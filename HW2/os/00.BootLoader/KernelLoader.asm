@@ -7,14 +7,14 @@ SECTION .text
 
 jmp 0x07E0:START     
 
-TOTALSECTORCOUNT:   dw  1024     
+TOTALSECTORCOUNT:   dw  2    
 
 START:
     mov ax, 0x07E0   
     mov ds, ax       
     mov ax, 0xB800   
-    mov es, ax       
-     
+    mov es, ax
+
     mov ax, 0x0000   
     mov ss, ax       
     mov sp, 0xFFFE   
@@ -71,8 +71,8 @@ START:
     xor byte [ HEADNUMBER ], 0x01        
     mov byte [ SECTORNUMBER ], 0x01      
     
-    cmp byte [ HEADNUMBER ], 0x00        
-    jne .READDATA                         
+    cmp byte [ HEADNUMBER ], 0x00
+    jne .READDATA
     
     add byte [ TRACKNUMBER ], 0x01       
     jmp .READDATA 
