@@ -9,6 +9,7 @@
 #include "Types.h"
 
 void kPrintString( int iX, int iY, const char* pcString );
+BOOL kInitializeKernel64Area(void);
 
 /**
  *  아래 함수는 C 언어 커널의 시작 부분임
@@ -16,7 +17,11 @@ void kPrintString( int iX, int iY, const char* pcString );
  */
 void Main( void )
 {
-    kPrintString( 0, 3, "C Language Kernel Started~!!!" );
+    DWORD i;
+    kPrintString( 0, 4, "C Language Kernel Started~!!!" );
+
+    kInitializeKernel64Area();
+    kPrintString(0, 5, "IA-32e Kernel Area Initialization Complete");
 
     while( 1 ) ;
 }
@@ -37,4 +42,20 @@ void kPrintString( int iX, int iY, const char* pcString )
     {
         pstScreen[ i ].bCharactor = pcString[ i ];
     }
+}
+
+BOOL kInitializeKernel64Area(void) {
+    DWORD* pdwCurrentAddress;
+
+    pdwCurrentAddress = (DWORD*) 0x100000; // initialize start address
+
+    while ((DWORD) pdwCurrentAddress < 0x600000){ // til 6mb, initialize with 0
+        *pdwCurrentAddress = 0x00;
+
+        if (*pdwCurrentAddress !=0) {
+            return FALSE;
+        }
+        pdwCurrentAddress++;
+    }
+    return TRUE;
 }

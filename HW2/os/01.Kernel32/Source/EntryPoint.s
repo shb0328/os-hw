@@ -35,7 +35,7 @@ PROTECTEDMODE:
     
     
     push ( SWITCHSUCCESSMESSAGE - $$ + 0x10000 )
-    push 2
+    push 3
     push 0
     call PRINTMESSAGE
     add esp, 12
