@@ -10,7 +10,7 @@
 
 void kPrintString( int iX, int iY, const char* pcString );
 BOOL kInitializeKernel64Area(void);
-
+BOOL kIsMemoryEnough(void);
 /**
  *  아래 함수는 C 언어 커널의 시작 부분임
  *      반드시 다른 함수들 보다 가장 앞쪽에 존재해야 함
@@ -20,8 +20,22 @@ void Main( void )
     DWORD i;
     kPrintString( 0, 4, "C Language Kernel Started~!!!" );
 
-    kInitializeKernel64Area();
-    kPrintString(0, 5, "IA-32e Kernel Area Initialization Complete");
+    kPrintString(0, 5, "Minimum Memory Size Check...................[    ]");
+    if(kIsMemoryEnough() == FALSE) {
+        kPrintString(45, 5, "Fail");
+        kPrintString(0, 6, "Not Enough Memory~!! MINT64 OS Requires Over 64 Mbyte Memory~!!");
+        while(1);
+    } else {
+        kPrintString(45, 5, "Pass");
+    }
+
+    kPrintString(0, 6, "IA-32e Kernel Area Initialize...............[    ]");
+    if(kInitializeKernel64Area() == FALSE) {
+        kPrintString(45, 6, "Fail");
+        kPrintString(0, 7, "Kernel Area Initialization Fail~!!");
+        while (1);
+    }
+    kPrintString(45, 6, "Pass");
 
     while( 1 ) ;
 }
@@ -56,6 +70,23 @@ BOOL kInitializeKernel64Area(void) {
             return FALSE;
         }
         pdwCurrentAddress++;
+    }
+    return TRUE;
+}
+
+BOOL kIsMemoryEnough(void) {
+    DWORD* pdwCurrentAddress;
+
+    pdwCurrentAddress = (DWORD*) 0x100000;
+
+    while((DWORD) pdwCurrentAddress < 0x4000000) {
+        *pdwCurrentAddress = 0x12345678;
+
+        if (*pdwCurrentAddress != 0x12345678) {
+            return FALSE;
+        }
+
+        pdwCurrentAddress += (0x100000 / 4);
     }
     return TRUE;
 }
