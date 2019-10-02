@@ -16,6 +16,10 @@ START:
 
     jmp dword 0x08: ( PROTECTEDMODE - $$ + 0x10000 )
 
+;;;;;;;;;;;;;;;;;;
+;;보호모드로 진입;;
+;;;;;;;;;;;;;;;;;;
+
 [BITS 32]
 PROTECTEDMODE:
     mov ax, 0x10
@@ -79,6 +83,10 @@ PRINTMESSAGE:
     pop esi
     pop ebp
     ret
+
+;;;;;;;;;;;;;;;;;;;;
+;;   데이터 영역   ;;
+;;;;;;;;;;;;;;;;;;;;
 
 align 8, db 0
 
