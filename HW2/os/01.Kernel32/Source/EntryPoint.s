@@ -45,9 +45,26 @@ PROTECTEDMODE:
     mov esp, 0xFFFE
     mov ebp, 0xFFFE
     
-    
-    push ( SWITCHSUCCESSMESSAGE - $$ + 0x10000 )
+    push ( RAMSIZEMESSAGE - $$ + 0x10000)
     push 3
+    push 0
+    call PRINTMESSAGE
+    add esp, 12
+    
+;;hyebeen ing *^_^*
+    ; mov eax, 0xe820
+    ; xor ebx, ebx
+    ; int 0x15
+
+    ; push ;XXMB
+    ; push 3
+    ; push 9
+    ; call PRINTMESSAGE
+    ; add esp, 12
+;;
+
+    push ( SWITCHSUCCESSMESSAGE - $$ + 0x10000 )
+    push 4
     push 0
     call PRINTMESSAGE
     add esp, 12
@@ -132,6 +149,7 @@ GDT:
         db 0x00
 GDTEND:
 
+RAMSIZEMESSAGE: db 'RAM Size:', 0
 SWITCHSUCCESSMESSAGE: db 'Switch To Protected Mode Success~!!', 0
 
 times 512 - ( $ - $$ )  db  0x00
