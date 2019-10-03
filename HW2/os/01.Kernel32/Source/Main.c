@@ -7,6 +7,7 @@
  */
 
 #include "Types.h"
+#include "Page.h"
 
 void kPrintString( int iX, int iY, const char* pcString );
 BOOL kInitializeKernel64Area(void);
@@ -33,10 +34,15 @@ void Main( void )
     if(kInitializeKernel64Area() == FALSE) {
         kPrintString(45, 7, "Fail");
         kPrintString(0, 8, "Kernel Area Initialization Fail~!!");
-        while (1);
+       while (1);
     }
     kPrintString(45, 7, "Pass");
 
+	//IA-32e mode kenel  page table
+	
+	kPrintString(0,8, "IA-32e Page Tables Initialize.............[    ]");
+	kInitializePageTables();
+	kPrintString(45, 8, "Pass");
 
     while( 1 ) ;
 }
