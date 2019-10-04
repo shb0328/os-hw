@@ -4,8 +4,9 @@ global kReadCPUID, kSwitchAndExecute64bitKernel
 
 SECTION .text
 
+;CPUID를 반환
 ;PARAM : DWORD dwEAX, DWORD* pdwEAX, * pdw EBX, * pdwECX, *pdwEDX
-kReadCPUID :
+kReadCPUID:
 	push ebp
 	mov ebp, esp
 	push eax
@@ -13,7 +14,6 @@ kReadCPUID :
 	push ecx
 	push edx
 	push esi
-
 
 	mov eax, dword [ ebp + 8 ]
 	cpuid
@@ -42,28 +42,34 @@ kReadCPUID :
 	pop ebp
 	ret
 
+;IA-32e 모드로 전환하고 64bit 커널을 수행
 kSwitchAndExecute64bitKernel:
-		mov eax, cr4
-		or eax, 0x20
-		mov cr4, eax
 
-		mov eax, 0x100000
-		mov cr3, eax
+	;CR4 레지스터의 PAE 비트를 1로 설정
+	mov eax, cr4
+	or eax, 0x20
+	mov cr4, eax
 
-		mov ecx, 0x0C0000080
-		rdmsr
+	;CR3 레지스터에 PML4 테이블의 어드레스와 캐시 활성화
+	mov eax, 0x100000
+	mov cr3, eax
 
-		or eax, 0x0100
+	;IA32_EFER.LME 를 1로 설정하여 IA-32e 모드 활성화
+	mov ecx, 0x0C0000080
+	rdmsr
 
-		wrmsr
+	or eax, 0x0100
 
-		mov eax, cr0
-		or eax, 0xE0000000
-		xor eax, 0x60000000
-		mov cr0, eax
+	wrmsr
 
-		jmp 0x08:0x200000
+	;캐시 기능과 페이징 기능 활성화
+	;CR0 레지스터의 NW(29bit) = 0, CD(30 bit) = 0, PG(31bit) = 1
+	mov eax, cr0
+	or eax,  0xE0000000
+	xor eax, 0x60000000
+	mov cr0, eax
 
-		;jmp &
+	jmp 0x08:0x200000
 
+	;jmp &
 
