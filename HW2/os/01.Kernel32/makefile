@@ -55,7 +55,7 @@ clean:
 # Make에 의해 다시 호출되는 부분, Temp 디렉터리를 기준으로 수행됨
 ################################################################################
 # 빌드할 C 소스 파일 정의, Temp 디렉터리를 기준으로 설정
-CENTRYPOINTOBJECTFILE = Main.o
+CNTRYPOINTOBJECTFILE = Main.o
 CSOURCEFILES = $(wildcard ../$(SOURCEDIRECTORY)/*.c)
 ASSEMBLYSOURCEFILES = $(wildcard ../$(SOURCEDIRECTORY)/*.asm)
 COBJECTFILES = $(subst Main.o, , $(notdir $(patsubst %.c,%.o,$(CSOURCEFILES))))

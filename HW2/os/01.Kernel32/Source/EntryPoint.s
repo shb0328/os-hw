@@ -26,7 +26,7 @@ START:
     mov eax, 0x4000003B
     mov cr0, eax
 
-    jmp dword 0x08: ( PROTECTEDMODE - $$ + 0x10000 )
+    jmp dword 0x18: ( PROTECTEDMODE - $$ + 0x10000 )
 
 ;;;;;;;;;;;;;;;;;;
 ;;보호모드로 진입;;
@@ -34,7 +34,7 @@ START:
 
 [BITS 32]
 PROTECTEDMODE:
-    mov ax, 0x10
+    mov ax, 0x20
     mov ds, ax
     mov es, ax
     mov fs, ax
@@ -69,7 +69,7 @@ PROTECTEDMODE:
     call PRINTMESSAGE
     add esp, 12
 
-    jmp dword 0x08: 0x10200 ; C 언어 커널이 존재하는 0x10200 어드레스로 이동하여 C 언어 커널 수행
+    jmp dword 0x18: 0x10200 ; C 언어 커널이 존재하는 0x10200 어드레스로 이동하여 C 언어 커널 수행
 
 PRINTMESSAGE:
     push ebp
@@ -131,6 +131,24 @@ GDT:
         db 0x00
         db 0x00
         db 0x00
+
+	IA_32eCODEDESCRIPTOR:
+		dw 0xFFFF
+		dw 0x0000
+		db 0x00
+		db 0x9A ; P=1, DPL= 0, CODE SEGMENT, EXECUTE/READ
+		db 0xAF ; G=1, D= 0, L=1, LIMIT[19:16]
+		db 0x00
+
+
+	IA_32eDATADESCRIPTOR:
+		dw 0xFFFF
+		dw 0x0000
+		db 0x00
+		db 0x92
+		db 0xAF
+		db 0x00
+
 
     CODEDESCRIPTOR:     
         dw 0xFFFF       ; Limit [15:0]
