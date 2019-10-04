@@ -8,11 +8,58 @@ START:
     mov ds, ax
     mov es, ax
 
+    .RAMSIZE:
+    ;;hyebeen ing *^_^* start
+;;get system memory map
+; int 0x15    
+; AX = E820h
+; EAX = 0000E820h
+; EDX = 534D4150h ('SMAP')
+; EBX = continuation value or 00000000h to start at beginning of map
+; ECX = size of buffer for result, in bytes (should be >= 20 bytes)
+; ES:DI -> buffer for result (see #00581)
+
+    ; mov ax, ss
+    ; add ax, bp
+    ; add ax, 1
+    ; mov es, ax
+    
+    xor di, di
+    xor bx, bx    
+    mov cx, 20
+    ; mov dx, ;SMAP
+    mov ax, 0xE820
+    int 0x15 ;get system memory map
+
+;     jc .GETSYSTEMMEMORYMAP_ERROR
+;     jmp .GETSYSTEMMEMORYMAP_SUCCESS
+
+; .GETSYSTEMMEMORYMAP_ERROR:
+;     push GETSYSTEMMEMORYMAP_ERROR_MESSAGE    
+;     push 3                      
+;     push 0                       
+;     call .PRINTMESSAGE            
+;     add  sp, 6 
+
+;     jmp .SET_A20GATE
+
+; .GETSYSTEMMEMORYMAP_SUCCESS:
+;     push RAMSIZEMESSAGE    
+;     push 3                      
+;     push 0                       
+;     call .PRINTMESSAGE            
+;     add  sp, 6  
+
+;output :: [ ecx ] buffer size ,[ ebx ] continuation ,[ es:di ] Buffer Pointer, [ cf ] Carry Flag = Non-Carry - indicates no error
+;;hyebeen ing *^_^* end   
+
+.SET_A20GATE:
     mov ax, 0x2401
     int 0x15 ; using bios, enable a20 gate
 
     jc .A20GATEERROR
     jmp .A20GATESUCCESS
+
 .A20GATEERROR:
     in al, 0x92 ; using system port, enable a20 gate
     or al, 0x02
@@ -39,29 +86,9 @@ PROTECTEDMODE:
     mov es, ax
     mov fs, ax
     mov gs, ax
-
-
     mov ss, ax
     mov esp, 0xFFFE
     mov ebp, 0xFFFE
-    
-    push ( RAMSIZEMESSAGE - $$ + 0x10000)
-    push 3
-    push 0
-    call PRINTMESSAGE
-    add esp, 12
-    
-;;hyebeen ing *^_^*
-    ; mov eax, 0xe820
-    ; xor ebx, ebx
-    ; int 0x15
-
-    ; push ;XXMB
-    ; push 3
-    ; push 9
-    ; call PRINTMESSAGE
-    ; add esp, 12
-;;
 
     push ( SWITCHSUCCESSMESSAGE - $$ + 0x10000 )
     push 4
@@ -150,6 +177,7 @@ GDT:
 GDTEND:
 
 RAMSIZEMESSAGE: db 'RAM Size:', 0
+GETSYSTEMMEMORYMAP_ERROR_MESSAGE: db 'get system memory map interrupt error ~!!', 0
 SWITCHSUCCESSMESSAGE: db 'Switch To Protected Mode Success~!!', 0
 
 times 512 - ( $ - $$ )  db  0x00
