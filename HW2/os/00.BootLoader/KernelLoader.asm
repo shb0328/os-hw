@@ -8,7 +8,7 @@ SECTION .text
 jmp 0x07E0:START     
 
 TOTALSECTORCOUNT:   dw  2    
-
+KERNEL32SECTORCOUNT: dw 2
 START:
     mov ax, 0x07E0   
     mov ds, ax       

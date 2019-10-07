@@ -42,7 +42,7 @@ kReadCPUID :
 	pop ebp
 	ret
 
-	kSwitchAndExecute64bitKernel:
+kSwitchAndExecute64bitKernel:
 		mov eax, cr4
 		or eax, 0x20
 		mov cr4, eax
