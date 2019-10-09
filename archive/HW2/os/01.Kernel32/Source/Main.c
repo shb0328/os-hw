@@ -7,14 +7,10 @@
  */
 
 #include "Types.h"
-#include "Page.h"
-#include "ModeSwitch.h"
 
 void kPrintString( int iX, int iY, const char* pcString );
 BOOL kInitializeKernel64Area(void);
 BOOL kIsMemoryEnough(void);
-void kCopyKernel64ImageTo2Mbyte(void);
-
 /**
  *  아래 함수는 C 언어 커널의 시작 부분임
  *      반드시 다른 함수들 보다 가장 앞쪽에 존재해야 함
@@ -22,9 +18,6 @@ void kCopyKernel64ImageTo2Mbyte(void);
 void Main( void )
 {
     DWORD i;
-    DWORD dwEAX, dwEBX, dwECX, dwEDX;
-    char vcVendorString[13] = {0,};
-
     kPrintString( 0, 5, "C Language Kernel Start.....................[PASS]" );
 
     kPrintString(0, 6, "Minimum Memory Size Check...................[    ]");
@@ -43,35 +36,6 @@ void Main( void )
         while (1);
     }
     kPrintString(45, 7, "Pass");
-
-    kPrintString(0, 8, "IA-32e Page Tables Initialize...............[    ]");
-    kInitializePageTables();
-    kPrintString(45, 8, "Pass");
-
-    kReadCPUID(0x00, &dwEAX, &dwEBX, &dwECX, &dwEDX);
-    *(DWORD*) vcVendorString = dwEBX;
-    *((DWORD*)vcVendorString +1) = dwEDX;
-    *((DWORD*)vcVendorString +2) = dwECX;
-    kPrintString(0, 9, "Processor Vendor String.....................[");
-    kPrintString(45, 9, vcVendorString);
-    kPrintString(45 + sizeof(vcVendorString), 9, "]");
-
-    kReadCPUID(0x80000001, &dwEAX, &dwEBX, &dwECX, &dwEDX);
-    kPrintString(0, 10, "64bit Mode Support Check....................[    ]");
-    if(dwEDX & (1<<29)){
-        kPrintString(45, 10, "Pass");
-    }else {
-        kPrintString(45, 10, "Fail");
-        kPrintString(0,11,"This processor does not support 64bit mode~!!");
-        while(1);
-    }
-
-    kPrintString(0, 11, "Copy IA-32e Kernel To 2M Address............[    ]");
-    kCopyKernel64ImageTo2Mbyte();
-    kPrintString(45, 11, "Pass");
-
-    kPrintString(0, 12, "Switch To IA-32e Mode");
-    kSwitchAndExecute64bitKernel();
 
     while( 1 ) ;
 }
@@ -125,37 +89,4 @@ BOOL kIsMemoryEnough(void) {
         pdwCurrentAddress += (0x100000 / 4);
     }
     return TRUE;
-}
-
-void kPrintINT( int iX, int iY, const char pcString )
-{
-    CHARACTER* pstScreen = ( CHARACTER* ) 0xB8000;
-    int i;
-    
-    // X, Y 좌표를 이용해서 문자열을 출력할 어드레스를 계산
-    pstScreen += ( iY * 80 ) + iX;
-    
-    // NULL이 나올 때까지 문자열 출력
-
-    pstScreen[0].bCharactor = pcString;
-}
-
-void kCopyKernel64ImageTo2Mbyte(void){
-    WORD wKernel32SectorCount, wTotalKernelSectorCount;
-    DWORD* pdwSourceAddress, *pdwDestinationAddress;
-    int i;
-
-    wTotalKernelSectorCount = *((WORD*) 0x7E05); //총 커널 섹터 수
-    wKernel32SectorCount = *((WORD*) 0x7E07); //보호모드 커널 섹터 수
-    
-    pdwSourceAddress = (DWORD*) (0x10000 + (wKernel32SectorCount * 512));
-    pdwDestinationAddress = (DWORD*) 0x200000;
-
-    //IA-32e 모드 커널 섹터 크기만큼 복사
-    for(i=0; i<512 *(wTotalKernelSectorCount - wKernel32SectorCount) / 4; i++){
-        *pdwDestinationAddress = *pdwSourceAddress;
-        pdwDestinationAddress++;
-        pdwSourceAddress++;
-    }
-
 }

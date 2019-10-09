@@ -7,8 +7,7 @@ SECTION .text
 
 jmp 0x07E0:START     
 
-TOTALSECTORCOUNT:   dw  0x02 ;부트로더를 제외한 MINT64 OS 이미지의 크기, 최대 1152섹터(0x90000byte)까지 가능
-KERNEL32SECTORCOUNT: dw 0x02 ;보호모드 커널의 총 섹터 수    
+TOTALSECTORCOUNT:   dw  2    
 
 START:
     mov ax, 0x07E0   
