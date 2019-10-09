@@ -38,7 +38,7 @@ void kInitializePageTables(void){
 
 	// Create Table Page
 	pstPTEntry = (PTENTRY*) 0x103000;
-	for(i = 0; i < )
+	//for(i = 0; i < )
 	//for (i = 0; i < PAGE_MAX)
 
 }
