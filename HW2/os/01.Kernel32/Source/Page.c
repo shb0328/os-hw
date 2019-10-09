@@ -22,7 +22,7 @@ void kInitializePageTables(void){
 	pstPDPTEntry = ( PDPTENTRY* ) 0x101000;
 	for( i =0; i<64; i++ ){
 		kSetPageEntryData( &( pstPDPTEntry[ i ] ), 0, 0x102000 + ( i*PAGE_TABLESIZE ), PAGE_FLAGES_DEFAULT, 0 );
-	}
+			}
 	for( i=64; i < PAGE_MAXENTRYCOUNT; i++ ){
 		kSetPageEntryData( &( pstPDPTEntry[ i ] ), 0, 0, 0, 0 );
 	}
@@ -35,12 +35,6 @@ void kInitializePageTables(void){
 	
 		dwMappingAddress += PAGE_DEFAULTSIZE;
 	}
-
-	// Create Table Page
-	pstPTEntry = (PTENTRY*) 0x103000;
-	//for(i = 0; i < )
-	//for (i = 0; i < PAGE_MAX)
-
 }
 
 // Set Flag to Page Entry
