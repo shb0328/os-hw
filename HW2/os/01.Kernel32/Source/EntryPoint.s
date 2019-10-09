@@ -7,52 +7,16 @@ START:
     mov ax, 0x1000
     mov ds, ax
     mov es, ax
-
-    .RAMSIZE:
-    ;;hyebeen ing *^_^* start
-;;get system memory map
-; int 0x15    
-; AX = E820h
-; EAX = 0000E820h
-; EDX = 534D4150h ('SMAP')
-; EBX = continuation value or 00000000h to start at beginning of map
-; ECX = size of buffer for result, in bytes (should be >= 20 bytes)
-; ES:DI -> buffer for result (see #00581)
-
-    ; mov ax, ss
-    ; add ax, bp
-    ; add ax, 1
-    ; mov es, ax
-    
-    xor di, di
-    xor bx, bx    
-    mov cx, 20
-    ; mov dx, ;SMAP
-    mov ax, 0xE820
-    int 0x15 ;get system memory map
-
-;     jc .GETSYSTEMMEMORYMAP_ERROR
-;     jmp .GETSYSTEMMEMORYMAP_SUCCESS
-
-; .GETSYSTEMMEMORYMAP_ERROR:
-;     push GETSYSTEMMEMORYMAP_ERROR_MESSAGE    
-;     push 3                      
-;     push 0                       
-;     call .PRINTMESSAGE            
-;     add  sp, 6 
-
-;     jmp .SET_A20GATE
-
-; .GETSYSTEMMEMORYMAP_SUCCESS:
-;     push RAMSIZEMESSAGE    
-;     push 3                      
-;     push 0                       
-;     call .PRINTMESSAGE            
-;     add  sp, 6  
-
-;output :: [ ecx ] buffer size ,[ ebx ] continuation ,[ es:di ] Buffer Pointer, [ cf ] Carry Flag = Non-Carry - indicates no error
-;;hyebeen ing *^_^* end   
-
+.RAMSIZE:
+    mov ax, 0x1000 ; TODO : change es to buf base address
+    mov es, ax
+    mov di, 0
+    mov eax, 0x0000e820
+    mov edx, 0x534d4150 ; SMAP ascii
+    mov ebx, 0x0
+    mov ecx, 20
+    int 15h
+    jc $
 .SET_A20GATE:
     mov ax, 0x2401
     int 0x15 ; using bios, enable a20 gate
