@@ -64,6 +64,7 @@ kSwitchAndExecute64bitKernel:
 
 	;캐시 기능과 페이징 기능 활성화
 	;CR0 레지스터의 NW(29bit) = 0, CD(30 bit) = 0, PG(31bit) = 1
+	;WP(16bit) = 1 커널도 페이지테이블엔트리의 R/W flag의 영향을 받게 하기 위해서
 	mov eax, cr0
 	or eax,  0xE0010000
 	xor eax, 0x60000000

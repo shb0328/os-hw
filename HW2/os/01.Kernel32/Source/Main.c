@@ -23,9 +23,7 @@ void Main(void)
 {
     DWORD i;
     DWORD dwEAX, dwEBX, dwECX, dwEDX;
-    char vcVendorString[13] = {
-        0,
-    };
+    char vcVendorString[13] = {0,};
 
     kPrintString(0, 5, "Protected Mode C Language Kernel Start.....................[PASS]");
 
@@ -34,8 +32,7 @@ void Main(void)
     {
         kPrintString(45, 6, "Fail");
         kPrintString(0, 7, "Not Enough Memory~!! MINT64 OS Requires Over 64 Mbyte Memory~!!");
-        while (1)
-            ;
+        while (1);
     }
     else
     {
@@ -47,8 +44,7 @@ void Main(void)
     {
         kPrintString(45, 7, "Fail");
         kPrintString(0, 8, "Kernel Area Initialization Fail~!!");
-        while (1)
-            ;
+        while (1);
     }
     kPrintString(45, 7, "Pass");
 
@@ -74,8 +70,7 @@ void Main(void)
     {
         kPrintString(45, 10, "Fail");
         kPrintString(0, 11, "This processor does not support 64bit mode~!!");
-        while (1)
-            ;
+        while (1);
     }
 
     kPrintString(0, 11, "Copy IA-32e Kernel To 2M Address............[    ]");
@@ -85,8 +80,7 @@ void Main(void)
     kPrintString(0, 12, "Switch To IA-32e Mode");
     kSwitchAndExecute64bitKernel();
 
-    while (1)
-        ;
+    while (1);
 }
 
 /**
