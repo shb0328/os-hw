@@ -210,7 +210,7 @@ PROTECTEDMODE:
     call PRINTMESSAGE
     add esp, 12
 
-    jmp dword 0x18: 0x10200 ; C 언어 커널이 존재하는 0x10200 어드레스로 이동하여 C 언어 커널 수행
+    jmp dword 0x18: 0x10400 ; C 언어 커널이 존재하는 0x10400 어드레스로 이동하여 C 언어 커널 수행
 
 PRINTMESSAGE:
     push ebp

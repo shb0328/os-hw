@@ -4,7 +4,7 @@
 # 컴파일러 및 링커 정의
 NASM32 = nasm
 GCC32 = gcc -c -m32 -ffreestanding
-LD32 = ld -melf_i386 -T ../elf_i386.ld -nostdlib -e Main -Ttext 0x10200
+LD32 = ld -melf_i386 -T ../elf_i386.ld -nostdlib -e Main -Ttext 0x10400
 
 # 바이너리 이미지 생성을 위한 OBJCOPY 옵션 정의
 OBJCOPY32 = objcopy -j .text -j .data -j .rodata -j .bss -S -O binary

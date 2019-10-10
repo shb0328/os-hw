@@ -14,7 +14,7 @@ SECTIONS
   PROVIDE (__executable_start = SEGMENT_START("text-segment", 0x08048000)); . = SEGMENT_START("text-segment", 0x08048000) + SIZEOF_HEADERS;
   /*************************************************/
   /* 섹션 재배치로 인해 앞으로 이동된 부분 */
-  .text 0x10200          :
+  .text 0x10400          :
   {
     *(.text.unlikely .text.*_unlikely .text.unlikely.*)
     *(.text.exit .text.exit.*)
