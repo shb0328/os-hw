@@ -65,7 +65,7 @@ kSwitchAndExecute64bitKernel:
 	;캐시 기능과 페이징 기능 활성화
 	;CR0 레지스터의 NW(29bit) = 0, CD(30 bit) = 0, PG(31bit) = 1
 	mov eax, cr0
-	or eax,  0xE0000000
+	or eax,  0xE0010000
 	xor eax, 0x60000000
 	mov cr0, eax
 
