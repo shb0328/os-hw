@@ -28,7 +28,7 @@ RAMSIZE:
     jmp .RAMSIZEINTURRUPT_SUCCESS
 
 .RAMSIZEINTURRUPT_ERROR:
-    push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x1000)
+    push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x10000)
     push 3
     push 0
     call .16BITPRINTMESSAGE
@@ -46,18 +46,18 @@ RAMSIZE:
 
 
     ;if complete, bx(offset) = 0   
-    or bx, bx
-    jne RAMSIZE
+    ;or bx, bx
+    ;jne RAMSIZE
 
 
 .RAMSIZE_PRINT:
-    push (RAMSIZEMESSAGE - $$ + 0x1000)
+    push (RAMSIZEMESSAGE - $$ + 0x10000)
     push 3
     push 0
     call .16BITPRINTMESSAGE
     add sp, 6
 
-    push (RAMSIZESAMPLE - $$ + 0x1000)
+    push (RAMSIZESAMPLE - $$ + 0x10000)
     push 3
     push 10
     call .16BITPRINTMESSAGE
