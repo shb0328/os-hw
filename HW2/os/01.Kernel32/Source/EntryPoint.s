@@ -8,12 +8,80 @@ START:
     mov ds, ax
     mov es, ax
 
-    ;A20 GATE 활성화
+    mov ss, ax
+    mov sp, 0xFFFE
+    mov bp, 0xFFFE
+
+    mov ax, 0xB800
+    mov fs, ax  
+
+RAMSIZE_INIT:
+    xor ebx, ebx
+    xor edi, edi
+    xor esi, esi ;acc high
+    xor ebp, ebp ;acc low
+RAMSIZELOOP:
+    mov ecx, 20
+    mov edx, 0x534d4150
+    mov eax, 0xE820
+    int 0x15
+
+    jc .RAMSIZEINTURRUPT_ERROR
+
+.RAMSIZEINTURRUPT_SUCCESS:
+    mov eax, dword [es : di + 16] ;TYPE
+    cmp eax, 1 ;ARM = 1, ARR = 2
+    jne .RAMSIZEEND
+
+.RAMSIZE_SUM:
+    mov eax, dword [es : di + 12] ;HIGH
+    add esi, eax
+
+    mov eax, dword [es : di + 8] ;LOW
+    add ebp, eax
+    jnc .RAMSIZEEND
+
+.ADD_CARRY:
+    inc esi
+
+.RAMSIZEEND:
+    ;if complete, bx(offset) = 0   
+    or bx, bx
+    jne RAMSIZELOOP
+
+.PARSE_RAMSIZE:
+    mov eax, esi
+    and eax, 0xFFFFF
+
+    shr ebp, 20
+    shl eax, 12
+    or ebp, eax 
+
+    shr esi, 20 
+
+.RAMSIZE_PRINT:
+    push (RAMSIZEMESSAGE - $$ + 0x10000)
+    push 3
+    push 0
+    call .16BITPRINTMESSAGE
+    add sp, 6
+
+    mov ax, bp
+    call .PRINTDECNUM
+
+;A20 GATE 활성화
     mov ax, 0x2401
     int 0x15 ; using bios, enable a20 gate
 
     jc .A20GATEERROR
     jmp .A20GATESUCCESS
+
+.RAMSIZEINTURRUPT_ERROR:
+    push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x10000)
+    push 3
+    push 0
+    call .16BITPRINTMESSAGE
+    add sp, 6
 
 .A20GATEERROR:
     in al, 0x92 ; using system port, enable a20 gate
@@ -30,6 +98,96 @@ START:
 
     jmp dword 0x18: ( PROTECTEDMODE - $$ + 0x10000 )
 
+;function
+.PRINTDECNUM:
+    ;input num : ax
+    push ax
+    push dx
+    push si
+    push di
+    push cx
+
+    mov si, 10
+    xor cx, cx
+.DIV:
+    xor dx, dx
+    div si
+    push dx
+
+    inc cx
+    or ax, ax
+    jne .DIV
+
+    mov di, 160*3 + 18
+.PRINT:
+    pop dx
+    add dx, '0'
+
+    mov byte[fs : di], dl
+    add di,2
+
+    dec cx
+    or cx, cx
+    jne .PRINT
+
+.PRINTDECNUMEND:
+    pop cx
+    pop di
+    pop si
+    pop dx
+    pop ax
+    ret
+
+;function
+.16BITPRINTMESSAGE:
+    push bp          
+    mov bp, sp       
+                     
+    push es          
+    push si          
+    push di          
+    push ax
+    push cx
+    push dx
+        
+    mov ax, 0xB800                                                
+    mov es, ax                   
+      
+    mov ax, word [ bp + 6 ]      
+    mov si, 160                  
+    mul si                       
+    mov di, ax                   
+        
+    mov ax, word [ bp + 4 ]      
+    mov si, 2                    
+    mul si                       
+    add di, ax                   
+ 
+    mov si, word [ bp + 8 ]      
+
+.16BITMESSAGELOOP:                
+    mov cl, byte [ si ]      
+ 
+    cmp cl, 0                
+    je .16BITMESSAGEEND           
+
+    mov byte [ es: di ], cl  
+    
+    add si, 1                
+    add di, 2                
+                                                     
+    jmp .16BITMESSAGELOOP         
+
+.16BITMESSAGEEND:
+    pop dx       
+    pop cx       
+    pop ax       
+    pop di       
+    pop si       
+    pop es
+    pop bp       
+    ret
+
 ;;;;;;;;;;;;;;;;;;
 ;;보호모드로 진입;;
 ;;;;;;;;;;;;;;;;;;
@@ -42,19 +200,17 @@ PROTECTEDMODE:
     mov fs, ax
     mov gs, ax
 
-
     mov ss, ax
     mov esp, 0xFFFE
     mov ebp, 0xFFFE
-    
-    
+      
     push ( SWITCHSUCCESSMESSAGE - $$ + 0x10000 )
     push 4
     push 0
     call PRINTMESSAGE
     add esp, 12
 
-    jmp dword 0x18: 0x10200 ; C 언어 커널이 존재하는 0x10200 어드레스로 이동하여 C 언어 커널 수행
+    jmp dword 0x18: 0x10400 ; C 언어 커널이 존재하는 0x10400 어드레스로 이동하여 C 언어 커널 수행
 
 PRINTMESSAGE:
     push ebp
@@ -96,7 +252,7 @@ PRINTMESSAGE:
     pop edi
     pop esi
     pop ebp
-    ret
+    ret   
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;   데이터 영역   ;;
@@ -151,5 +307,7 @@ GDT:
 GDTEND:
 
 SWITCHSUCCESSMESSAGE: db 'Switch To Protected Mode Success~!!', 0
+RAMSIZEINTURRUPTERRORMESSAGE: db 'INTURRUPT ERROR~~!', 0
+RAMSIZEMESSAGE: db 'RAMSIZE :  MB', 0
 
-times 512 - ( $ - $$ )  db  0x00
+times 1024 - ( $ - $$ )  db  0x00

@@ -34,18 +34,19 @@ void kInitializePageTables(void)
     pstPDPTEntry = (PDPTENTRY *)0x101000;
     for (i = 0; i < 64; i++)
     {
-        kSetPageEntryData(&(pstPDPTEntry[i]), 0, 0x102000 + (i * PAGE_TABLESIZE), PAGE_FLAGS_DEFAULT, 0);
+        kSetPageEntryData(&(pstPDPTEntry[i]), 0, 0x104000 + (i * PAGE_TABLESIZE), PAGE_FLAGS_DEFAULT, 0);
     }
     for (i = 64; i < PAGE_MAXENTRYCOUNT; i++)
     {
         kSetPageEntryData(&(pstPDPTEntry[i]), 0, 0, 0, 0);
     }
 
+
     //Create Table Page Directory
     // 페이지 디렉터리 테이블 생성
     // 하나의 페이지 디렉터리가 1GB까지 매핑 가능
     // 여유있게 64개의 페이지 디렉터리를 생성하여 총 64GB까지 지원
-    pstPDEntry = (PDENTRY *)0x102000;
+    pstPDEntry = (PDENTRY *)0x104000;
     dwMappingAddress = 0; 
     for (i = 0; i < PAGE_MAXENTRYCOUNT * 64; i++)
     {
