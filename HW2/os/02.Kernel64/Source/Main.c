@@ -11,21 +11,24 @@ void Main(void)
     kPrintString(0, 14, "IA-32e C Languege Kernel Start..............[Pass]");
     kPrintString(0, 15, "This message is printed through the video memory relocated to 0xAB8000");
 
-    kPrintString(0, 16, "Read from 0x1ff000 [  ]");
-    if (ReadTest())
+    kPrintString(0, 16, "Read from 0x1fe000 [  ]");
+    if (RW_ReadTest())
         kPrintString(20, 16, "OK");
 
-    kPrintString(0, 17, "Write to 0x1ff000 [  ]");
-    if (WriteTest())
+    kPrintString(0, 17, "Write to 0x1fe000 [  ]");
+    if (RW_WriteTest())
         kPrintString(19, 17, "OK");
 
-    kPrintString(0, 18, "Read from 0x1fe000 [  ]");
-    if (RW_ReadTest())
+    kPrintString(0, 18, "Read from 0x1ff000 [  ]");
+    if (ReadTest())
         kPrintString(20, 18, "OK");
 
-    kPrintString(0, 19, "Write to 0x1fe000 [  ]");
-    if (RW_WriteTest())
+//HW2 : 아래 주석을 해제하고 프로그램을 실행 시키면, 0x1ff000 주소에 write가 거부되어 재부팅됨
+/*
+    kPrintString(0, 19, "Write to 0x1ff000 [  ]");
+    if (WriteTest())
         kPrintString(19, 19, "OK");
+*/
 }
 
 /**
