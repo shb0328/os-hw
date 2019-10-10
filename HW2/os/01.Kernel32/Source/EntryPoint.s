@@ -15,8 +15,10 @@ START:
     mov ax, 0xB800
     mov fs, ax  
 
+RAMSIZE_INIT:
+    xor ebx, ebx
 RAMSIZE:
-    mov ebx, 0x00
+    mov ebx, ebx
     mov ecx, 20
     mov edx, 0x534d4150
     mov eax, 0xE820
@@ -33,9 +35,20 @@ RAMSIZE:
     add sp, 6
 
 .RAMSIZEINTURRUPT_SUCCESS:
-    mov ax, cx
+    ;check value (for debugging, after finish, remove)
+    mov ax, es
     call .PRINTDECNUM
-    ;jmp $
+
+;;;;;;;;;;;;;;;;
+;;    TODO    ;;
+;;;;;;;;;;;;;;;;
+
+
+
+    ;if complete, bx(offset) = 0   
+    or bx, bx
+    jne RAMSIZE
+
 
 .RAMSIZE_PRINT:
     push (RAMSIZEMESSAGE - $$ + 0x1000)
