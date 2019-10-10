@@ -17,38 +17,47 @@ START:
 
 RAMSIZE_INIT:
     xor ebx, ebx
-RAMSIZE:
-    mov ebx, ebx
+    xor edi, edi
+    xor esi, esi ;acc high
+    xor ebp, ebp ;acc low
+RAMSIZELOOP:
     mov ecx, 20
     mov edx, 0x534d4150
     mov eax, 0xE820
     int 0x15
 
     jc .RAMSIZEINTURRUPT_ERROR
-    jmp .RAMSIZEINTURRUPT_SUCCESS
-
-.RAMSIZEINTURRUPT_ERROR:
-    push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x10000)
-    push 3
-    push 0
-    call .16BITPRINTMESSAGE
-    add sp, 6
 
 .RAMSIZEINTURRUPT_SUCCESS:
-    ;check value (for debugging, after finish, remove)
-    mov ax, es
-    call .PRINTDECNUM
+    mov eax, dword [es : di + 16] ;TYPE
+    cmp eax, 1 ;ARM = 1, ARR = 2
+    jne .RAMSIZEEND
 
-;;;;;;;;;;;;;;;;
-;;    TODO    ;;
-;;;;;;;;;;;;;;;;
+.RAMSIZE_SUM:
+    mov eax, dword [es : di + 12] ;HIGH
+    add esi, eax
 
+    mov eax, dword [es : di + 8] ;LOW
+    add ebp, eax
+    jnc .RAMSIZEEND
 
+.ADD_CARRY:
+    inc esi
 
+.RAMSIZEEND:
     ;if complete, bx(offset) = 0   
-    ;or bx, bx
-    ;jne RAMSIZE
+    or bx, bx
+    jne RAMSIZELOOP
 
+.PARSE_RAMSIZE:
+    mov eax, esi
+    and eax, 0xFFFFF
+
+    shr ebp, 20
+    shl eax, 12
+    or ebp, eax 
+
+    shr esi, 20 
 
 .RAMSIZE_PRINT:
     push (RAMSIZEMESSAGE - $$ + 0x10000)
@@ -57,11 +66,8 @@ RAMSIZE:
     call .16BITPRINTMESSAGE
     add sp, 6
 
-    push (RAMSIZESAMPLE - $$ + 0x10000)
-    push 3
-    push 10
-    call .16BITPRINTMESSAGE
-    add sp, 6
+    mov ax, bp
+    call .PRINTDECNUM
 
     ;A20 GATE 활성화
     mov ax, 0x2401
@@ -69,6 +75,13 @@ RAMSIZE:
 
     jc .A20GATEERROR
     jmp .A20GATESUCCESS
+
+.RAMSIZEINTURRUPT_ERROR:
+    push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x10000)
+    push 3
+    push 0
+    call .16BITPRINTMESSAGE
+    add sp, 6
 
 .A20GATEERROR:
     in al, 0x92 ; using system port, enable a20 gate
@@ -105,7 +118,7 @@ RAMSIZE:
     or ax, ax
     jne .DIV
 
-    mov di, 160*3 + 100
+    mov di, 160*3 + 18
 .PRINT:
     pop dx
     add dx, '0'
@@ -295,7 +308,6 @@ GDTEND:
 
 SWITCHSUCCESSMESSAGE: db 'Switch To Protected Mode Success~!!', 0
 RAMSIZEINTURRUPTERRORMESSAGE: db 'INTURRUPT ERROR~~!', 0
-RAMSIZEMESSAGE: db 'RAMSIZE :    MB', 0
-RAMSIZESAMPLE: db '100',0
+RAMSIZEMESSAGE: db 'RAMSIZE :  MB', 0
 
-times 512 - ( $ - $$ )  db  0x00
+times 1024 - ( $ - $$ )  db  0x00
