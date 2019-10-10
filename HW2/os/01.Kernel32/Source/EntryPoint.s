@@ -8,6 +8,34 @@ START:
     mov ds, ax
     mov es, ax
 
+    mov ss, ax
+    mov sp, 0xFFFE
+    mov bp, 0xFFFE
+
+.RAMSIZE:
+
+
+.RAMSIZE_ERROR:
+    push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x10000)
+    push 3
+    push 0
+    call .16BITPRINTMESSAGE
+    add sp, 6
+
+.RAMSIZE_SUCCESS:
+    ;print RAMSIZE
+    push (RAMSIZEMESSAGE - $$ + 0x10000)
+    push 3
+    push 0
+    call .16BITPRINTMESSAGE
+    add sp, 6
+
+    push (RAMSIZESAMPLE - $$ + 0x10000)
+    push 3
+    push 10
+    call .16BITPRINTMESSAGE
+    add sp, 6
+
     ;A20 GATE 활성화
     mov ax, 0x2401
     int 0x15 ; using bios, enable a20 gate
@@ -29,6 +57,56 @@ START:
     mov cr0, eax
 
     jmp dword 0x18: ( PROTECTEDMODE - $$ + 0x10000 )
+
+;function
+.16BITPRINTMESSAGE:
+    push bp          
+    mov bp, sp       
+                     
+    push es          
+    push si          
+    push di          
+    push ax
+    push cx
+    push dx
+        
+    mov ax, 0xB800                                                
+    mov es, ax                   
+      
+    mov ax, word [ bp + 6 ]      
+    mov si, 160                  
+    mul si                       
+    mov di, ax                   
+        
+    mov ax, word [ bp + 4 ]      
+    mov si, 2                    
+    mul si                       
+    add di, ax                   
+ 
+    mov si, word [ bp + 8 ]      
+
+.16BITMESSAGELOOP:                
+    mov cl, byte [ si ]      
+ 
+    cmp cl, 0                
+    je .16BITMESSAGEEND           
+
+    mov byte [ es: di ], cl  
+    
+    add si, 1                
+    add di, 2                
+                                                     
+    jmp .16BITMESSAGELOOP         
+
+.16BITMESSAGEEND:
+    pop dx       
+    pop cx       
+    pop ax       
+    pop di       
+    pop si       
+    pop es
+    pop bp       
+    ret
 
 ;;;;;;;;;;;;;;;;;;
 ;;보호모드로 진입;;
@@ -96,7 +174,7 @@ PRINTMESSAGE:
     pop edi
     pop esi
     pop ebp
-    ret
+    ret   
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;   데이터 영역   ;;
@@ -151,5 +229,8 @@ GDT:
 GDTEND:
 
 SWITCHSUCCESSMESSAGE: db 'Switch To Protected Mode Success~!!', 0
+RAMSIZEINTURRUPTERRORMESSAGE: db 'INTURRUPT ERROR~~!', 0
+RAMSIZEMESSAGE: db 'RAMSIZE :    MB', 0
+RAMSIZESAMPLE: db '100',0
 
 times 512 - ( $ - $$ )  db  0x00
