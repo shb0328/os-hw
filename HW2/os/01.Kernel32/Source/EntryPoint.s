@@ -12,18 +12,27 @@ START:
     mov sp, 0xFFFE
     mov bp, 0xFFFE
 
-.RAMSIZE:
+RAMSIZE:
+    mov ebx, 0x00
+    mov ecx, 20
+    mov edx, 0x534d4150
+    mov eax, 0xE820
+    int 0x15
 
+    jc .RAMSIZEINTURRUPT_ERROR
+    jmp .RAMSIZEINTURRUPT_SUCCESS
 
-.RAMSIZE_ERROR:
+.RAMSIZEINTURRUPT_ERROR:
     push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x10000)
     push 3
     push 0
     call .16BITPRINTMESSAGE
     add sp, 6
 
-.RAMSIZE_SUCCESS:
-    ;print RAMSIZE
+.RAMSIZEINTURRUPT_SUCCESS:
+    
+
+.RAMSIZE_PRINT:
     push (RAMSIZEMESSAGE - $$ + 0x10000)
     push 3
     push 0
@@ -120,12 +129,10 @@ PROTECTEDMODE:
     mov fs, ax
     mov gs, ax
 
-
     mov ss, ax
     mov esp, 0xFFFE
     mov ebp, 0xFFFE
-    
-    
+      
     push ( SWITCHSUCCESSMESSAGE - $$ + 0x10000 )
     push 4
     push 0
