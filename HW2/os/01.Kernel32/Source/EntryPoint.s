@@ -12,6 +12,9 @@ START:
     mov sp, 0xFFFE
     mov bp, 0xFFFE
 
+    mov ax, 0xB800
+    mov fs, ax  
+
 RAMSIZE:
     mov ebx, 0x00
     mov ecx, 20
@@ -23,23 +26,25 @@ RAMSIZE:
     jmp .RAMSIZEINTURRUPT_SUCCESS
 
 .RAMSIZEINTURRUPT_ERROR:
-    push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x10000)
+    push (RAMSIZEINTURRUPTERRORMESSAGE - $$ + 0x1000)
     push 3
     push 0
     call .16BITPRINTMESSAGE
     add sp, 6
 
 .RAMSIZEINTURRUPT_SUCCESS:
-    
+    mov ax, cx
+    call .PRINTDECNUM
+    ;jmp $
 
 .RAMSIZE_PRINT:
-    push (RAMSIZEMESSAGE - $$ + 0x10000)
+    push (RAMSIZEMESSAGE - $$ + 0x1000)
     push 3
     push 0
     call .16BITPRINTMESSAGE
     add sp, 6
 
-    push (RAMSIZESAMPLE - $$ + 0x10000)
+    push (RAMSIZESAMPLE - $$ + 0x1000)
     push 3
     push 10
     call .16BITPRINTMESSAGE
@@ -66,6 +71,46 @@ RAMSIZE:
     mov cr0, eax
 
     jmp dword 0x18: ( PROTECTEDMODE - $$ + 0x10000 )
+
+;function
+.PRINTDECNUM:
+    ;input num : ax
+    push ax
+    push dx
+    push si
+    push di
+    push cx
+
+    mov si, 10
+    xor cx, cx
+.DIV:
+    xor dx, dx
+    div si
+    push dx
+
+    inc cx
+    or ax, ax
+    jne .DIV
+
+    mov di, 160*3 + 100
+.PRINT:
+    pop dx
+    add dx, '0'
+
+    mov byte[fs : di], dl
+    add di,2
+
+    dec cx
+    or cx, cx
+    jne .PRINT
+
+.PRINTDECNUMEND:
+    pop cx
+    pop di
+    pop si
+    pop dx
+    pop ax
+    ret
 
 ;function
 .16BITPRINTMESSAGE:
