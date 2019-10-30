@@ -19,7 +19,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
         { "totalram", "Show Total RAM Size", kShowTotalRAMSize },
         { "strtod", "String To Decial/Hex Convert", kStringToDecimalHexTest },
         { "shutdown", "Shutdown And Reboot OS", kShutdown },
-};                                     
+};
 
 //==============================================================================
 //  실제 셸을 구성하는 코드
@@ -33,6 +33,14 @@ void kStartConsoleShell( void )
     int iCommandBufferIndex = 0;
     BYTE bKey;
     int iCursorX, iCursorY;
+    int commandCount = sizeof(gs_vstCommandTable) / sizeof(SHELLCOMMANDENTRY);
+    int commandIndex;
+    SHELLCOMMANDENTRY command;
+    int commandStrLen;
+    int commandStrIndex;
+    int matchedCount;
+    char *matchedCommandStrs[commandCount];
+    int iCommandTempBufferIndex;
     
     // 프롬프트 출력
     kPrintf( CONSOLESHELL_PROMPTMESSAGE );
@@ -78,13 +86,59 @@ void kStartConsoleShell( void )
         {
             ;
         }
+        else if (bKey == KEY_TAB) // for Autocomplete
+        {
+            matchedCount = 0;
+            for(commandIndex = 0; commandIndex < commandCount; commandIndex++)
+            {
+                command = gs_vstCommandTable[commandIndex];
+                commandStrLen = kStrLen(command.pcCommand);
+                for(commandStrIndex = 0; commandStrIndex < commandStrLen && commandStrIndex < iCommandBufferIndex; commandStrIndex++)
+                {
+                    if(command.pcCommand[commandStrIndex] != vcCommandBuffer[commandStrIndex]) break;
+                }
+
+                if(commandStrIndex == iCommandBufferIndex) // Matched
+                {
+                    matchedCommandStrs[matchedCount++] = command.pcCommand; 
+                }
+            }
+
+            if(matchedCount == 0) continue;
+            else if(matchedCount == 1)
+            {
+                commandStrLen = kStrLen(matchedCommandStrs[0]);
+                for(commandStrIndex = iCommandBufferIndex; commandStrIndex < commandStrLen; commandStrIndex++)
+                {
+                    vcCommandBuffer[iCommandBufferIndex++] = matchedCommandStrs[0][commandStrIndex];
+                    kPrintf("%c", matchedCommandStrs[0][commandStrIndex]);
+                }
+            }
+            else
+            {
+                kPrintf("\n");
+                for(commandIndex = 0; commandIndex < matchedCount; commandIndex++)
+                {
+                    kPrintf("%s", matchedCommandStrs[commandIndex]);
+                    if(commandIndex < matchedCount - 1) {
+                        kPrintf(" ");
+                    }
+                }
+                kPrintf("\n");
+                kPrintf("%s", CONSOLESHELL_PROMPTMESSAGE);
+                for(iCommandTempBufferIndex = 0; iCommandTempBufferIndex < iCommandBufferIndex; iCommandTempBufferIndex++)
+                {
+                    kPrintf("%c", vcCommandBuffer[iCommandTempBufferIndex]);
+                }
+            }
+        }
         else
         {
             // TAB은 공백으로 전환
-            if( bKey == KEY_TAB )
-            {
-                bKey = ' ';
-            }
+            // if( bKey == KEY_TAB )
+            // {
+            //     bKey = ' ';
+            // }
             
             // 버퍼에 공간이 남아있을 때만 가능
             if( iCommandBufferIndex < CONSOLESHELL_MAXCOMMANDBUFFERCOUNT )
