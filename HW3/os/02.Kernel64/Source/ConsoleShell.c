@@ -19,6 +19,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
         { "totalram", "Show Total RAM Size", kShowTotalRAMSize },
         { "strtod", "String To Decial/Hex Convert", kStringToDecimalHexTest },
         { "shutdown", "Shutdown And Reboot OS", kShutdown },
+        {"shutdummy", "dummy", kDummy}
 };
 
 //==============================================================================
@@ -41,6 +42,7 @@ void kStartConsoleShell( void )
     int matchedCount;
     char *matchedCommandStrs[commandCount];
     int iCommandTempBufferIndex;
+    int commonStrSize;
     
     // 프롬프트 출력
     kPrintf( CONSOLESHELL_PROMPTMESSAGE );
@@ -116,19 +118,49 @@ void kStartConsoleShell( void )
             }
             else
             {
-                kPrintf("\n");
+                int minLen = 0x7fffffff;
                 for(commandIndex = 0; commandIndex < matchedCount; commandIndex++)
                 {
-                    kPrintf("%s", matchedCommandStrs[commandIndex]);
-                    if(commandIndex < matchedCount - 1) {
-                        kPrintf(" ");
+                    commandStrLen = kStrLen(matchedCommandStrs[commandIndex]);
+                    if(minLen > commandStrLen) minLen = commandStrLen;
+                }
+
+                int maxSharedIndex = commandStrIndex;
+                for(; maxSharedIndex < minLen; maxSharedIndex++)
+                {
+                    char cur = matchedCommandStrs[0][maxSharedIndex];
+                    for(commandIndex = 1; commandIndex < matchedCount; commandIndex++)
+                    {
+                        if(cur != matchedCommandStrs[commandIndex][maxSharedIndex]) break;
+                    }
+                    if(commandIndex != matchedCount) break;
+                }
+
+                if(maxSharedIndex > commandStrIndex)
+                {
+                    for(int idx = commandStrIndex; idx < maxSharedIndex; idx++)
+                    {
+                        vcCommandBuffer[iCommandBufferIndex++] = matchedCommandStrs[0][idx];
+                        kPrintf("%c", matchedCommandStrs[0][idx]);
                     }
                 }
-                kPrintf("\n");
-                kPrintf("%s", CONSOLESHELL_PROMPTMESSAGE);
-                for(iCommandTempBufferIndex = 0; iCommandTempBufferIndex < iCommandBufferIndex; iCommandTempBufferIndex++)
+                else
                 {
-                    kPrintf("%c", vcCommandBuffer[iCommandTempBufferIndex]);
+                    kPrintf("\n");
+                    for(commandIndex = 0; commandIndex < matchedCount; commandIndex++)
+                    {
+                        kPrintf("%s", matchedCommandStrs[commandIndex]);
+                        if(commandIndex < matchedCount - 1)
+                        {
+                            kPrintf(" ");
+                        }
+                    }
+                    kPrintf("\n");
+                    kPrintf("%s", CONSOLESHELL_PROMPTMESSAGE);
+                    for(iCommandTempBufferIndex = 0; iCommandTempBufferIndex < iCommandBufferIndex; iCommandTempBufferIndex++)
+                    {
+                        kPrintf("%c", vcCommandBuffer[iCommandTempBufferIndex]);
+                    }
                 }
             }
         }
@@ -348,4 +380,9 @@ void kShutdown( const char* pcParamegerBuffer )
     kPrintf( "Press Any Key To Reboot PC..." );
     kGetCh();
     kReboot();
+}
+
+void kDummy(const char *dummy)
+{
+    kPrintf("Dummy\n");
 }
