@@ -24,11 +24,10 @@ void Main(void)
         kPrintString(20, 18, "OK");
 
 //HW2 : 아래 주석을 해제하고 프로그램을 실행 시키면, 0x1ff000 주소에 write가 거부되어 재부팅됨
-/*
     kPrintString(0, 19, "Write to 0x1ff000 [  ]");
     if (WriteTest())
         kPrintString(19, 19, "OK");
-*/
+
 }
 
 /**
