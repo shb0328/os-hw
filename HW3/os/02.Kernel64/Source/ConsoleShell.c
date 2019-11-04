@@ -100,7 +100,7 @@ void kStartConsoleShell( void )
                                 
                 }
 
-                kExecuteCommand(vcCommandBuffer);
+                // kExecuteCommand(vcCommandBuffer);
         
 
             }       
