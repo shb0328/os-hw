@@ -481,9 +481,8 @@ void kRaisefault(const char *pcParamegerBuffer)
     //커널의 임시 핸들러가 수행됨
     //bTemp = bTemp / 0;
     long *ptr = 0x1ff000;
-    *ptr = 0;
-
-    kDistinguishException(ptr, 0);
+    // *ptr = 0;
+	kPrintf(*ptr);
 }
 
 void kDummy(const char *dummy)
