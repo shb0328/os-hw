@@ -74,12 +74,10 @@ void kProtectionFaultExceptionHandler(int iVectorNumber, QWORD qwErrorCode)
         mask >>= 4;
     }
 
-    kPrintStringXY(0, 0, "====================================================");
-    kPrintStringXY(0, 1, "                 Protection Fault Occur~!!!!               ");
-    kPrintStringXY(0, 2, "                    Address:                         ");
-    kPrintStringXY(28, 2, "0x");
-    kPrintStringXY(30, 2, vcBuffer);
-    kPrintStringXY(0, 3, "====================================================");
+    kPrintf("====================================================\n");
+    kPrintf("                 Protection Fault Occur~!!!!               \n");
+    kPrintf("                    Address: 0x%s ", vcBuffer);
+    kPrintf("\n====================================================\n");
 
     pstPTEntry = (PTENTRY *)0x142000;
     kSetPageEntryData(&(pstPTEntry[511]), 0, 0x1FF000, 0x00000003, 0);
