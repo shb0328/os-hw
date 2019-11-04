@@ -20,7 +20,7 @@ void Main(void)
     kPrintf( "Switch To IA-32e Mode Success~!!\n" );
     kPrintf( "IA-32e C Language Kernel Start..............[Pass]\n" );
     kPrintf( "Initialize Console..........................[Pass]\n" );
-    kPrintf("This message is printed through the video memory relocated to 0xAB8000\n");
+    // kPrintf("This message is printed through the video memory relocated to 0xAB8000\n");
 
     kGetCursor( &iCursorX, &iCursorY );
     kPrintf("Read from 0x1fe000 [  ]");

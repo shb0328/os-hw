@@ -51,7 +51,7 @@ void kPageFaultExceptionHandler(int iVectorNumber, QWORD qwErrorCode)
     kPrintf("\n====================================================\n");
 
     pstPTEntry = (PTENTRY *)0x142000;
-    kSetPageEntryData(&(pstPTEntry[511]), 0, 0x1FF000, 0x00000001, 0); //0
+    kSetPageEntryData(&(pstPTEntry[511]), 0, 0x1FF000, 0x00000001, 0); 
     // invlpg(&iVectorNumber);
 
     //EOI
@@ -147,8 +147,10 @@ void kKeyboardHandler( int iVectorNumber )
     kSendEOIToPIC( iVectorNumber - PIC_IRQSTARTVECTOR );
 }
 
+// static inline void invlpg(int *m)
 static inline void invlpg(void *m)
 {
+    //kPrintf("%x",*m);
     asm volatile("invlpg (%0)"
                  :
                  : "b"(m)

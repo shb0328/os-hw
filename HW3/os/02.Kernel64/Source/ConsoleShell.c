@@ -476,13 +476,17 @@ void kShutdown( const char* pcParamegerBuffer )
 
 void kRaisefault(const char *pcParamegerBuffer)
 {
-
-    //아래 코드를 수행하면 Divide Error 예외가 발생하여
-    //커널의 임시 핸들러가 수행됨
-    //bTemp = bTemp / 0;
     long *ptr = 0x1ff000;
-    // *ptr = 0;
-	kPrintf(*ptr);
+	/**
+	 * 0x1ff000 에 write(access) 시도 (Read-Only)
+	 * Protection Fault & Page Fault 발생
+     */
+	*ptr = 0;
+	/**
+	 * 0x1ff000 에 read(access) 시도 (non-present)
+	 * Page Fault 발생
+	 */
+	// kPrintf(*ptr);
 }
 
 void kDummy(const char *dummy)
