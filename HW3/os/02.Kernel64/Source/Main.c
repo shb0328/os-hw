@@ -35,11 +35,11 @@ void Main(void)
         kPrintf("OK\n");
     }
 
-    kPrintf("Read from 0x1ff000 [  ]");
-    if (ReadTest()) {
-        kSetCursor(20, iCursorY++);
-        kPrintf("OK\n");
-    }
+    // kPrintf("Read from 0x1ff000 [  ]");
+    // if (ReadTest()) {
+    //     kSetCursor(20, iCursorY++);
+    //     kPrintf("OK\n");
+    // }
 
 //HW2 : 아래 주석을 해제하고 프로그램을 실행 시키면, 0x1ff000 주소에 write가 거부되어 재부팅됨
     // kPrintString(0, 19, "Write to 0x1ff000 [  ]");
