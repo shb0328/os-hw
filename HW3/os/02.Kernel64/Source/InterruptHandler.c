@@ -51,10 +51,12 @@ void kPageFaultExceptionHandler(int iVectorNumber, QWORD qwErrorCode)
     kPrintf("\n====================================================\n");
 
     pstPTEntry = (PTENTRY *)0x142000;
-    kSetPageEntryData(&(pstPTEntry[511]), 0, 0x1FF000, 0x00000003, 0); //0
-
-    invlpg(&iVectorNumber);
-    kPrintf("hi3");
+    kSetPageEntryData(&(pstPTEntry[511]), 0, 0x1FF000, 0x00000001, 0); //0
+    
+    //EOI
+    kSendEOIToPIC(iVectorNumber - PIC_IRQSTARTVECTOR);
+    
+    // invlpg(&iVectorNumber);
 }
 void kProtectionFaultExceptionHandler(int iVectorNumber, QWORD qwErrorCode)
 {
@@ -81,7 +83,11 @@ void kProtectionFaultExceptionHandler(int iVectorNumber, QWORD qwErrorCode)
 
     pstPTEntry = (PTENTRY *)0x142000;
     kSetPageEntryData(&(pstPTEntry[511]), 0, 0x1FF000, 0x00000003, 0);
-    invlpg(&iVectorNumber);
+
+    //EOI
+    kSendEOIToPIC(iVectorNumber - PIC_IRQSTARTVECTOR);
+    
+    // invlpg(&iVectorNumber);
 }
 
 
