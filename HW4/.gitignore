@@ -1,0 +1,5 @@
+Disk.img
+*.bin
+*.elf
+*.dep
+*.o
