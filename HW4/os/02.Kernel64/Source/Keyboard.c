@@ -661,6 +661,6 @@ BOOL kGetKeyFromKeyQueue( KEYDATA* pstData )
     bResult = kGetQueue( &gs_stKeyQueue, pstData );
 
     // 임계 영역 끝
-    kLockForSystemData(bPreviousInterrupt);
+    kUnlockForSystemData(bPreviousInterrupt);
     return bResult;
 }
