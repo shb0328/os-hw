@@ -2,6 +2,9 @@
 #include "PIC.h"
 #include "Keyboard.h"
 #include "Console.h"
+#include "Utility.h"
+#include "Task.h"
+#include "Descriptor.h"
 
 void kSetPageEntryData(PTENTRY *pstEntry, DWORD dwUpperBaseAddress, DWORD dwLowerBaseAddress, DWORD dwLowerFlags, DWORD dwUpperFlags)
 {
@@ -145,6 +148,38 @@ void kKeyboardHandler( int iVectorNumber )
 
     // EOI 
     kSendEOIToPIC( iVectorNumber - PIC_IRQSTARTVECTOR );
+}
+
+//타이머 인터럽트의 핸들러
+void kTimerHandler( int iVectorNumber )
+{
+    char vcBuffer[] = "[INT:  , ]";
+    static int g_iTimerInterruptCount = 0;
+
+    //========================================================
+    //인터럽트가 발생했음을 알리려고 메시지를 출력하는 부분
+    //인터럽트 벡터를 화면 오른쪽 위에 2자리 정수로 출력
+    vcBuffer[5] = '0' + iVectorNumber / 10;
+    vcBuffer[6] = '0' + iVectorNumber % 10;
+    //발생한 횟수 출력
+    vcBuffer[8] = '0' + g_iTimerInterruptCount;
+    g_iTimerInterruptCount = (g_iTimerInterruptCount + 1) % 10;
+    kPrintStringXY(70,0,vcBuffer);
+    //========================================================
+
+    //EOI전송
+    kSendEOIToPIC(iVectorNumber - PIC_IRQSTARTVECTOR);
+
+    //타이머 발생 횟수를 증가
+    g_qwTickCount++;
+
+    //태스크가 사용한 프로세서의 시간을 줄임
+    kDecreaseProcessorTime();
+    //프로세서가 사용할 수 있는 시간을 다 썼다면 태스크 전환 수행
+    if(kIsProcessorTimeExpired() == TRUE)
+    {
+        kScheduleInInterrupt();
+    }
 }
 
 // static inline void invlpg(int *m)
