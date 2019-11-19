@@ -465,3 +465,19 @@ int kVSPrintf( char* pcBuffer, const char* pcFormatString, va_list ap )
     pcBuffer[ iBufferIndex ] = '\0';
     return iBufferIndex;
 }
+
+//PIT컨트롤러가 발생한 횟수를 저장할 카운터
+volatile QWORD g_qwTickCount = 0;
+
+/**
+ * millisec 동안 대기
+ */
+void kSleep(QWORD qwMillisecond)
+{
+    QWORD qwLastTickCount;
+
+    qwLastTickCount = g_qwTickCount;
+    while((g_qwTickCount - qwLastTickCount) <= qwMillisecond){
+        kSchedule();
+    }
+}

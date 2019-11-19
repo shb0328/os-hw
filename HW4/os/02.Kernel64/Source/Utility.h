@@ -32,5 +32,6 @@ int kHexToString( QWORD qwValue, char* pcBuffer );
 int kDecimalToString( long lValue, char* pcBuffer );
 int kSPrintf( char* pcBuffer, const char* pcFormatString, ... );
 int kVSPrintf( char* pcBuffer, const char* pcFormatString, va_list ap );
+void kSleep(QWORD qwMillisecond0);
 
 #endif /*__UTILITY_H__*/
