@@ -4,6 +4,8 @@
 #include "PIC.h"
 #include "Console.h"
 #include "ConsoleShell.h"
+#include "Task.h"
+#include "PIT.h"
 
 void kPrintString(int iX, int iY, const char *pcString);
 BOOL ReadTest();
@@ -68,6 +70,12 @@ void Main(void)
     kSetCursor( 45, iCursorY++ );
     kPrintf( "Pass], Size = %d MB\n", kGetTotalRAMSize() );
 
+    kPrintf("TCB Pool And Scheduler Initialize...........[Pass]\n");
+    iCursorY++;
+    kInitializeScheduler();
+    //1ms 당 한 번씩 인터럽트가 발생하도록 설정
+    kInitializePIT(MSTOCOUNT(1),1);
+
     // 키보드를 활성화
     kPrintf("Keyboard Activate And Queue Initialize......[    ]" );
     if( kInitializeKeyboard() == TRUE )
@@ -92,6 +100,8 @@ void Main(void)
     kSetCursor(45, iCursorY++);
     kPrintf("Pass\n");
 
+    //유휴 태스크를 시스템 스레드로 생성
+    kCreateTask( TASK_FLAGS_LOWEST | TASK_FLAGS_THREAD | TASK_FLAGS_SYSTEM | TASK_FLAGS_IDLE, 0, 0, ( QWORD ) kIdleTask );
     // start shell
     kStartConsoleShell();
 }
