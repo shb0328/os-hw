@@ -10,6 +10,9 @@
 #include "AssemblyUtility.h"
 #include <stdarg.h>
 
+//PIT컨트롤러가 발생한 횟수를 저장할 카운터
+volatile QWORD g_qwTickCount = 0;
+
 /**
  *  메모리를 특정 값으로 채움
  */
@@ -466,8 +469,10 @@ int kVSPrintf( char* pcBuffer, const char* pcFormatString, va_list ap )
     return iBufferIndex;
 }
 
-//PIT컨트롤러가 발생한 횟수를 저장할 카운터
-volatile QWORD g_qwTickCount = 0;
+QWORD kGetTickCount(void)
+{
+    return g_qwTickCount;
+}
 
 /**
  * millisec 동안 대기
