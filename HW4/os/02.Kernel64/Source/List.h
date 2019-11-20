@@ -3,7 +3,7 @@
  *  date    2009/02/23
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui
- *  brief   ¸®½ºÆ®¿¡ °ü·ÃµÈ ÇÔ¼ö¸¦ Á¤ÀÇÇÑ Çì´õ ÆÄÀÏ
+ *  brief   ë¦¬ìŠ¤íŠ¸ì— ê´€ë ¨ëœ í•¨ìˆ˜ë¥¼ ì •ì˜í•œ í—¤ë” íŒŒì¼
  */
 
 #ifndef __LIST_H__
@@ -13,42 +13,42 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ±¸Á¶Ã¼
+// êµ¬ì¡°ì²´
 //
 ////////////////////////////////////////////////////////////////////////////////
-// 1¹ÙÀÌÆ®·Î Á¤·Ä
+// 1ë°”ì´íŠ¸ë¡œ ì •ë ¬
 #pragma pack( push, 1 )
 
-// µ¥ÀÌÅÍ¸¦ ¿¬°áÇÏ´Â ÀÚ·á±¸Á¶
-// ¹Ýµå½Ã µ¥ÀÌÅÍÀÇ °¡Àå ¾ÕºÎºÐ¿¡ À§Ä¡ÇØ¾ß ÇÔ
+// ë°ì´í„°ë¥¼ ì—°ê²°í•˜ëŠ” ìžë£Œêµ¬ì¡°
+// ë°˜ë“œì‹œ ë°ì´í„°ì˜ ê°€ìž¥ ì•žë¶€ë¶„ì— ìœ„ì¹˜í•´ì•¼ í•¨
 typedef struct kListLinkStruct
 {
-    // ´ÙÀ½ µ¥ÀÌÅÍÀÇ ¾îµå·¹½º¿Í µ¥ÀÌÅÍ¸¦ ±¸ºÐÇÏ±â À§ÇÑ ID
+    // ë‹¤ìŒ ë°ì´í„°ì˜ ì–´ë“œë ˆìŠ¤ì™€ ë°ì´í„°ë¥¼ êµ¬ë¶„í•˜ê¸° ìœ„í•œ ID
     void* pvNext;
     QWORD qwID;
 } LISTLINK;
 
 /*
-// ¸®½ºÆ®¿¡ »ç¿ëÇÒ µ¥ÀÌÅÍ¸¦ Á¤ÀÇÇÏ´Â ¿¹
-// ¹Ýµå½Ã °¡Àå ¾ÕºÎºÐÀº LISTLINK·Î ½ÃÀÛÇØ¾ß ÇÔ
+// ë¦¬ìŠ¤íŠ¸ì— ì‚¬ìš©í•  ë°ì´í„°ë¥¼ ì •ì˜í•˜ëŠ” ì˜ˆ
+// ë°˜ë“œì‹œ ê°€ìž¥ ì•žë¶€ë¶„ì€ LISTLINKë¡œ ì‹œìž‘í•´ì•¼ í•¨
 struct kListItemExampleStruct
 {
-    // ¸®½ºÆ®¸¦ ¿¬°áÇÏ´Â ÀÚ·á±¸Á¶
+    // ë¦¬ìŠ¤íŠ¸ë¥¼ ì—°ê²°í•˜ëŠ” ìžë£Œêµ¬ì¡°
     LISTLINK stLink;
     
-    // µ¥ÀÌÅÍµé
+    // ë°ì´í„°ë“¤
     int iData1;
     char cData2;
 };
 */
 
-// ¸®½ºÆ®¸¦ °ü¸®ÇÏ´Â ÀÚ·á±¸Á¶
+// ë¦¬ìŠ¤íŠ¸ë¥¼ ê´€ë¦¬í•˜ëŠ” ìžë£Œêµ¬ì¡°
 typedef struct kListManagerStruct
 {
-    // ¸®½ºÆ® µ¥ÀÌÅÍÀÇ ¼ö
+    // ë¦¬ìŠ¤íŠ¸ ë°ì´í„°ì˜ ìˆ˜
     int iItemCount;
 
-    // ¸®½ºÆ®ÀÇ Ã¹ ¹øÂ°¿Í ¸¶Áö¸· µ¥ÀÌÅÍÀÇ ¾îµå·¹½º
+    // ë¦¬ìŠ¤íŠ¸ì˜ ì²« ë²ˆì§¸ì™€ ë§ˆì§€ë§‰ ë°ì´í„°ì˜ ì–´ë“œë ˆìŠ¤
     void* pvHeader;
     void* pvTail;
 } LIST;
@@ -58,7 +58,7 @@ typedef struct kListManagerStruct
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ÇÔ¼ö
+// í•¨ìˆ˜
 //
 ////////////////////////////////////////////////////////////////////////////////
 void kInitializeList( LIST* pstList );

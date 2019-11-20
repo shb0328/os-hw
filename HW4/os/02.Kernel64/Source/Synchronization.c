@@ -3,7 +3,7 @@
  *  date    2009/03/13
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui 
- *  brief   µ¿±âÈ­¸¦ Ã³¸®ÇÏ´Â ÇÔ¼ö¿¡ °ü·ÃµÈ ÆÄÀÏ
+ *  brief   ë™ê¸°í™”ë¥¼ ì²˜ë¦¬í•˜ëŠ” í•¨ìˆ˜ì— ê´€ë ¨ëœ íŒŒì¼
  */
 
 #include "Synchronization.h"
@@ -11,7 +11,7 @@
 #include "Task.h"
 
 /**
- *  ½Ã½ºÅÛ Àü¿ª¿¡¼­ »ç¿ëÇÏ´Â µ¥ÀÌÅÍ¸¦ À§ÇÑ Àá±Ý ÇÔ¼ö
+ *  ì‹œìŠ¤í…œ ì „ì—­ì—ì„œ ì‚¬ìš©í•˜ëŠ” ë°ì´í„°ë¥¼ ìœ„í•œ ìž ê¸ˆ í•¨ìˆ˜
  */
 BOOL kLockForSystemData( void )
 {
@@ -19,7 +19,7 @@ BOOL kLockForSystemData( void )
 }
 
 /**
- *  ½Ã½ºÅÛ Àü¿ª¿¡¼­ »ç¿ëÇÏ´Â µ¥ÀÌÅÍ¸¦ À§ÇÑ Àá±Ý ÇØÁ¦ ÇÔ¼ö
+ *  ì‹œìŠ¤í…œ ì „ì—­ì—ì„œ ì‚¬ìš©í•˜ëŠ” ë°ì´í„°ë¥¼ ìœ„í•œ ìž ê¸ˆ í•´ì œ í•¨ìˆ˜
  */
 void kUnlockForSystemData( BOOL bInterruptFlag )
 {
@@ -27,63 +27,63 @@ void kUnlockForSystemData( BOOL bInterruptFlag )
 }
 
 /**
- *  ¹ÂÅØ½º¸¦ ÃÊ±âÈ­ 
+ *  ë®¤í…ìŠ¤ë¥¼ ì´ˆê¸°í™” 
  */
 void kInitializeMutex( MUTEX* pstMutex )
 {
-    // Àá±è ÇÃ·¡±×¿Í È½¼ö, ±×¸®°í ÅÂ½ºÅ© ID¸¦ ÃÊ±âÈ­
+    // ìž ê¹€ í”Œëž˜ê·¸ì™€ íšŸìˆ˜, ê·¸ë¦¬ê³  íƒœìŠ¤í¬ IDë¥¼ ì´ˆê¸°í™”
     pstMutex->bLockFlag = FALSE;
     pstMutex->dwLockCount = 0;
     pstMutex->qwTaskID = TASK_INVALIDID;
 }
 
 /**
- *  ÅÂ½ºÅ© »çÀÌ¿¡¼­ »ç¿ëÇÏ´Â µ¥ÀÌÅÍ¸¦ À§ÇÑ Àá±Ý ÇÔ¼ö
+ *  íƒœìŠ¤í¬ ì‚¬ì´ì—ì„œ ì‚¬ìš©í•˜ëŠ” ë°ì´í„°ë¥¼ ìœ„í•œ ìž ê¸ˆ í•¨ìˆ˜
  */
 void kLock( MUTEX* pstMutex )
 {
-    // ÀÌ¹Ì Àá°Ü ÀÖ´Ù¸é ³»°¡ Àá°¬´ÂÁö È®ÀÎÇÏ°í Àá±Ù È½¼ö¸¦ Áõ°¡½ÃÅ² µÚ Á¾·á
+    // ì´ë¯¸ ìž ê²¨ ìžˆë‹¤ë©´ ë‚´ê°€ ìž ê°”ëŠ”ì§€ í™•ì¸í•˜ê³  ìž ê·¼ íšŸìˆ˜ë¥¼ ì¦ê°€ì‹œí‚¨ ë’¤ ì¢…ë£Œ
     if( kTestAndSet(&( pstMutex->bLockFlag ), 0, 1 ) == FALSE )
     {
-        // ÀÚ½ÅÀÌ Àá°¬´Ù¸é È½¼ö¸¸ Áõ°¡½ÃÅ´
+        // ìžì‹ ì´ ìž ê°”ë‹¤ë©´ íšŸìˆ˜ë§Œ ì¦ê°€ì‹œí‚´
         if( pstMutex->qwTaskID == kGetRunningTask()->stLink.qwID ) 
         {
             pstMutex->dwLockCount++;
             return ;
         }
         
-        // ÀÚ½ÅÀÌ ¾Æ´Ñ °æ¿ì´Â Àá±ä °ÍÀÌ ÇØÁ¦µÉ ¶§±îÁö ´ë±â
+        // ìžì‹ ì´ ì•„ë‹Œ ê²½ìš°ëŠ” ìž ê¸´ ê²ƒì´ í•´ì œë  ë•Œê¹Œì§€ ëŒ€ê¸°
         while( kTestAndSet( &( pstMutex->bLockFlag ), 0, 1 ) == FALSE )
         {
             kSchedule();
         }
     }
        
-    // Àá±è ¼³Á¤, Àá±è ÇÃ·¡±×´Â À§ÀÇ kTestAndSet() ÇÔ¼ö¿¡¼­ Ã³¸®ÇÔ
+    // ìž ê¹€ ì„¤ì •, ìž ê¹€ í”Œëž˜ê·¸ëŠ” ìœ„ì˜ kTestAndSet() í•¨ìˆ˜ì—ì„œ ì²˜ë¦¬í•¨
     pstMutex->dwLockCount = 1;
     pstMutex->qwTaskID = kGetRunningTask()->stLink.qwID;
 }
 
 /**
- *  ÅÂ½ºÅ© »çÀÌ¿¡¼­ »ç¿ëÇÏ´Â µ¥ÀÌÅÍ¸¦ À§ÇÑ Àá±Ý ÇØÁ¦ ÇÔ¼ö
+ *  íƒœìŠ¤í¬ ì‚¬ì´ì—ì„œ ì‚¬ìš©í•˜ëŠ” ë°ì´í„°ë¥¼ ìœ„í•œ ìž ê¸ˆ í•´ì œ í•¨ìˆ˜
  */
 void kUnlock( MUTEX* pstMutex )
 {
-    // ¹ÂÅØ½º¸¦ Àá±Ù ÅÂ½ºÅ©°¡ ¾Æ´Ï¸é ½ÇÆÐ
+    // ë®¤í…ìŠ¤ë¥¼ ìž ê·¼ íƒœìŠ¤í¬ê°€ ì•„ë‹ˆë©´ ì‹¤íŒ¨
     if( ( pstMutex->bLockFlag == FALSE ) ||
         ( pstMutex->qwTaskID != kGetRunningTask()->stLink.qwID ) )
     {
         return ;
     }
     
-    // ¹ÂÅØ½º¸¦ Áßº¹À¸·Î Àá°¬À¸¸é Àá±ä È½¼ö¸¸ °¨¼Ò
+    // ë®¤í…ìŠ¤ë¥¼ ì¤‘ë³µìœ¼ë¡œ ìž ê°”ìœ¼ë©´ ìž ê¸´ íšŸìˆ˜ë§Œ ê°ì†Œ
     if( pstMutex->dwLockCount > 1 )
     {
         pstMutex->dwLockCount--;
         return ;
     }
     
-    // ÇØÁ¦µÈ °ÍÀ¸·Î ¼³Á¤, Àá±è ÇÃ·¡±×¸¦ °¡Àå ³ªÁß¿¡ ÇØÁ¦ÇØ¾ß ÇÔ
+    // í•´ì œëœ ê²ƒìœ¼ë¡œ ì„¤ì •, ìž ê¹€ í”Œëž˜ê·¸ë¥¼ ê°€ìž¥ ë‚˜ì¤‘ì— í•´ì œí•´ì•¼ í•¨
     pstMutex->qwTaskID = TASK_INVALIDID;
     pstMutex->dwLockCount = 0;
     pstMutex->bLockFlag = FALSE;
