@@ -209,6 +209,18 @@ static void kSetUpTask( TCB* pstTCB, QWORD qwFlags, QWORD qwEntryPointAddress,
     pstTCB->pvStackAddress = pvStackAddress;
     pstTCB->qwStackSize = qwStackSize;
     pstTCB->qwFlags = qwFlags;
+
+    //해당 Task의 pass 값을 초기화
+    pstTCB->pass = kInitializePass();
+}
+
+QWORD kInitializePass(void)
+{
+    if(gs_stScheduler.currentMaxPass < gs_stScheduler.currentMinPass){
+        return 0;
+    }
+    
+    return gs_stScheduler.currentMinPass;
 }
 
 //==============================================================================
@@ -247,6 +259,13 @@ void kInitializeScheduler( void )
     // 프로세서 사용률을 계산하는데 사용하는 자료구조 초기화
     gs_stScheduler.qwSpendProcessorTimeInIdleTask = 0;
     gs_stScheduler.qwProcessorLoad = 0;
+
+    //pass 값의 임계값 초기화 
+    gs_stScheduler.passThreshold = 100000; //total ticket number
+
+    //pass 값의 최대 최소 값 초기화
+    gs_stScheduler.currentMaxPass = 0;
+    gs_stScheduler.currentMinPass = 100000; //total ticket number
 }
 
 /**
