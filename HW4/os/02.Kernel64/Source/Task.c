@@ -12,7 +12,7 @@
 // 스케줄러 관련 자료구조
 static SCHEDULER gs_stScheduler;
 static TCBPOOLMANAGER gs_stTCBPoolManager;
-static TCB* result[TASK_MAXREADYLISTCOUNT] = {0};
+TCB* result[TASK_MAXREADYLISTCOUNT] = {0};
 
 //==============================================================================
 //  태스크 풀과 태스크 관련
