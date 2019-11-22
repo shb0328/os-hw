@@ -20,7 +20,7 @@ QWORD random_generator()
 
     return (seed = (QWORD)lo);
 }
-/*
+
 QWORD cal_ticket(BYTE priority)  // lottery task 10
 {
     switch (priority)
@@ -37,7 +37,7 @@ QWORD cal_ticket(BYTE priority)  // lottery task 10
         return 1000;
     }
 }
-*/
+
 QWORD cal_stride(BYTE priority) // stride task 1  BIGNUM = 300000
 {
     switch (priority)

@@ -11,6 +11,7 @@
 
 #include "Types.h"
 #include "List.h"
+#include "random.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -229,6 +230,7 @@ TCB *kGetTCBInTCBPool(int iOffset);
 BOOL kIsTaskExist(QWORD qwID);
 QWORD kGetProcessorLoad(void);
 static TCB *kGetProcessByThread(TCB *pstThread);
+QWORD kInitializePass(void);
 
 //==============================================================================
 //  유휴 태스크 관련

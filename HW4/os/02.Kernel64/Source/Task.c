@@ -310,47 +310,47 @@ TCB *kGetRunningTask(void)
  *  태스크 리스트에서 다음으로 실행할 태스크를 얻음
  */
 
-/*
+
 //stride
-static TCB* kGetNextTaskToRun( void )
-{
-    TCB* pstTarget = NULL;
-    int iTaskCount, i, j;
+// static TCB* kGetNextTaskToRun( void )
+// {
+//     TCB* pstTarget = NULL;
+//     int iTaskCount, i, j;
 
-    LIST * list;
+//     LIST * list;
     
-    int resi = 0;
-    int resj = 0;
+//     int resi = 0;
+//     int resj = 0;
 
-    for(j = 0; j < TASK_MAXREADYLISTCOUNT; ++j){
-        TCB * tmp;
-        list = &gs_stScheduler.vstReadyList[j];
-        iTaskCount = kGetListCount( &( gs_stScheduler.vstReadyList[ j ] ) );
-        tmp = (TCB*)kGetHeaderFromList(list);
+//     for(j = 0; j < TASK_MAXREADYLISTCOUNT; ++j){
+//         TCB * tmp;
+//         list = &gs_stScheduler.vstReadyList[j];
+//         iTaskCount = kGetListCount( &( gs_stScheduler.vstReadyList[ j ] ) );
+//         tmp = (TCB*)kGetHeaderFromList(list);
 
-        for(i = 0; i < iTaskCount; ++i){
+//         for(i = 0; i < iTaskCount; ++i){
         
-            if(tmp->pass < gs_stScheduler.currentMinPass){
-                gs_stScheduler.currentMinPass = tmp->pass;
-                resi = i;
-                resj = j;
-            }
-            tmp = (TCB*)kGetNextFromList(list,tmp);
-        }
-    }
+//             if(tmp->pass < gs_stScheduler.currentMinPass){
+//                 gs_stScheduler.currentMinPass = tmp->pass;
+//                 resi = i;
+//                 resj = j;
+//             }
+//             tmp = (TCB*)kGetNextFromList(list,tmp);
+//         }
+//     }
 
-    list = &gs_stScheduler.vstReadyList[resj];
-    pstTarget = (TCB*)kGetHeaderFromList(list);
+//     list = &gs_stScheduler.vstReadyList[resj];
+//     pstTarget = (TCB*)kGetHeaderFromList(list);
 
-    for(i = 0; i<resi; i++){
-        pstTarget = (TCB*)kGetNextFromList(list,pstTarget);
-    }
-    pstTarget->pass += cal_stride(resj);
-    pstTarget->got_time += 1;
+//     for(i = 0; i<resi; i++){
+//         pstTarget = (TCB*)kGetNextFromList(list,pstTarget);
+//     }
+//     pstTarget->pass += cal_stride(resj);
+//     pstTarget->got_time += 1;
 
-    return pstTarget;
-}
-*/
+//     return pstTarget;
+// }
+
 
 
 //lottery
