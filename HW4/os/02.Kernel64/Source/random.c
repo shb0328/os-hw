@@ -21,7 +21,7 @@ QWORD random_generator()
     return (seed = (QWORD)lo);
 }
 
-QWORD cal_ticket(BYTE priority)  // lottery task 10
+QWORD cal_ticket(BYTE priority)
 {
     switch (priority)
     {
