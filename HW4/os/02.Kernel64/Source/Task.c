@@ -12,6 +12,7 @@
 // 스케줄러 관련 자료구조
 static SCHEDULER gs_stScheduler;
 static TCBPOOLMANAGER gs_stTCBPoolManager;
+static TCB* result[TASK_MAXREADYLISTCOUNT] = {0};
 
 //==============================================================================
 //  태스크 풀과 태스크 관련
@@ -531,6 +532,7 @@ BOOL kChangePriority(QWORD qwTaskID, BYTE bPriority)
  *  다른 태스크를 찾아서 전환
  *      인터럽트나 예외가 발생했을 때 호출하면 안됨
  */
+int i = 0;
 void kSchedule(void)
 {
     TCB *pstRunningTask, *pstNextTask;
@@ -554,6 +556,13 @@ void kSchedule(void)
         // 임계 영역 끝
         kUnlockForSystemData(bPreviousFlag);
         return;
+    }
+
+    if(pstRunningTask->pass >= gs_stScheduler.passThreshold){
+        if(!(pstRunningTask->qwFlags && TASK_FLAGS_SYSTEM)){
+            result[i++] = pstRunningTask;
+            kEndTask(pstRunningTask->stLink.qwID);
+        }
     }
 
     // 현재 수행중인 태스크의 정보를 수정한 뒤 콘텍스트 전환
