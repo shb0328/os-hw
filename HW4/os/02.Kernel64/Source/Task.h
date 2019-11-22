@@ -139,9 +139,7 @@ typedef struct kTaskControlBlockStruct
     QWORD got_time;
 
     //Stride Scheduling 을 위한 Task의 현재 누적 pass 값
-    QWORD pass; 
-    QWORD stride;
-    
+    QWORD pass;     
 } TCB;
 
 // TCB 풀의 상태를 관리하는 자료구조
