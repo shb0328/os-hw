@@ -310,38 +310,36 @@ static TCB* kGetNextTaskToRun( void )
 {
     TCB* pstTarget = NULL;
     int iTaskCount, i, j;
+
+    LIST * list;
     
-    // 큐에 태스크가 있으나 모든 큐의 태스크가 1회씩 실행된 경우, 모든 큐가 프로세서를
-    // 양보하여 태스크를 선택하지 못할 수 있으니 NULL일 경우 한번 더 수행
-    for( j = 0 ; j < 2 ; j++ )
-    {
-        // 높은 우선 순위에서 낮은 우선 순위까지 리스트를 확인하여 스케줄링할 태스크를 선택
-        for( i = 0 ; i < TASK_MAXREADYLISTCOUNT ; i++ )
-        {
-            iTaskCount = kGetListCount( &( gs_stScheduler.vstReadyList[ i ] ) );
-            
-            // 만약 실행한 횟수보다 리스트의 태스크 수가 더 많으면 현재 우선 순위의
-            // 태스크를 실행함
-            if( gs_stScheduler.viExecuteCount[ i ] < iTaskCount )
-            {
-                pstTarget = ( TCB* ) kRemoveListFromHeader( 
-                                        &( gs_stScheduler.vstReadyList[ i ] ) );
-                gs_stScheduler.viExecuteCount[ i ]++;
-                break;            
-            }
-            // 만약 실행한 횟수가 더 많으면 실행 횟수를 초기화하고 다음 우선 순위로 양보함
-            else
-            {
-                gs_stScheduler.viExecuteCount[ i ] = 0;
-            }
-        }
+    int resi = 0;
+    int resj = 0;
+
+    for(j = 0; j < TASK_MAXREADYLISTCOUNT; ++j){
+        TCB * tmp;
+        list = &gs_stScheduler.vstReadyList[j];
+        iTaskCount = kGetListCount( &( gs_stScheduler.vstReadyList[ j ] ) );
+        tmp = (TCB*)kGetHeaderFromList(list);
+
+        for(i = 0; i < iTaskCount; ++i){
         
-        // 만약 수행할 태스크를 찾았으면 종료
-        if( pstTarget != NULL )
-        {
-            break;
+            if(tmp->pass < gs_stScheduler.currentMinPass){
+                gs_stScheduler.currentMinPass = tmp->pass;
+                resi = i;
+                resj = j;
+            }
+            tmp = (TCB*)kGetNextFromList(list,tmp);
         }
-    }    
+    }
+
+    list = &gs_stScheduler.vstReadyList[resj];
+    pstTarget = (TCB*)kGetHeaderFromList(list);
+
+    for(i = 0; i<resi; i++){
+        pstTarget = (TCB*)kGetNextFromList(list,pstTarget);
+    }
+    pstTarget->pass += pstTarget->stride;
     return pstTarget;
 }
 
