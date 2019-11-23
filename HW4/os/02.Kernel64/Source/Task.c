@@ -291,100 +291,6 @@ TCB *kGetRunningTask(void)
 /**
  *  태스크 리스트에서 다음으로 실행할 태스크를 얻음
  */
-/*
-static TCB* kGetNextTaskToRun( void )
-{
-    TCB* pstTarget = NULL;
-    int iTaskCount, i, j;
-    
-    // 큐에 태스크가 있으나 모든 큐의 태스크가 1회씩 실행된 경우, 모든 큐가 프로세서를
-    // 양보하여 태스크를 선택하지 못할 수 있으니 NULL일 경우 한번 더 수행
-    for( j = 0 ; j < 2 ; j++ )
-    {
-        // 높은 우선 순위에서 낮은 우선 순위까지 리스트를 확인하여 스케줄링할 태스크를 선택
-        for( i = 0 ; i < TASK_MAXREADYLISTCOUNT ; i++ )
-        {
-            iTaskCount = ketListCount( &( gs_stScheduler.vstReadyList[ i ] ) );
-            
-            // 만약 실행한 횟수보다 리스트의 태스크 수가 더 많으면 현재 우선 순위의
-            // 태스크를 실행함
-            if( gs_stScheduler.viExecuteCount[ i ] < iTaskCount )
-            {
-                pstTarget = ( TCB* ) kRemoveListFromHeader( 
-                                        &( gs_stScheduler.vstReadyList[ i ] ) );
-                gs_stScheduler.viExecuteCount[ i ]++;
-                break;            
-            }
-            // 만약 실행한 횟수가 더 많으면 실행 횟수를 초기화하고 다음 우선 순위로 양보함
-            else
-            {
-                gs_stScheduler.viExecuteCount[ i ] = 0;
-            }
-        }
-        
-        // 만약 수행할 태스크를 찾았으면 종료
-        if( pstTarget != NULL )
-        {
-            break;
-        }
-    }    
-    return pstTarget;
-}
-*/
-/*   lottery
-static TCB *kGetNextTaskToRun(void)
-{
-    TCB *pstTarget = NULL;
-    int iTaskCount, i, j;
-
-    int counter = 0;
-    int total_ticket = 0;
-
-    for (int k = 0; k < TASK_MAXREADYLISTCOUNT; k++)
-    {
-        if (kGetListCount(&(gs_stScheduler.vstReadyList[k])) > 0)
-            total_ticket += cal_ticket(k);
-    }
-
-    int winner = random_generator() % (total_ticket + 1);
-
-    // 큐에 태스크가 있으나 모든 큐의 태스크가 1회씩 실행된 경우, 모든 큐가 프로세서를
-    // 양보하여 태스크를 선택하지 못할 수 있으니 NULL일 경우 한번 더 수행
-    for (j = 0; j < 2; j++)
-    {
-
-        counter = 0;
-
-        // 높은 우선 순위에서 낮은 우선 순위까지 리스트를 확인하여 스케줄링할 태스크를 선택
-        for (i = 0; i < TASK_MAXREADYLISTCOUNT; i++)
-        {
-            iTaskCount = kGetListCount(&(gs_stScheduler.vstReadyList[i]));
-
-            if (iTaskCount == 0)
-                continue;
-
-            counter += cal_ticket(i);
-
-            if (counter >= winner)
-            {
-                pstTarget = (TCB *)kRemoveListFromHeader(
-                    &(gs_stScheduler.vstReadyList[i]));
-                gs_stScheduler.viExecuteCount[i]++;
-                pstTarget->got_time += 1;
-                break;
-            }
-           
-        }
-
-        // 만약 수행할 태스크를 찾았으면 종료
-        if (pstTarget != NULL)
-        {
-            break;
-        }
-    }
-    return pstTarget;
-}
-*/
 
 //stride
 static TCB *kGetNextTaskToRun(void)
@@ -569,22 +475,9 @@ void kSchedule(void)
         return;
     }
 
-
-    //pass 값이 임계값에 도달했으면 endtask
-	// if(pstRunningTask->pass >= gs_stScheduler.passThreshold){
-    //     if(!(pstRunningTask->qwFlags && TASK_FLAGS_SYSTEM)){
-    //         result[i++] = pstRunningTask;
-    //         kEndTask(pstRunningTask->stLink.qwID);
-    //     }
-    // }
-
-
     // 현재 수행중인 태스크의 정보를 수정한 뒤 콘텍스트 전환
     pstRunningTask = gs_stScheduler.pstRunningTask;
     gs_stScheduler.pstRunningTask = pstNextTask;
-
-
-
 
     // 유휴 태스크에서 전환되었다면 사용한 프로세서 시간을 증가시킴
     if ((pstRunningTask->qwFlags & TASK_FLAGS_IDLE) == TASK_FLAGS_IDLE)
