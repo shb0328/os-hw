@@ -137,7 +137,7 @@ typedef struct kTaskControlBlockStruct
     QWORD qwStackSize;
 
     QWORD got_time;
-
+	
     //Stride Scheduling 을 위한 Task의 현재 누적 pass 값
     QWORD pass;
 

@@ -211,7 +211,7 @@ static void kSetUpTask(TCB *pstTCB, QWORD qwFlags, QWORD qwEntryPointAddress,
     pstTCB->qwStackSize = qwStackSize;
     pstTCB->qwFlags = qwFlags;
     pstTCB->got_time = 0;
-    // pstTCB->pass = 100000;
+    pstTCB->pass = 100000;
     
 }
 
