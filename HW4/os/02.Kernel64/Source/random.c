@@ -21,7 +21,7 @@ QWORD random_generator()
     return (seed = (QWORD)lo);
 }
 
-QWORD cal_ticket(BYTE priority) //total 100000 (40000 + 20000 + 15000 + 10000 + 10000 + 5000)
+QWORD cal_ticket(BYTE priority) //total 100000 = 40000 + 20000 + 15000 + 10000 + 10000 + 5000
 {
     switch (priority)
     {

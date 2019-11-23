@@ -210,7 +210,6 @@ static void kSetUpTask(TCB *pstTCB, QWORD qwFlags, QWORD qwEntryPointAddress,
     pstTCB->qwStackSize = qwStackSize;
     pstTCB->qwFlags = qwFlags;
     pstTCB->got_time = 0;
-    pstTCB->pass = 100000;
     
 }
 
@@ -250,7 +249,6 @@ void kInitializeScheduler(void)
     // 프로세서 사용률을 계산하는데 사용하는 자료구조 초기화
     gs_stScheduler.qwSpendProcessorTimeInIdleTask = 0;
     gs_stScheduler.qwProcessorLoad = 0;
-   gs_stScheduler.passThreshold = 3000;
 }
 
 /**

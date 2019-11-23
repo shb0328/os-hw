@@ -137,9 +137,6 @@ typedef struct kTaskControlBlockStruct
     QWORD qwStackSize;
 
     QWORD got_time;
-	
-    //Stride Scheduling 을 위한 Task의 현재 누적 pass 값
-    QWORD pass;
 
 } TCB;
 
@@ -179,14 +176,6 @@ typedef struct kSchedulerStruct
     // 유휴 태스크(Idle Task)에서 사용한 프로세서 시간
     QWORD qwSpendProcessorTimeInIdleTask;
 
-    //현재 실행 중인 Task 중에서 가장 큰 pass 값
-    QWORD currentMaxPass;
-
-    //현재 실행 중인 Task 중에서 가장 작은 pass 값
-    QWORD currentMinPass;
-
-    //pass값의 임계값
-    QWORD passThreshold;
 } SCHEDULER;
 
 #pragma pack(pop)

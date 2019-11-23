@@ -844,41 +844,6 @@ static void kChangeTaskPriority( const char* pcParameterBuffer )
     }
 }
 
- /*
-static void kShowTaskList( const char* pcParameterBuffer )
-{
-    int i;
-    TCB* pstTCB;
-    int iCount = 0;
-    
-    kPrintf( "=========== Task Total Count [%d] ===========\n", kGetTaskCount() );
-    for( i = 0 ; i < TASK_MAXCOUNT ; i++ )
-    {
- 
-        pstTCB = kGetTCBInTCBPool( i );
-        if( ( pstTCB->stLink.qwID >> 32 ) != 0 )
-        {
- 
-            if( ( iCount != 0 ) && ( ( iCount % 10 ) == 0 ) )
-            {
-                kPrintf( "Press any key to continue... ('q' is exit) : " );
-                if( kGetCh() == 'q' )
-                {
-                    kPrintf( "\n" );
-                    break;
-                }
-                kPrintf( "\n" );
-            }
-            
-            kPrintf( "[%d] Task ID[0x%Q], Priority[%d], Flags[0x%Q], Thread[%d]\n", 1 + iCount++,
-                     pstTCB->stLink.qwID, GETPRIORITY( pstTCB->qwFlags ), 
-                     pstTCB->qwFlags, kGetListCount( &( pstTCB->stChildThreadList ) ) );
-            kPrintf( "    Parent PID[0x%Q], Memory Address[0x%Q], Size[0x%Q]\n",
-                    pstTCB->qwParentProcessID, pstTCB->pvMemoryAddress, pstTCB->qwMemorySize );
-        }
-    }
-}
-*/
 static void kShowTaskList( const char* pcParameterBuffer )
 {
     int i;
