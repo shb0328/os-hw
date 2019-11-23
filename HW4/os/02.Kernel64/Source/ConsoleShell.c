@@ -6,7 +6,7 @@
 #include "RTC.h"
 #include "AssemblyUtility.h"
 #include "Task.h"
-//#include "Task.c"
+
 #include "Synchronization.h"
 
 
@@ -36,7 +36,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
     { "testmutex", "Test Mutex Function", kTestMutex },
     { "testthread", "Test Thread And Process Function", kTestThread },
     { "showmatrix", "Show Matrix Screen", kShowMatrix },    
-    // {"showresult","Show result",kShowResult},    
+    {"showresult","Show result",kShowResult},    
 
 };       
 
@@ -960,7 +960,8 @@ static void kShowTaskList( const char* pcParameterBuffer )
                      pstTCB->qwFlags, kGetListCount( &( pstTCB->stChildThreadList ) ) );
             kPrintf( "    Parent PID[0x%Q], Memory Address[0x%Q], Size[0x%Q]\n",
                     pstTCB->qwParentProcessID, pstTCB->pvMemoryAddress, pstTCB->qwMemorySize );
-            kPrintf( "Got_Time[%d]\n", pstTCB->got_time);
+            kPrintf( "Got_Time[%d] ", pstTCB->got_time);
+		kPrintf( " pass[%d]\n", pstTCB->pass);
         }
     }
 }
@@ -1231,15 +1232,15 @@ static void kShowMatrix( const char* pcParameterBuffer )
 /**
  * Command functions
  */
-// extern TCB* result[];
+ extern TCB* result[];
 
-// static void kShowResult()
-// {
-//     kPrintf( "=========================================================\n" );
-//     for(int i = 0; i<TASK_MAXREADYLISTCOUNT; ++i){
-//         kPrintf( "stride : %d, got_time : %d\n", cal_stride(result[i]->qwFlags & 7),result[i]->got_time);
-//     }
-//     kPrintf( "=========================================================\n" );
-// }
+ static void kShowResult()
+ {
+     kPrintf( "=========================================================\n" );
+     for(int i = 0; i<TASK_MAXREADYLISTCOUNT; ++i){
+         kPrintf( "stride : %d, got_time : %d\n", cal_stride(result[i]->qwFlags & 7),result[i]->got_time);
+     }
+     kPrintf( "=========================================================\n" );
+ }
 
 

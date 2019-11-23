@@ -12,6 +12,7 @@
 // 스케줄러 관련 자료구조
 static SCHEDULER gs_stScheduler;
 static TCBPOOLMANAGER gs_stTCBPoolManager;
+ TCB* result[TASK_MAXREADYLISTCOUNT] = {0};
 
 //==============================================================================
 //  태스크 풀과 태스크 관련
@@ -210,6 +211,8 @@ static void kSetUpTask(TCB *pstTCB, QWORD qwFlags, QWORD qwEntryPointAddress,
     pstTCB->qwStackSize = qwStackSize;
     pstTCB->qwFlags = qwFlags;
     pstTCB->got_time = 0;
+    pstTCB->pass = 0;
+    
 }
 
 //==============================================================================
@@ -370,21 +373,7 @@ static TCB *kGetNextTaskToRun(void)
                 pstTarget->got_time += 1;
                 break;
             }
-
-            // // 만약 실행한 횟수보다 리스트의 태스크 수가 더 많으면 현재 우선 순위의
-            // // 태스크를 실행함
-            // if( gs_stScheduler.viExecuteCount[ i ] < iTaskCount )
-            // {
-            //     pstTarget = ( TCB* ) kRemoveListFromHeader(
-            //                             &( gs_stScheduler.vstReadyList[ i ] ) );
-            //     gs_stScheduler.viExecuteCount[ i ]++;
-            //     break;
-            // }
-            // // 만약 실행한 횟수가 더 많으면 실행 횟수를 초기화하고 다음 우선 순위로 양보함
-            // else
-            // {
-            //     gs_stScheduler.viExecuteCount[ i ] = 0;
-            // }
+           
         }
 
         // 만약 수행할 태스크를 찾았으면 종료
@@ -398,34 +387,38 @@ static TCB *kGetNextTaskToRun(void)
 */
 
 //stride
+//static QWORD currentMinPass = 999999;
+
 static TCB *kGetNextTaskToRun(void)
 {
     TCB *pstTarget = NULL;
     int iTaskCount, i, j;
 
     LIST *list;
-
+    
     int resi = 0;
-    int resj = 0;
+    int resj = 0;	
+    QWORD currentMinPass = 999999;
 
-    for (j = 0; j < TASK_MAXREADYLISTCOUNT; ++j)
+    for (j = 0; j < TASK_MAXREADYLISTCOUNT; j++)
     {
         TCB *tmp;
-        list = &gs_stScheduler.vstReadyList[j];
+        list = &(gs_stScheduler.vstReadyList[j]);
         iTaskCount = kGetListCount(&(gs_stScheduler.vstReadyList[j]));
         tmp = (TCB *)kGetHeaderFromList(list);
+	
 
-        for (i = 0; i < iTaskCount; ++i)
+        for (i = 0; i < iTaskCount; i++)
         {
-
-            if (tmp->pass < gs_stScheduler.currentMinPass)
+            if ((tmp->pass) < currentMinPass)
             {
-                gs_stScheduler.currentMinPass = tmp->pass;
+                //gs_stScheduler.currentMinPass = tmp->pass;
+		currentMinPass = tmp->pass;
                 resi = i;
                 resj = j;
-            }
-            tmp = (TCB *)kGetNextFromList(list, tmp);
-        }
+	    }
+           tmp = (TCB *)kGetNextFromList(list, tmp);          
+        }    
     }
 
     list = &gs_stScheduler.vstReadyList[resj];
@@ -435,6 +428,7 @@ static TCB *kGetNextTaskToRun(void)
     {
         pstTarget = (TCB *)kGetNextFromList(list, pstTarget);
     }
+
     pstTarget->pass += cal_stride(resj);
     pstTarget->got_time += 1;
 
@@ -550,6 +544,7 @@ BOOL kChangePriority(QWORD qwTaskID, BYTE bPriority)
  *  다른 태스크를 찾아서 전환
  *      인터럽트나 예외가 발생했을 때 호출하면 안됨
  */
+int i = 0;
 void kSchedule(void)
 {
     TCB *pstRunningTask, *pstNextTask;
@@ -575,9 +570,21 @@ void kSchedule(void)
         return;
     }
 
+
+	if(pstRunningTask->pass >= gs_stScheduler.passThreshold){
+        if(!(pstRunningTask->qwFlags && TASK_FLAGS_SYSTEM)){
+            result[i++] = pstRunningTask;
+            kEndTask(pstRunningTask->stLink.qwID);
+        }
+    }
+
+
     // 현재 수행중인 태스크의 정보를 수정한 뒤 콘텍스트 전환
     pstRunningTask = gs_stScheduler.pstRunningTask;
     gs_stScheduler.pstRunningTask = pstNextTask;
+
+
+
 
     // 유휴 태스크에서 전환되었다면 사용한 프로세서 시간을 증가시킴
     if ((pstRunningTask->qwFlags & TASK_FLAGS_IDLE) == TASK_FLAGS_IDLE)
