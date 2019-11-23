@@ -43,14 +43,14 @@ QWORD cal_stride(BYTE priority) // stride task 1  BIGNUM = 300000
     switch (priority)
     {
     case TASK_FLAGS_HIGHEST:
-        return 10; // stride
+        return 10000; // stride
     case TASK_FLAGS_HIGH:
-        return 12;
+        return 12000;
     case TASK_FLAGS_MEDIUM:
-        return 15;
+        return 15000;
     case TASK_FLAGS_LOW:
-        return 20;
+        return 200000;
     case TASK_FLAGS_LOWEST:
-        return 30;
+        return 300000;
     }
 }

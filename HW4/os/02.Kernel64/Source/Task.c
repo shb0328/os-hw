@@ -211,7 +211,7 @@ static void kSetUpTask(TCB *pstTCB, QWORD qwFlags, QWORD qwEntryPointAddress,
     pstTCB->qwStackSize = qwStackSize;
     pstTCB->qwFlags = qwFlags;
     pstTCB->got_time = 0;
-    pstTCB->pass = 0;
+    pstTCB->pass = 100000;
     
 }
 
@@ -251,6 +251,7 @@ void kInitializeScheduler(void)
     // 프로세서 사용률을 계산하는데 사용하는 자료구조 초기화
     gs_stScheduler.qwSpendProcessorTimeInIdleTask = 0;
     gs_stScheduler.qwProcessorLoad = 0;
+   gs_stScheduler.passThreshold = 3000;
 }
 
 /**
@@ -331,7 +332,7 @@ static TCB* kGetNextTaskToRun( void )
     return pstTarget;
 }
 */
-/*   lottery
+  // lottery
 static TCB *kGetNextTaskToRun(void)
 {
     TCB *pstTarget = NULL;
@@ -384,11 +385,11 @@ static TCB *kGetNextTaskToRun(void)
     }
     return pstTarget;
 }
-*/
+
 
 //stride
-//static QWORD currentMinPass = 999999;
-
+// QWORD currentMinPass = 999999;
+/*
 static TCB *kGetNextTaskToRun(void)
 {
     TCB *pstTarget = NULL;
@@ -399,7 +400,6 @@ static TCB *kGetNextTaskToRun(void)
     int resi = 0;
     int resj = 0;	
     QWORD currentMinPass = 999999;
-
     for (j = 0; j < TASK_MAXREADYLISTCOUNT; j++)
     {
         TCB *tmp;
@@ -434,6 +434,7 @@ static TCB *kGetNextTaskToRun(void)
 
     return pstTarget;
 }
+*/
 /**
  *  태스크를 스케줄러의 준비 리스트에 삽입
  */
