@@ -737,18 +737,17 @@ static void kCreateTestTask( const char* pcParameterBuffer )
     {
  
     case 0:
-        for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
+	
+
+     for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
         {    
             if( kCreateTask( TASK_FLAGS_HIGH | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
             {
                 break;
             }
         }
-        
-        kPrintf( "Task1 %d Created\n", i );	
+        kPrintf( "Task1 %d Created\n", i );
 
-        
-       
 	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
         {    
             if( kCreateTask( TASK_FLAGS_MEDIUM | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
@@ -756,12 +755,9 @@ static void kCreateTestTask( const char* pcParameterBuffer )
                 break;
             }
         }
-        
         kPrintf( "Task1 %d Created\n", i );
-       
-        
- 
-    case 1:
+
+
 	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
         {    
             if( kCreateTask( TASK_FLAGS_LOW | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
@@ -769,14 +765,40 @@ static void kCreateTestTask( const char* pcParameterBuffer )
                 break;
             }
         }
-        kPrintf( "Task2 %d Created\n", i );
+        kPrintf( "Task1 %d Created\n", i );
+
+
+for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
+        {    
+            if( kCreateTask( TASK_FLAGS_LOWEST | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
+            {
+                break;
+            }
+        }
+        kPrintf( "Task1 %d Created\n", i );
+
+
+       
+	break;
+
+
+    case 1:
+	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
+        {    
+            if( kCreateTask( TASK_FLAGS_MEDIUM | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
+            {
+                break;
+            }
+        }
+        kPrintf( "Task1 %d Created\n", i );
 
 
         break;
+
     case 2:
         for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
         {    
-            if( kCreateTask( TASK_FLAGS_MEDIUM | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
+            if( kCreateTask( TASK_FLAGS_LOW| TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
             {
                 break;
             }
@@ -888,8 +910,8 @@ static void kShowTaskList( const char* pcParameterBuffer )
                      pstTCB->qwFlags, kGetListCount( &( pstTCB->stChildThreadList ) ) );
             kPrintf( "    Parent PID[0x%Q], Memory Address[0x%Q], Size[0x%Q]\n",
                     pstTCB->qwParentProcessID, pstTCB->pvMemoryAddress, pstTCB->qwMemorySize );
-            kPrintf( "Got_Time[%d] ", pstTCB->got_time);
-		kPrintf( " pass[%d]\n", pstTCB->pass);
+            kPrintf( "Got_Time[%d] \n", pstTCB->got_time);
+		
         }
     }
 }

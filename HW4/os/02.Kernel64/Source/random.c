@@ -26,15 +26,15 @@ QWORD cal_ticket(BYTE priority)
     switch (priority)
     {
     case TASK_FLAGS_HIGHEST:
-        return 3000;
+        return 35000;
     case TASK_FLAGS_HIGH:
-        return 2500;
+        return 25000;
     case TASK_FLAGS_MEDIUM:
-        return 2000;
+        return 20000;
     case TASK_FLAGS_LOW:
-        return 1500;
+        return 15000;
     case TASK_FLAGS_LOWEST:
-        return 1000;
+        return 50000;
     }
 }
 

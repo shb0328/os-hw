@@ -211,7 +211,7 @@ static void kSetUpTask(TCB *pstTCB, QWORD qwFlags, QWORD qwEntryPointAddress,
     pstTCB->qwStackSize = qwStackSize;
     pstTCB->qwFlags = qwFlags;
     pstTCB->got_time = 0;
-    pstTCB->pass = 100000;
+    
     
 }
 
@@ -347,7 +347,7 @@ static TCB *kGetNextTaskToRun(void)
             total_ticket += cal_ticket(k);
     }
 
-    int winner = random_generator() % (total_ticket + 1);
+    int winner = random_generator() % (100000);
 
     // 큐에 태스크가 있으나 모든 큐의 태스크가 1회씩 실행된 경우, 모든 큐가 프로세서를
     // 양보하여 태스크를 선택하지 못할 수 있으니 NULL일 경우 한번 더 수행
