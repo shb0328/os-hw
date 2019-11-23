@@ -21,36 +21,19 @@ QWORD random_generator()
     return (seed = (QWORD)lo);
 }
 
-QWORD cal_ticket(BYTE priority)
+QWORD cal_ticket(BYTE priority) //total 100000 (40000 + 20000 + 15000 + 10000 + 10000 + 5000)
 {
     switch (priority)
     {
     case TASK_FLAGS_HIGHEST:
-        return 35000;
+        return 40000;
     case TASK_FLAGS_HIGH:
-        return 25000;
-    case TASK_FLAGS_MEDIUM:
         return 20000;
-    case TASK_FLAGS_LOW:
-        return 15000;
-    case TASK_FLAGS_LOWEST:
-        return 50000;
-    }
-}
-
-QWORD cal_stride(BYTE priority) // stride task 1  BIGNUM = 300000
-{
-    switch (priority)
-    {
-    case TASK_FLAGS_HIGHEST:
-        return 10000; // stride
-    case TASK_FLAGS_HIGH:
-        return 12000;
     case TASK_FLAGS_MEDIUM:
         return 15000;
     case TASK_FLAGS_LOW:
-        return 200000;
+        return 10000;
     case TASK_FLAGS_LOWEST:
-        return 300000;
+        return 5000;
     }
 }

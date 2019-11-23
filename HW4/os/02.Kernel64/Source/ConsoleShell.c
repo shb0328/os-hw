@@ -35,8 +35,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
     { "cpuload", "Show Processor Load", kCPULoad },
     { "testmutex", "Test Mutex Function", kTestMutex },
     { "testthread", "Test Thread And Process Function", kTestThread },
-    { "showmatrix", "Show Matrix Screen", kShowMatrix },    
-    {"showresult","Show result",kShowResult},    
+    { "showmatrix", "Show Matrix Screen", kShowMatrix },     
 
 };       
 
@@ -1178,19 +1177,5 @@ static void kShowMatrix( const char* pcParameterBuffer )
         kPrintf( "Matrix Process Create Fail\n" );
     }
 }
-
-/**
- * Command functions
- */
- extern TCB* result[];
-
- static void kShowResult()
- {
-     kPrintf( "=========================================================\n" );
-     for(int i = 0; i<TASK_MAXREADYLISTCOUNT; ++i){
-         kPrintf( "stride : %d, got_time : %d\n", cal_stride(result[i]->qwFlags & 7),result[i]->got_time);
-     }
-     kPrintf( "=========================================================\n" );
- }
 
 
