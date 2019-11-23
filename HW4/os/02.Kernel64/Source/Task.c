@@ -211,7 +211,7 @@ static void kSetUpTask(TCB *pstTCB, QWORD qwFlags, QWORD qwEntryPointAddress,
     pstTCB->qwStackSize = qwStackSize;
     pstTCB->qwFlags = qwFlags;
     pstTCB->got_time = 0;
-    pstTCB->pass = 0;
+    pstTCB->pass = gs_stScheduler.currentMinPass;
     
 }
 
@@ -387,8 +387,6 @@ static TCB *kGetNextTaskToRun(void)
 */
 
 //stride
-//static QWORD currentMinPass = 999999;
-
 static TCB *kGetNextTaskToRun(void)
 {
     TCB *pstTarget = NULL;
@@ -413,7 +411,8 @@ static TCB *kGetNextTaskToRun(void)
             if ((tmp->pass) < currentMinPass)
             {
                 //gs_stScheduler.currentMinPass = tmp->pass;
-		currentMinPass = tmp->pass;
+		        currentMinPass = tmp->pass;
+                gs_stScheduler.currentMinPass = tmp->pass;
                 resi = i;
                 resj = j;
 	    }
@@ -571,12 +570,13 @@ void kSchedule(void)
     }
 
 
-	if(pstRunningTask->pass >= gs_stScheduler.passThreshold){
-        if(!(pstRunningTask->qwFlags && TASK_FLAGS_SYSTEM)){
-            result[i++] = pstRunningTask;
-            kEndTask(pstRunningTask->stLink.qwID);
-        }
-    }
+    //pass 값이 임계값에 도달했으면 endtask
+	// if(pstRunningTask->pass >= gs_stScheduler.passThreshold){
+    //     if(!(pstRunningTask->qwFlags && TASK_FLAGS_SYSTEM)){
+    //         result[i++] = pstRunningTask;
+    //         kEndTask(pstRunningTask->stLink.qwID);
+    //     }
+    // }
 
 
     // 현재 수행중인 태스크의 정보를 수정한 뒤 콘텍스트 전환

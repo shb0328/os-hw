@@ -28,7 +28,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
     { "rdtsc", "Read Time Stamp Counter", kReadTimeStampCounter },
     { "cpuspeed", "Measure Processor Speed", kMeasureProcessorSpeed },
     { "date", "Show Date And Time", kShowDateAndTime },
-    { "createtask", "Create Task, ex)createtask 1(type) 10(count)", kCreateTestTask },
+    { "createtask", "Create Task, ex)createtask 1(priority) 10(count)", kCreateTestTask },
     { "changepriority", "Change Task Priority, ex)changepriority 1(ID) 2(Priority)",kChangeTaskPriority },
     { "tasklist", "Show Task List", kShowTaskList },
     { "killtask", "End Task, ex)killtask 1(ID) or 0xffffffff(All Task)", kKillTask },
@@ -728,6 +728,7 @@ static void kCreateTestTask( const char* pcParameterBuffer )
     char vcCount[ 30 ];
     int i;
     
+    BOOL bPreviousFlag;
  
     kInitializeParameter( &stList, pcParameterBuffer );
     kGetNextParameter( &stList, vcType );
@@ -735,127 +736,71 @@ static void kCreateTestTask( const char* pcParameterBuffer )
 
     switch( kAToI( vcType, 10 ) )
     {
- 
-    case 0:
-        for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_HIGHEST | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
+        case 0:
+            for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
+            {    
+                if( kCreateTask( TASK_FLAGS_HIGHEST | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
+                {
+                    break;
+                }
             }
-        }
+            
+            kPrintf( "TASK_FLAGS_HIGHEST %d Created\n", i );
+
+        break;
+
+        case 1:
+
+            for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
+            {    
+                if( kCreateTask( TASK_FLAGS_HIGH | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
+                {
+                    break;
+                }
+            }
+            
+            kPrintf( "TASK_FLAGS_HIGH %d Created\n", i );
+
+        break;
+
+        case 2:
+
+            for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
+            {    
+                if( kCreateTask( TASK_FLAGS_MEDIUM | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
+                {
+                    break;
+                }
+            }
+            kPrintf( "TASK_FLAGS_MEDIUM %d Created\n", i );
+
+        break;
+    
+        case 3:
+
+            for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
+            {    
+                if( kCreateTask( TASK_FLAGS_LOW | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
+                {
+                    break;
+                }
+            }
+            kPrintf( "TASK_FLAGS_LOW %d Created\n", i );
+
+        break;
+        case 4:
         
-        kPrintf( "Task1 %d Created\n", i );
-
-		for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_HIGH | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
+            for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
+            {    
+                if( kCreateTask( TASK_FLAGS_LOWEST | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
+                {
+                    break;
+                }
             }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-
-
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_MEDIUM | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_LOW | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_LOWEST | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
+            kPrintf( "TASK_FLAGS_LOWEST %d Created\n", i );
 
         break;
-        
- 
-    case 1:
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_HIGH | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-
-
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_MEDIUM | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_LOW | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_LOWEST | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-
-
-        break;
-    case 2:
-        for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_MEDIUM | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-        break;
-      
-	case 3:
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_LOW | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-        break;
-	case 4:
-	for( i = 0 ; i < kAToI( vcCount, 10 ) ; i++ )
-        {    
-            if( kCreateTask( TASK_FLAGS_LOWEST | TASK_FLAGS_THREAD, 0, 0, ( QWORD ) kTestTask2 ) == NULL )
-            {
-                break;
-            }
-        }
-        kPrintf( "Task2 %d Created\n", i );
-        break;
+	
 }   
 
 }
