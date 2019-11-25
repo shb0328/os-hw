@@ -17,6 +17,8 @@
 //  함수
 //
 ////////////////////////////////////////////////////////////////////////////////
+WORD kInPortWord( WORD wPort );
+void kOutPortWord( WORD wPort, WORD wData );
 BYTE kInPortByte( WORD wPort );
 void kOutPortByte( WORD wPort, BYTE bData );
 void kLoadGDTR( QWORD qwGDTRAddress );

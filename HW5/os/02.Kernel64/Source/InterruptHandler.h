@@ -17,4 +17,5 @@ void kSetPageEntryData( PTENTRY* pstEntry, DWORD dwUpperBaseAddress,
         DWORD dwLowerBaseAddress, DWORD dwLowerFlags, DWORD dwUpperFlags );
 void kTimerHandler( int iVectorNumber );
 static inline void invlpg(void* m);
+void kHDDHandler( int iVectorNumber );
 #endif /*__INTERRUPTHANDLER_H__*/

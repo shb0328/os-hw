@@ -68,5 +68,4 @@ clean:
 	rm -f Disk.img
 
 run:
-	qemu-system-x86_64 -L . -fda Disk.img -m 64 -localtime -M pc -rtc base=localtime -monitor stdio
-
+	qemu-system-x86_64 -L . -fda Disk.img -m 64 -hda HDD.img -boot a -localtime -M pc -rtc base=localtime -monitor stdio
