@@ -1,68 +1,86 @@
+# file		makefile
+# date		2009/01/02
+# author	kkamagui 
+# brief		IA-32e ¸ðµå Ä¿³ÎÀ» ºôµåÇÏ±â À§ÇÑ make ÆÄÀÏ
+
 ################################################################################
-# ë¹Œë“œ í™˜ê²½ ë° ê·œì¹™ ì„¤ì • 
+# ºôµå È¯°æ ¹× ±ÔÄ¢ ¼³Á¤ 
 ################################################################################
-# ì»´íŒŒì¼ëŸ¬ ë° ë§ì»¤ ì •ì˜
+# ÄÄÆÄÀÏ·¯ ¹× ¸µÄ¿ Á¤ÀÇ
 NASM64 = nasm -f elf64
 GCC64 = gcc -c -m64 -ffreestanding
-LD64 = ld -melf_x86_64 -T ../elf_x86_64.ld -nostdlib -e Main -Ttext 0x200000
+LD64 = ld -melf_x86_64 -T ../elf_x86_64.x -nostdlib -e Main -Ttext 0x200000
 
+# ¹ÙÀÌ³Ê¸® ÀÌ¹ÌÁö »ý¼ºÀ» À§ÇÑ OBJCOPY ¿É¼Ç Á¤ÀÇ
 OBJCOPY64 = objcopy -j .text -j .data -j .rodata -j .bss -S -O binary
 
+# µð·ºÅÍ¸® Á¤ÀÇ
 OBJECTDIRECTORY = Temp
 SOURCEDIRECTORY	= Source
 
 ################################################################################
-# ë¹Œë“œ í•­ëª© ë° ë¹Œë“œ ë°©ë²• ì„¤ì •
+# ºôµå Ç×¸ñ ¹× ºôµå ¹æ¹ý ¼³Á¤
 ################################################################################
-# ê¸°ë³¸ì ìœ¼ë¡œ ë¹Œë“œë¥¼ ìˆ˜í–‰í•  ëª©ë¡
+# ±âº»ÀûÀ¸·Î ºôµå¸¦ ¼öÇàÇÒ ¸ñ·Ï
 all: prepare Kernel64.bin
 
+# ¿ÀºêÁ§Æ® ÆÄÀÏÀÌ À§Ä¡ÇÒ µð·ºÅÍ¸®¸¦ »ý¼º
 prepare:
 	mkdir -p $(OBJECTDIRECTORY)
 
+
+# Ä¿³ÎÀÇ C ¼Ò½º ÆÄÀÏ¿¡ ´ëÇÑ ÀÇÁ¸¼º Á¤º¸ »ý¼º
 dep:
 	@echo === Make Dependancy File ===
 	make -C $(OBJECTDIRECTORY) -f ../makefile InternalDependency
 	@echo === Dependancy Search Complete ===
 
+# µð·ºÅÍ¸®¸¦ ¿ÀºêÁ§Æ® ÆÄÀÏ µð·ºÅÍ¸®·Î ÀÌµ¿ÇØ¼­ ÀÇÁ¸¼º ÆÄÀÏ ¹× ½ÇÇà ÆÄÀÏÀ» »ý¼º
 ExecuteInternalBuild: dep
 	make -C $(OBJECTDIRECTORY) -f ../makefile Kernel64.elf
 
+# Ä¿³Î ÀÌ¹ÌÁö¸¦ ¹ÙÀÌ³Ê¸® ÆÄÀÏ·Î º¯È¯ÇÏ¿© IA-32e ¸ðµå ¹ÙÀÌ³Ê¸® »ý¼º
 Kernel64.bin: ExecuteInternalBuild
 	$(OBJCOPY64) $(OBJECTDIRECTORY)/Kernel64.elf $@
-
+		
+# ¼Ò½º ÆÄÀÏÀ» Á¦¿ÜÇÑ ³ª¸ÓÁö ÆÄÀÏ Á¤¸®	
 clean:
 	rm -f *.bin
 	rm -f $(OBJECTDIRECTORY)/*.*
 
 ################################################################################
-# Makeì— ì˜í•´ ë‹¤ì‹œ í˜¸ì¶œë˜ëŠ” ë¶€ë¶„, Temp ë””ë ‰í„°ë¦¬ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ìˆ˜í–‰ë¨
+# Make¿¡ ÀÇÇØ ´Ù½Ã È£ÃâµÇ´Â ºÎºÐ, Temp µð·ºÅÍ¸®¸¦ ±âÁØÀ¸·Î ¼öÇàµÊ
 ################################################################################
-# ë¹Œë“œí•  ì–´ì…ˆë¸”ë¦¬ì–´ ì—”íŠ¸ë¦¬ í¬ì¸íŠ¸ ì†ŒìŠ¤ íŒŒì¼ ì •ì˜, Temp ë””ë ‰í„°ë¦¬ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì„¤ì •
+# ºôµåÇÒ ¾î¼Àºí¸®¾î ¿£Æ®¸® Æ÷ÀÎÆ® ¼Ò½º ÆÄÀÏ Á¤ÀÇ, Temp µð·ºÅÍ¸®¸¦ ±âÁØÀ¸·Î ¼³Á¤
 ENTRYPOINTSOURCEFILE = ../$(SOURCEDIRECTORY)/EntryPoint.s
 ENTRYPOINTOBJECTFILE = EntryPoint.o
-#ë¹Œë“œí•  C ì†ŒìŠ¤ íŒŒì¼ ì •ì˜, Temp ë””ë ‰í„°ë¦¬ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì„¤ì •
+# ºôµåÇÒ C ¼Ò½º ÆÄÀÏ Á¤ÀÇ, Temp µð·ºÅÍ¸®¸¦ ±âÁØÀ¸·Î ¼³Á¤
 CSOURCEFILES = $(wildcard ../$(SOURCEDIRECTORY)/*.c)
 ASSEMBLYSOURCEFILES = $(wildcard ../$(SOURCEDIRECTORY)/*.asm)
 COBJECTFILES = $(notdir $(patsubst %.c,%.o,$(CSOURCEFILES)))
 ASSEMBLYOBJECTFILES = $(notdir $(patsubst %.asm,%.o,$(ASSEMBLYSOURCEFILES)))
 
-#ì–´ì…ˆë¸”ë¦¬ì–´ ì—”íŠ¸ë¦¬ í¬ì¸íŠ¸ ë¹Œë“œ
+# ¾î¼Àºí¸®¾î ¿£Æ®¸® Æ÷ÀÎÆ® ºôµå
 $(ENTRYPOINTOBJECTFILE): $(ENTRYPOINTSOURCEFILE)
 	$(NASM64) -o $@ $<
 
+# .c ÆÄÀÏÀ» .o ÆÄÀÏ·Î ¹Ù²Ù´Â ±ÔÄ¢ Á¤ÀÇ
 %.o: ../$(SOURCEDIRECTORY)/%.c
 	$(GCC64) -c $<
 
+# .asm ÆÄÀÏÀ» .o ÆÄÀÏ·Î ¹Ù²Ù´Â ±ÔÄ¢ Á¤ÀÇ
 %.o: ../$(SOURCEDIRECTORY)/%.asm
 	$(NASM64) -o $@ $<
 
+# ½ÇÁ¦ ÀÇÁ¸¼º¿¡ °ü·ÃµÈ ÆÄÀÏÀ» »ý¼º
 InternalDependency:
 	$(GCC64) -MM $(CSOURCEFILES) > Dependency.dep
 
+# ½ÇÁ¦ Ä¿³Î ÀÌ¹ÌÁö¸¦ ºôµå
 Kernel64.elf: $(ENTRYPOINTOBJECTFILE) $(COBJECTFILES) $(ASSEMBLYOBJECTFILES)
 	$(LD64) -o $@ $^
 
+# ÇöÀç µð¸¯Åä¸®ÀÇ ÆÄÀÏ Áß, dependency ÆÄÀÏÀÌ ÀÖÀ¸¸é make¿¡ Æ÷ÇÔ	
 ifeq (Dependency.dep, $(wildcard Dependency.dep))
 include Dependency.dep
 endif

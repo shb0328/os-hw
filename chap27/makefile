@@ -1,12 +1,12 @@
 # file		makefile
 # date		2008/11/12
 # author	kkamagui 
-# brief		OS ì´ë¯¸ì§€ë¥¼ ë¹Œë“œí•˜ê¸° ìœ„í•œ make íŒŒì¼
+# brief		OS ÀÌ¹ÌÁö¸¦ ºôµåÇÏ±â À§ÇÑ make ÆÄÀÏ
 
-# ê¸°ë³¸ì ìœ¼ë¡œ ë¹Œë“œë¥¼ ìˆ˜í–‰í•  ëª©ë¡
+# ±âº»ÀûÀ¸·Î ºôµå¸¦ ¼öÇàÇÒ ¸ñ·Ï
 all: BootLoader Kernel32 Kernel64 Disk.img Utility
 
-# ë¶€íŠ¸ ë¡œë” ë¹Œë“œë¥¼ ìœ„í•´ ë¶€íŠ¸ ë¡œë” ë””ë ‰í„°ë¦¬ì—ì„œ make ì‹¤í–‰
+# ºÎÆ® ·Î´õ ºôµå¸¦ À§ÇØ ºÎÆ® ·Î´õ µğ·ºÅÍ¸®¿¡¼­ make ½ÇÇà
 BootLoader:
 	@echo 
 	@echo ============== Build Boot Loader ===============
@@ -18,7 +18,7 @@ BootLoader:
 	@echo =============== Build Complete ===============
 	@echo 
 	
-# ë³´í˜¸ ëª¨ë“œ ì»¤ë„ ì´ë¯¸ì§€ë¥¼ ë¹Œë“œí•˜ê¸° ìœ„í•´ ë³´í˜¸ ëª¨ë“œ ë””ë ‰í„°ë¦¬ì—ì„œ make ì‹¤í–‰
+# º¸È£ ¸ğµå Ä¿³Î ÀÌ¹ÌÁö¸¦ ºôµåÇÏ±â À§ÇØ º¸È£ ¸ğµå µğ·ºÅÍ¸®¿¡¼­ make ½ÇÇà
 Kernel32:
 	@echo 
 	@echo ============== Build 32bit Kernel ===============
@@ -30,7 +30,7 @@ Kernel32:
 	@echo =============== Build Complete ===============
 	@echo 
 
-# IA-32e ëª¨ë“œ ì»¤ë„ ì´ë¯¸ì§€ë¥¼ ë¹Œë“œí•˜ê¸° ìœ„í•´ IA-32e ëª¨ë“œ ë””ë ‰í„°ë¦¬ì—ì„œ make ì‹¤í–‰
+# IA-32e ¸ğµå Ä¿³Î ÀÌ¹ÌÁö¸¦ ºôµåÇÏ±â À§ÇØ IA-32e ¸ğµå µğ·ºÅÍ¸®¿¡¼­ make ½ÇÇà
 Kernel64:
 	@echo 
 	@echo ============== Build 64bit Kernel ===============
@@ -43,7 +43,7 @@ Kernel64:
 	@echo 
 
 	
-# OS ì´ë¯¸ì§€ ìƒì„±
+# OS ÀÌ¹ÌÁö »ı¼º
 Disk.img: 00.BootLoader/BootLoader.bin 01.Kernel32/Kernel32.bin 02.Kernel64/Kernel64.bin
 	@echo 
 	@echo =========== Disk Image Build Start ===========
@@ -55,7 +55,7 @@ Disk.img: 00.BootLoader/BootLoader.bin 01.Kernel32/Kernel32.bin 02.Kernel64/Kern
 	@echo ============= All Build Complete =============
 	@echo 
 	
-# ìœ í‹¸ë¦¬í‹° ë¹Œë“œ
+# À¯Æ¿¸®Æ¼ ºôµå
 Utility:
 	@echo 
 	@echo =========== Utility Build Start ===========
@@ -67,14 +67,14 @@ Utility:
 	@echo =========== Utility Build Complete ===========
 	@echo 
 	
-run:
-	qemu-system-x86_64 -L . -fda Disk.img -m 64 -localtime -M pc -rtc base=localtime -monitor stdio
-
 	
-# ì†ŒìŠ¤ íŒŒì¼ì„ ì œì™¸í•œ ë‚˜ë¨¸ì§€ íŒŒì¼ ì •ë¦¬	
+# ¼Ò½º ÆÄÀÏÀ» Á¦¿ÜÇÑ ³ª¸ÓÁö ÆÄÀÏ Á¤¸®	
 clean:
 	make -C 00.BootLoader clean
 	make -C 01.Kernel32 clean
 	make -C 02.Kernel64 clean
 	make -C 04.Utility clean
-	rm -f Disk.img	
+	rm -f Disk.img
+
+run:
+	qemu-system-x86_64 -L . -fda Disk.img -m 64 -localtime -M pc -rtc base=localtime -monitor stdio
