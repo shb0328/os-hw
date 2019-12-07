@@ -259,7 +259,7 @@ static CACHEBUFFER *kAllocateCacheBufferWithFlush(int iCacheTableIndex);
 BOOL kFlushFileSystemCache(void);
 
 //  고수준 함수(High Level Function)
-FILE *kOpenFile(const char *pcFileName, const char *pcMode);
+FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id);
 DWORD kReadFile(void *pvBuffer, DWORD dwSize, DWORD dwCount, FILE *pstFile);
 DWORD kWriteFile(const void *pvBuffer, DWORD dwSize, DWORD dwCount, FILE *pstFile);
 int kSeekFile(FILE *pstFile, int iOffset, int iOrigin);

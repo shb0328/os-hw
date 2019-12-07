@@ -1081,6 +1081,15 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 				return -1;
 			}
 		}
+		else
+		{
+			//권한 확인
+			if (0 == (stEntry.authFlag & 0x20))
+			{
+				return -1;
+			}
+		}
+
 		// 시작 클러스터의 다음 클러스터를 찾음
 		if (kGetClusterLinkData(stEntry.dwStartClusterIndex, &dwSecondCluster) == FALSE)
 		{
@@ -1122,6 +1131,14 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 		{
 			//권한 확인
 			if (0 == (stEntry.authFlag & 0x04))
+			{
+				return -1;
+			}
+		}
+		else
+		{
+			//권한 확인
+			if (0 == (stEntry.authFlag & 0x40))
 			{
 				return -1;
 			}
