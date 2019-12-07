@@ -3,7 +3,7 @@
  *  date    2009/01/16
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui
- *  brief   GDT ¹× IDT¿¡ °ü·ÃµÈ °¢Á¾ µð½ºÅ©¸³ÅÍ¿¡ ´ëÇÑ Çì´õ ÆÄÀÏ
+ *  brief   GDT ë° IDTì— ê´€ë ¨ëœ ê°ì¢… ë””ìŠ¤í¬ë¦½í„°ì— ëŒ€í•œ í—¤ë” íŒŒì¼
  */
 
 #ifndef __DESCRIPTOR_H__
@@ -13,13 +13,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ¸ÅÅ©·Î
+// ë§¤í¬ë¡œ
 //
 ////////////////////////////////////////////////////////////////////////////////
 //==============================================================================
 // GDT
 //==============================================================================
-// Á¶ÇÕ¿¡ »ç¿ëÇÒ ±âº» ¸ÅÅ©·Î
+// ì¡°í•©ì— ì‚¬ìš©í•  ê¸°ë³¸ ë§¤í¬ë¡œ
 #define GDT_TYPE_CODE           0x0A
 #define GDT_TYPE_DATA           0x02
 #define GDT_TYPE_TSS            0x09
@@ -33,8 +33,8 @@
 #define GDT_FLAGS_UPPER_DB      0x40
 #define GDT_FLAGS_UPPER_G       0x80
 
-// ½ÇÁ¦·Î »ç¿ëÇÒ ¸ÅÅ©·Î
-// Lower Flags´Â Code/Data/TSS, DPL0, Present·Î ¼³Á¤
+// ì‹¤ì œë¡œ ì‚¬ìš©í•  ë§¤í¬ë¡œ
+// Lower FlagsëŠ” Code/Data/TSS, DPL0, Presentë¡œ ì„¤ì •
 #define GDT_FLAGS_LOWER_KERNELCODE ( GDT_TYPE_CODE | GDT_FLAGS_LOWER_S | \
         GDT_FLAGS_LOWER_DPL0 | GDT_FLAGS_LOWER_P )
 #define GDT_FLAGS_LOWER_KERNELDATA ( GDT_TYPE_DATA | GDT_FLAGS_LOWER_S | \
@@ -45,24 +45,24 @@
 #define GDT_FLAGS_LOWER_USERDATA ( GDT_TYPE_DATA | GDT_FLAGS_LOWER_S | \
         GDT_FLAGS_LOWER_DPL3 | GDT_FLAGS_LOWER_P )
 
-// Upper Flags´Â Granulaty·Î ¼³Á¤ÇÏ°í ÄÚµå ¹× µ¥ÀÌÅÍ´Â 64ºñÆ® Ãß°¡
+// Upper FlagsëŠ” Granulatyë¡œ ì„¤ì •í•˜ê³  ì½”ë“œ ë° ë°ì´í„°ëŠ” 64ë¹„íŠ¸ ì¶”ê°€
 #define GDT_FLAGS_UPPER_CODE ( GDT_FLAGS_UPPER_G | GDT_FLAGS_UPPER_L )
 #define GDT_FLAGS_UPPER_DATA ( GDT_FLAGS_UPPER_G | GDT_FLAGS_UPPER_L )
 #define GDT_FLAGS_UPPER_TSS ( GDT_FLAGS_UPPER_G )
 
-// ¼¼±×¸ÕÆ® µð½ºÅ©¸³ÅÍ ¿ÀÇÁ¼Â
+// ì„¸ê·¸ë¨¼íŠ¸ ë””ìŠ¤í¬ë¦½í„° ì˜¤í”„ì…‹
 #define GDT_KERNELCODESEGMENT 0x08
 #define GDT_KERNELDATASEGMENT 0x10
 #define GDT_TSSSEGMENT        0x18
 
-// ±âÅ¸ GDT¿¡ °ü·ÃµÈ ¸ÅÅ©·Î
-// GDTRÀÇ ½ÃÀÛ ¾îµå·¹½º, 1Mbyte¿¡¼­ 264Kbyte±îÁö´Â ÆäÀÌÁö Å×ÀÌºí ¿µ¿ª
+// ê¸°íƒ€ GDTì— ê´€ë ¨ëœ ë§¤í¬ë¡œ
+// GDTRì˜ ì‹œìž‘ ì–´ë“œë ˆìŠ¤, 1Mbyteì—ì„œ 264Kbyteê¹Œì§€ëŠ” íŽ˜ì´ì§€ í…Œì´ë¸” ì˜ì—­
 #define GDTR_STARTADDRESS   0x142000
-// 8¹ÙÀÌÆ® ¿£Æ®¸®ÀÇ °³¼ö, ³Î µð½ºÅ©¸³ÅÍ/Ä¿³Î ÄÚµå/Ä¿³Î µ¥ÀÌÅÍ
+// 8ë°”ì´íŠ¸ ì—”íŠ¸ë¦¬ì˜ ê°œìˆ˜, ë„ ë””ìŠ¤í¬ë¦½í„°/ì»¤ë„ ì½”ë“œ/ì»¤ë„ ë°ì´í„°
 #define GDT_MAXENTRY8COUNT  3
-// 16¹ÙÀÌÆ® ¿£Æ®¸®ÀÇ °³¼ö, TSS
+// 16ë°”ì´íŠ¸ ì—”íŠ¸ë¦¬ì˜ ê°œìˆ˜, TSS
 #define GDT_MAXENTRY16COUNT 1
-// GDT Å×ÀÌºíÀÇ Å©±â
+// GDT í…Œì´ë¸”ì˜ í¬ê¸°
 #define GDT_TABLESIZE       ( ( sizeof( GDTENTRY8 ) * GDT_MAXENTRY8COUNT ) + \
         ( sizeof( GDTENTRY16 ) * GDT_MAXENTRY16COUNT ) )
 #define TSS_SEGMENTSIZE     ( sizeof( TSSSEGMENT ) )
@@ -70,7 +70,7 @@
 //==============================================================================
 // IDT
 //==============================================================================
-// Á¶ÇÕ¿¡ »ç¿ëÇÒ ±âº» ¸ÅÅ©·Î
+// ì¡°í•©ì— ì‚¬ìš©í•  ê¸°ë³¸ ë§¤í¬ë¡œ
 #define IDT_TYPE_INTERRUPT      0x0E
 #define IDT_TYPE_TRAP           0x0F
 #define IDT_FLAGS_DPL0          0x00
@@ -81,73 +81,73 @@
 #define IDT_FLAGS_IST0          0
 #define IDT_FLAGS_IST1          1
 
-// ½ÇÁ¦·Î »ç¿ëÇÒ ¸ÅÅ©·Î
+// ì‹¤ì œë¡œ ì‚¬ìš©í•  ë§¤í¬ë¡œ
 #define IDT_FLAGS_KERNEL        ( IDT_FLAGS_DPL0 | IDT_FLAGS_P )
 #define IDT_FLAGS_USER          ( IDT_FLAGS_DPL3 | IDT_FLAGS_P )
 
-// ±âÅ¸ IDT¿¡ °ü·ÃµÈ ¸ÅÅ©·Î
-// IDT ¿£Æ®¸®ÀÇ °³¼ö
+// ê¸°íƒ€ IDTì— ê´€ë ¨ëœ ë§¤í¬ë¡œ
+// IDT ì—”íŠ¸ë¦¬ì˜ ê°œìˆ˜
 #define IDT_MAXENTRYCOUNT       100
-// IDTRÀÇ ½ÃÀÛ ¾îµå·¹½º, TSS ¼¼±×¸ÕÆ®ÀÇ µÚÂÊ¿¡ À§Ä¡
+// IDTRì˜ ì‹œìž‘ ì–´ë“œë ˆìŠ¤, TSS ì„¸ê·¸ë¨¼íŠ¸ì˜ ë’¤ìª½ì— ìœ„ì¹˜
 #define IDTR_STARTADDRESS       ( GDTR_STARTADDRESS + sizeof( GDTR ) + \
         GDT_TABLESIZE + TSS_SEGMENTSIZE )
-// IDT Å×ÀÌºíÀÇ ½ÃÀÛ ¾îµå·¹½º
+// IDT í…Œì´ë¸”ì˜ ì‹œìž‘ ì–´ë“œë ˆìŠ¤
 #define IDT_STARTADDRESS        ( IDTR_STARTADDRESS + sizeof( IDTR ) )
-// IDT Å×ÀÌºíÀÇ ÀüÃ¼ Å©±â
+// IDT í…Œì´ë¸”ì˜ ì „ì²´ í¬ê¸°
 #define IDT_TABLESIZE           ( IDT_MAXENTRYCOUNT * sizeof( IDTENTRY ) )
 
-// ISTÀÇ ½ÃÀÛ ¾îµå·¹½º
+// ISTì˜ ì‹œìž‘ ì–´ë“œë ˆìŠ¤
 #define IST_STARTADDRESS        0x700000
-// ISTÀÇ Å©±â
+// ISTì˜ í¬ê¸°
 #define IST_SIZE                0x100000
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ±¸Á¶Ã¼
+// êµ¬ì¡°ì²´
 //
 ////////////////////////////////////////////////////////////////////////////////
-// 1¹ÙÀÌÆ®·Î Á¤·Ä
+// 1ë°”ì´íŠ¸ë¡œ ì •ë ¬
 #pragma pack( push, 1 )
 
-// GDTR ¹× IDTR ±¸Á¶Ã¼
+// GDTR ë° IDTR êµ¬ì¡°ì²´
 typedef struct kGDTRStruct
 {
     WORD wLimit;
     QWORD qwBaseAddress;
-    // 16¹ÙÀÌÆ® ¾îµå·¹½º Á¤·ÄÀ» À§ÇØ Ãß°¡
+    // 16ë°”ì´íŠ¸ ì–´ë“œë ˆìŠ¤ ì •ë ¬ì„ ìœ„í•´ ì¶”ê°€
     WORD wPading;
     DWORD dwPading;
 } GDTR, IDTR;
 
-// 8¹ÙÀÌÆ® Å©±âÀÇ GDT ¿£Æ®¸® ±¸Á¶
+// 8ë°”ì´íŠ¸ í¬ê¸°ì˜ GDT ì—”íŠ¸ë¦¬ êµ¬ì¡°
 typedef struct kGDTEntry8Struct
 {
     WORD wLowerLimit;
     WORD wLowerBaseAddress;
     BYTE bUpperBaseAddress1;
-    // 4ºñÆ® Type, 1ºñÆ® S, 2ºñÆ® DPL, 1ºñÆ® P
+    // 4ë¹„íŠ¸ Type, 1ë¹„íŠ¸ S, 2ë¹„íŠ¸ DPL, 1ë¹„íŠ¸ P
     BYTE bTypeAndLowerFlag;
-    // 4ºñÆ® Segment Limit, 1ºñÆ® AVL, L, D/B, G
+    // 4ë¹„íŠ¸ Segment Limit, 1ë¹„íŠ¸ AVL, L, D/B, G
     BYTE bUpperLimitAndUpperFlag;
     BYTE bUpperBaseAddress2;
 } GDTENTRY8;
 
-// 16¹ÙÀÌÆ® Å©±âÀÇ GDT ¿£Æ®¸® ±¸Á¶
+// 16ë°”ì´íŠ¸ í¬ê¸°ì˜ GDT ì—”íŠ¸ë¦¬ êµ¬ì¡°
 typedef struct kGDTEntry16Struct
 {
     WORD wLowerLimit;
     WORD wLowerBaseAddress;
     BYTE bMiddleBaseAddress1;
-    // 4ºñÆ® Type, 1ºñÆ® 0, 2ºñÆ® DPL, 1ºñÆ® P
+    // 4ë¹„íŠ¸ Type, 1ë¹„íŠ¸ 0, 2ë¹„íŠ¸ DPL, 1ë¹„íŠ¸ P
     BYTE bTypeAndLowerFlag;
-    // 4ºñÆ® Segment Limit, 1ºñÆ® AVL, 0, 0, G
+    // 4ë¹„íŠ¸ Segment Limit, 1ë¹„íŠ¸ AVL, 0, 0, G
     BYTE bUpperLimitAndUpperFlag;
     BYTE bMiddleBaseAddress2;
     DWORD dwUpperBaseAddress;
     DWORD dwReserved;
 } GDTENTRY16;
 
-// TSS Data ±¸Á¶Ã¼
+// TSS Data êµ¬ì¡°ì²´
 typedef struct kTSSDataStruct
 {
     DWORD dwReserved1;
@@ -159,14 +159,14 @@ typedef struct kTSSDataStruct
     WORD wIOMapBaseAddress;
 } TSSSEGMENT;
 
-// IDT °ÔÀÌÆ® µð½ºÅ©¸³ÅÍ ±¸Á¶Ã¼
+// IDT ê²Œì´íŠ¸ ë””ìŠ¤í¬ë¦½í„° êµ¬ì¡°ì²´
 typedef struct kIDTEntryStruct
 {
     WORD wLowerBaseAddress;
     WORD wSegmentSelector;
-    // 3ºñÆ® IST, 5ºñÆ® 0
+    // 3ë¹„íŠ¸ IST, 5ë¹„íŠ¸ 0
     BYTE bIST;
-    // 4ºñÆ® Type, 1ºñÆ® 0, 2ºñÆ® DPL, 1ºñÆ® P
+    // 4ë¹„íŠ¸ Type, 1ë¹„íŠ¸ 0, 2ë¹„íŠ¸ DPL, 1ë¹„íŠ¸ P
     BYTE bTypeAndFlags;
     WORD wMiddleBaseAddress;
     DWORD dwUpperBaseAddress;
@@ -177,7 +177,7 @@ typedef struct kIDTEntryStruct
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  ÇÔ¼ö
+//  í•¨ìˆ˜
 //
 ////////////////////////////////////////////////////////////////////////////////
 void kInitializeGDTTableAndTSS( void );

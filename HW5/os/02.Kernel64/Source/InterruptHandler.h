@@ -3,7 +3,7 @@
  *  date    2009/01/24
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui
- *  brief   ÀÎÅÍ·´Æ® ¹× ¿¹¿Ü ÇÚµé·¯¿¡ °ü·ÃµÈ Çì´õ ÆÄÀÏ
+ *  brief   ì¸í„°ëŸ½íŠ¸ ë° ì˜ˆì™¸ í•¸ë“¤ëŸ¬ì— ê´€ë ¨ëœ í—¤ë” íŒŒì¼
  */
 
 #ifndef __INTERRUPTHANDLER_H__
@@ -13,7 +13,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ÇÔ¼ö
+// í•¨ìˆ˜
 //
 ////////////////////////////////////////////////////////////////////////////////
 void kCommonExceptionHandler( int iVectorNumber, QWORD qwErrorCode );

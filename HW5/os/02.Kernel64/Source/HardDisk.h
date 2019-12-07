@@ -3,7 +3,7 @@
  *  date    2009/04/20
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui
- *  brief   ÇÏµå µð½ºÅ© ÄÁÆ®·Ñ·¯¿¡ °ü·ÃµÈ Çì´õ ÆÄÀÏ
+ *  brief   í•˜ë“œ ë””ìŠ¤í¬ ì»¨íŠ¸ë¡¤ëŸ¬ì— ê´€ë ¨ëœ í—¤ë” íŒŒì¼
  */
 
 #ifndef __HARDDISK_H__
@@ -14,14 +14,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ¸ÅÅ©·Î
+// ë§¤í¬ë¡œ
 //
 ////////////////////////////////////////////////////////////////////////////////
-// Ã¹ ¹øÂ° PATA Æ÷Æ®(Primary PATA Port)¿Í µÎ ¹øÂ° PATA Æ÷Æ®(Secondary PATA Port)ÀÇ Á¤º¸
+// ì²« ë²ˆì§¸ PATA í¬íŠ¸(Primary PATA Port)ì™€ ë‘ ë²ˆì§¸ PATA í¬íŠ¸(Secondary PATA Port)ì˜ ì •ë³´
 #define HDD_PORT_PRIMARYBASE                0x1F0
 #define HDD_PORT_SECONDARYBASE              0x170
 
-// Æ÷Æ® ÀÎµ¦½º¿¡ °ü·ÃµÈ ¸ÅÅ©·Î
+// í¬íŠ¸ ì¸ë±ìŠ¤ì— ê´€ë ¨ëœ ë§¤í¬ë¡œ
 #define HDD_PORT_INDEX_DATA                 0x00
 #define HDD_PORT_INDEX_SECTORCOUNT          0x02
 #define HDD_PORT_INDEX_SECTORNUMBER         0x03
@@ -32,12 +32,12 @@
 #define HDD_PORT_INDEX_COMMAND              0x07
 #define HDD_PORT_INDEX_DIGITALOUTPUT        0x206
 
-// Ä¿¸Çµå ·¹Áö½ºÅÍ¿¡ °ü·ÃµÈ ¸ÅÅ©·Î
+// ì»¤ë§¨ë“œ ë ˆì§€ìŠ¤í„°ì— ê´€ë ¨ëœ ë§¤í¬ë¡œ
 #define HDD_COMMAND_READ                    0x20
 #define HDD_COMMAND_WRITE                   0x30
 #define HDD_COMMAND_IDENTIFY                0xEC
 
-// »óÅÂ ·¹Áö½ºÅÍ¿¡ °ü·ÃµÈ ¸ÅÅ©·Î
+// ìƒíƒœ ë ˆì§€ìŠ¤í„°ì— ê´€ë ¨ëœ ë§¤í¬ë¡œ
 #define HDD_STATUS_ERROR                    0x01
 #define HDD_STATUS_INDEX                    0x02
 #define HDD_STATUS_CORRECTEDDATA            0x04
@@ -47,86 +47,86 @@
 #define HDD_STATUS_READY                    0x40
 #define HDD_STATUS_BUSY                     0x80
 
-// µå¶óÀÌºê/Çìµå ·¹Áö½ºÅÍ¿¡ °ü·ÃµÈ ¸ÅÅ©·Î
+// ë“œë¼ì´ë¸Œ/í—¤ë“œ ë ˆì§€ìŠ¤í„°ì— ê´€ë ¨ëœ ë§¤í¬ë¡œ
 #define HDD_DRIVEANDHEAD_LBA                0xE0
 #define HDD_DRIVEANDHEAD_SLAVE              0x10
 
-// µðÁöÅÐ Ãâ·Â ·¹Áö½ºÅÍ¿¡ °ü·ÃµÈ ¸ÅÅ©·Î
+// ë””ì§€í„¸ ì¶œë ¥ ë ˆì§€ìŠ¤í„°ì— ê´€ë ¨ëœ ë§¤í¬ë¡œ
 #define HDD_DIGITALOUTPUT_RESET             0x04
 #define HDD_DIGITALOUTPUT_DISABLEINTERRUPT  0x01
 
-// ÇÏµå µð½ºÅ©ÀÇ ÀÀ´äÀ» ´ë±âÇÏ´Â ½Ã°£(millisecond)
+// í•˜ë“œ ë””ìŠ¤í¬ì˜ ì‘ë‹µì„ ëŒ€ê¸°í•˜ëŠ” ì‹œê°„(millisecond)
 #define HDD_WAITTIME                        500
-// ÇÑ¹ø¿¡ HDD¿¡ ÀÐ°Å³ª ¾µ ¼ö ÀÖ´Â ¼½ÅÍÀÇ ¼ö
+// í•œë²ˆì— HDDì— ì½ê±°ë‚˜ ì“¸ ìˆ˜ ìžˆëŠ” ì„¹í„°ì˜ ìˆ˜
 #define HDD_MAXBULKSECTORCOUNT              256            
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ±¸Á¶Ã¼
+// êµ¬ì¡°ì²´
 //
 ////////////////////////////////////////////////////////////////////////////////
-// 1¹ÙÀÌÆ®·Î Á¤·Ä
+// 1ë°”ì´íŠ¸ë¡œ ì •ë ¬
 #pragma pack( push, 1 )
 
-// HDD¿¡ ´ëÇÑ Á¤º¸¸¦ ³ªÅ¸³»´Â ±¸Á¶Ã¼
+// HDDì— ëŒ€í•œ ì •ë³´ë¥¼ ë‚˜íƒ€ë‚´ëŠ” êµ¬ì¡°ì²´
 typedef struct kHDDInformationStruct
 {
-    // ¼³Á¤°ª
+    // ì„¤ì •ê°’
     WORD wConfiguation;
     
-    // ½Ç¸°´õ ¼ö
+    // ì‹¤ë¦°ë” ìˆ˜
     WORD wNumberOfCylinder;
     WORD wReserved1;
     
-    // Çìµå ¼ö
+    // í—¤ë“œ ìˆ˜
     WORD wNumberOfHead;
     WORD wUnformattedBytesPerTrack;
     WORD wUnformattedBytesPerSector;
     
-    // ½Ç¸°´õ´ç ¼½ÅÍ ¼ö
+    // ì‹¤ë¦°ë”ë‹¹ ì„¹í„° ìˆ˜
     WORD wNumberOfSectorPerCylinder;
     WORD wInterSectorGap;
     WORD wBytesInPhaseLock;
     WORD wNumberOfVendorUniqueStatusWord;
     
-    // ÇÏµå µð½ºÅ©ÀÇ ½Ã¸®¾ó ³Ñ¹ö
+    // í•˜ë“œ ë””ìŠ¤í¬ì˜ ì‹œë¦¬ì–¼ ë„˜ë²„
     WORD vwSerialNumber[ 10 ];
     WORD wControllerType;
     WORD wBufferSize; 
     WORD wNumberOfECCBytes;
     WORD vwFirmwareRevision[ 4 ];
     
-    // ÇÏµå µð½ºÅ©ÀÇ ¸ðµ¨ ¹øÈ£
+    // í•˜ë“œ ë””ìŠ¤í¬ì˜ ëª¨ë¸ ë²ˆí˜¸
     WORD vwModelNumber[ 20 ];
     WORD vwReserved2[ 13 ];
     
-    // µð½ºÅ©ÀÇ ÃÑ ¼½ÅÍ ¼ö
+    // ë””ìŠ¤í¬ì˜ ì´ ì„¹í„° ìˆ˜
     DWORD dwTotalSectors;     
     WORD vwReserved3[ 196 ];
 } HDDINFORMATION;
 
 #pragma pack( pop )
 
-// ÇÏµå µð½ºÅ©¸¦ °ü¸®ÇÏ´Â ±¸Á¶Ã¼
+// í•˜ë“œ ë””ìŠ¤í¬ë¥¼ ê´€ë¦¬í•˜ëŠ” êµ¬ì¡°ì²´
 typedef struct kHDDManagerStruct
 {
-    // HDD Á¸Àç ¿©ºÎ¿Í ¾²±â¸¦ ¼öÇàÇÒ ¼ö ÀÖ´ÂÁö ¿©ºÎ
+    // HDD ì¡´ìž¬ ì—¬ë¶€ì™€ ì“°ê¸°ë¥¼ ìˆ˜í–‰í•  ìˆ˜ ìžˆëŠ”ì§€ ì—¬ë¶€
     BOOL bHDDDetected;
     BOOL bCanWrite;
     
-    // ÀÎÅÍ·´Æ® ¹ß»ý ¿©ºÎ¿Í µ¿±âÈ­ °´Ã¼
+    // ì¸í„°ëŸ½íŠ¸ ë°œìƒ ì—¬ë¶€ì™€ ë™ê¸°í™” ê°ì²´
     volatile BOOL bPrimaryInterruptOccur;
     volatile BOOL bSecondaryInterruptOccur;
     MUTEX stMutex;
     
-    // HDD Á¤º¸
+    // HDD ì •ë³´
     HDDINFORMATION stHDDInformation;
 } HDDMANAGER;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ÇÔ¼ö
+// í•¨ìˆ˜
 //
 ////////////////////////////////////////////////////////////////////////////////
 BOOL kInitializeHDD( void );

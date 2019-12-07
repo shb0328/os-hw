@@ -3,7 +3,7 @@
  *  date    2009/02/08
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui
- *  brief   PIT ƒ¡∆Æ∑—∑Øø° ∞¸∑√µ» «Ï¥ı ∆ƒ¿œ
+ *  brief   PIT Ïª®Ìä∏Î°§Îü¨Ïóê Í¥ÄÎ†®Îêú Ìó§Îçî ÌååÏùº
  */
 
 #ifndef __PIT_H__
@@ -13,20 +13,20 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ∏≈≈©∑Œ
+// Îß§ÌÅ¨Î°ú
 //
 ////////////////////////////////////////////////////////////////////////////////
 #define PIT_FREQUENCY               1193182
 #define MSTOCOUNT( x )              ( PIT_FREQUENCY * ( x ) / 1000 )
 #define USTOCOUNT( x )              ( PIT_FREQUENCY * ( x ) / 1000000 )
 
-// I/O ∆˜∆Æ
+// I/O Ìè¨Ìä∏
 #define PIT_PORT_CONTROL            0x43
 #define PIT_PORT_COUNTER0           0x40
 #define PIT_PORT_COUNTER1           0x41
 #define PIT_PORT_COUNTER2           0x42
 
-// ∏µÂ
+// Î™®Îìú
 #define PIT_CONTROL_COUNTER0        0x00
 #define PIT_CONTROL_COUNTER1        0x40
 #define PIT_CONTROL_COUNTER2        0x80
@@ -47,7 +47,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  «‘ºˆ
+//  Ìï®Ïàò
 //
 ////////////////////////////////////////////////////////////////////////////////
 void kInitializePIT( WORD wCount, BOOL bPeriodic );

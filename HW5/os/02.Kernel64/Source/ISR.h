@@ -3,7 +3,7 @@
  *  date    2009/01/24
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui
- *  brief   ÀÎÅÍ·´Æ® ¼­ºñ½º ·çÆ¾(ISR) °ü·ÃµÈ Çì´õ ÆÄÀÏ
+ *  brief   ì¸í„°ëŸ½íŠ¸ ì„œë¹„ìŠ¤ ë£¨í‹´(ISR) ê´€ë ¨ëœ í—¤ë” íŒŒì¼
  */
 
 #ifndef __ISR_H__
@@ -11,10 +11,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  ÇÔ¼ö
+//  í•¨ìˆ˜
 //
 ////////////////////////////////////////////////////////////////////////////////
-// ¿¹¿Ü(Exception) Ã³¸®¿ë ISR
+// ì˜ˆì™¸(Exception) ì²˜ë¦¬ìš© ISR
 void kISRDivideError( void );
 void kISRDebug( void );
 void kISRNMI( void );
@@ -37,7 +37,7 @@ void kISRMachineCheck( void );
 void kISRSIMDError( void );
 void kISRETCException( void );
 
-// ÀÎÅÍ·´Æ®(Interrupt) Ã³¸®¿ë ISR
+// ì¸í„°ëŸ½íŠ¸(Interrupt) ì²˜ë¦¬ìš© ISR
 void kISRTimer( void );
 void kISRKeyboard( void );
 void kISRSlavePIC( void );

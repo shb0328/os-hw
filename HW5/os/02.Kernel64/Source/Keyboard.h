@@ -3,7 +3,7 @@
  *  date    2009/01/09
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui
- *  brief   Ű���� ����̽� ����̹� �Լ����� ������ ����
+ *  brief   키보드 디바이스 드라이버 함수들을 정의한 파일
  */
 
 #ifndef __KEYBOARD_H__
@@ -13,18 +13,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ��ũ��
+// 매크로
 //
 ////////////////////////////////////////////////////////////////////////////////
-// Pause Ű�� ó���ϱ� ���� �����ؾ� �ϴ� ������ ��ĵ �ڵ��� ��
+// Pause 키를 처리하기 위해 무시해야 하는 나머지 스캔 코드의 수
 #define KEY_SKIPCOUNTFORPAUSE       2
 
-// Ű ���¿� ���� �÷���
+// 키 상태에 대한 플래그
 #define KEY_FLAGS_UP             0x00
 #define KEY_FLAGS_DOWN           0x01
 #define KEY_FLAGS_EXTENDEDKEY    0x02
 
-// ��ĵ �ڵ� ���� ���̺��� ���� ��ũ��
+// 스캔 코드 매핑 테이블에 대한 매크로
 #define KEY_MAPPINGTABLEMAXCOUNT    89
 
 #define KEY_NONE        0x00
@@ -66,50 +66,50 @@
 #define KEY_F12         0x9F
 #define KEY_PAUSE       0xA0
 
-// Ű ť�� ���� ��ũ��
-// Ű ť�� �ִ� ũ��
+// 키 큐에 대한 매크로
+// 키 큐의 최대 크기
 #define KEY_MAXQUEUECOUNT	100
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ����ü
+// 구조체
 //
 ////////////////////////////////////////////////////////////////////////////////
-// 1����Ʈ�� ����
+// 1바이트로 정렬
 #pragma pack( push, 1 )
 
-// ��ĵ �ڵ� ���̺��� �����ϴ� �׸�
+// 스캔 코드 테이블을 구성하는 항목
 typedef struct kKeyMappingEntryStruct
 {
-    // Shift Ű�� Caps Lock Ű�� ���յ��� �ʴ� ASCII �ڵ�
+    // Shift 키나 Caps Lock 키와 조합되지 않는 ASCII 코드
     BYTE bNormalCode;
     
-    // Shift Ű�� Caps Lock Ű�� ���յ� ASCII �ڵ�
+    // Shift 키나 Caps Lock 키와 조합된 ASCII 코드
     BYTE bCombinedCode;
 } KEYMAPPINGENTRY;
 
-// Ű������ ���¸� �����ϴ� �ڷᱸ��
+// 키보드의 상태를 관리하는 자료구조
 typedef struct kKeyboardManagerStruct
 {
-    // ���� Ű ����
+    // 조합 키 정보
     BOOL bShiftDown;
     BOOL bCapsLockOn;
     BOOL bNumLockOn;
     BOOL bScrollLockOn;
     
-    // Ȯ�� Ű�� ó���ϱ� ���� ����
+    // 확장 키를 처리하기 위한 정보
     BOOL bExtendedCodeIn;
     int iSkipCountForPause;
 } KEYBOARDMANAGER;
 
-// Ű ť�� ������ ������ ����ü
+// 키 큐에 삽입할 데이터 구조체
 typedef struct kKeyDataStruct
 {
-    // Ű���忡�� ���޵� ��ĵ �ڵ�
+    // 키보드에서 전달된 스캔 코드
 	BYTE bScanCode;
-    // ��ĵ �ڵ带 ��ȯ�� ASCII �ڵ�
+    // 스캔 코드를 변환한 ASCII 코드
 	BYTE bASCIICode;
-    // Ű ���¸� �����ϴ� �÷���(����/������/Ȯ�� Ű ����)
+    // 키 상태를 저장하는 플래그(눌림/떨어짐/확장 키 여부)
 	BYTE bFlags;
 } KEYDATA;
 
@@ -117,7 +117,7 @@ typedef struct kKeyDataStruct
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  �Լ�
+//  함수
 //
 ////////////////////////////////////////////////////////////////////////////////
 BOOL kIsOutputBufferFull( void );

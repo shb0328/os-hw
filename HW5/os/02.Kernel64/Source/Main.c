@@ -3,7 +3,7 @@
  *  date    2009/01/02
  *  author  kkamagui 
  *          Copyright(c)2008 All rights reserved by kkamagui
- *  brief   C ¾ğ¾î·Î ÀÛ¼ºµÈ Ä¿³ÎÀÇ ¿£Æ®¸® Æ÷ÀÎÆ® ÆÄÀÏ
+ *  brief   C ì–¸ì–´ë¡œ ì‘ì„±ëœ ì»¤ë„ì˜ ì—”íŠ¸ë¦¬ í¬ì¸íŠ¸ íŒŒì¼
  */
 
 #include "Types.h"
@@ -19,19 +19,19 @@
 #include "FileSystem.h"
 
 /**
- *  ¾Æ·¡ ÇÔ¼ö´Â C ¾ğ¾î Ä¿³ÎÀÇ ½ÃÀÛ ºÎºĞÀÓ
+ *  ì•„ë˜ í•¨ìˆ˜ëŠ” C ì–¸ì–´ ì»¤ë„ì˜ ì‹œì‘ ë¶€ë¶„ì„
  */
 void Main( void )
 {
     int iCursorX, iCursorY;
 
-    // ÄÜ¼ÖÀ» ¸ÕÀú ÃÊ±âÈ­ÇÑ ÈÄ, ´ÙÀ½ ÀÛ¾÷À» ¼öÇà
+    // ì½˜ì†”ì„ ë¨¼ì € ì´ˆê¸°í™”í•œ í›„, ë‹¤ìŒ ì‘ì—…ì„ ìˆ˜í–‰
     kInitializeConsole( 0, 10 );    
     kPrintf( "Switch To IA-32e Mode Success~!!\n" );
     kPrintf( "IA-32e C Language Kernel Start..............[Pass]\n" );
     kPrintf( "Initialize Console..........................[Pass]\n" );
     
-    // ºÎÆÃ »óÈ²À» È­¸é¿¡ Ãâ·Â
+    // ë¶€íŒ… ìƒí™©ì„ í™”ë©´ì— ì¶œë ¥
     kGetCursor( &iCursorX, &iCursorY );
     kPrintf( "GDT Initialize And Switch For IA-32e Mode...[    ]" );
     kInitializeGDTTableAndTSS();
@@ -59,16 +59,16 @@ void Main( void )
     iCursorY++;
     kInitializeScheduler();
     
-    // µ¿Àû ¸Ş¸ğ¸® ÃÊ±âÈ­
+    // ë™ì  ë©”ëª¨ë¦¬ ì´ˆê¸°í™”
     kPrintf( "Dynamic Memory Initialize...................[Pass]\n" );
     iCursorY++;
     kInitializeDynamicMemory();
     
-    // 1ms´ç ÇÑ¹ø¾¿ ÀÎÅÍ·´Æ®°¡ ¹ß»ıÇÏµµ·Ï ¼³Á¤
+    // 1msë‹¹ í•œë²ˆì”© ì¸í„°ëŸ½íŠ¸ê°€ ë°œìƒí•˜ë„ë¡ ì„¤ì •
     kInitializePIT( MSTOCOUNT( 1 ), 1 );
     
     kPrintf( "Keyboard Activate And Queue Initialize......[    ]" );
-    // Å°º¸µå¸¦ È°¼ºÈ­
+    // í‚¤ë³´ë“œë¥¼ í™œì„±í™”
     if( kInitializeKeyboard() == TRUE )
     {
         kSetCursor( 45, iCursorY++ );
@@ -83,14 +83,14 @@ void Main( void )
     }
     
     kPrintf( "PIC Controller And Interrupt Initialize.....[    ]" );
-    // PIC ÄÁÆ®·Ñ·¯ ÃÊ±âÈ­ ¹× ¸ğµç ÀÎÅÍ·´Æ® È°¼ºÈ­
+    // PIC ì»¨íŠ¸ë¡¤ëŸ¬ ì´ˆê¸°í™” ë° ëª¨ë“  ì¸í„°ëŸ½íŠ¸ í™œì„±í™”
     kInitializePIC();
     kMaskPICInterrupt( 0 );
     kEnableInterrupt();
     kSetCursor( 45, iCursorY++ );
     kPrintf( "Pass\n" );
     
-    // ÆÄÀÏ ½Ã½ºÅÛÀ» ÃÊ±âÈ­
+    // íŒŒì¼ ì‹œìŠ¤í…œì„ ì´ˆê¸°í™”
     kPrintf( "File System Initialize......................[    ]" );
     if( kInitializeFileSystem() == TRUE )
     {
@@ -103,7 +103,7 @@ void Main( void )
         kPrintf( "Fail\n" );
     }
     
-    // À¯ÈŞ ÅÂ½ºÅ©¸¦ ½Ã½ºÅÛ ½º·¹µå·Î »ı¼ºÇÏ°í ¼ĞÀ» ½ÃÀÛ
+    // ìœ íœ´ íƒœìŠ¤í¬ë¥¼ ì‹œìŠ¤í…œ ìŠ¤ë ˆë“œë¡œ ìƒì„±í•˜ê³  ì…¸ì„ ì‹œì‘
     kCreateTask( TASK_FLAGS_LOWEST | TASK_FLAGS_THREAD | TASK_FLAGS_SYSTEM | TASK_FLAGS_IDLE, 0, 0, 
             ( QWORD ) kIdleTask );
     kStartConsoleShell();
