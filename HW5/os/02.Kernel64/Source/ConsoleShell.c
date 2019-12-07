@@ -1756,6 +1756,11 @@ static void kWriteDataToFile(const char *pcParameterBuffer)
         kPrintf("%s File Open Fail\n", vcFileName);
         return;
     }
+    else if (fp == -1)
+    {
+        kPrintf("File already exists. You don't have permission.\n");
+        return;
+    }
 
     // 엔터 키가 연속으로 3번 눌러질 때까지 내용을 파일에 씀
     iEnterCount = 0;

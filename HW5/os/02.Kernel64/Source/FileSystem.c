@@ -1021,7 +1021,7 @@ static BOOL kFreeClusterUntilEnd(DWORD dwClusterIndex)
 /**
  *  파일을 열거나 생성 
  */
-FILE *kOpenFile(const char *pcFileName, const char *pcMode)
+FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 {
 	DIRECTORYENTRY stEntry;
 	int iDirectoryEntryOffset;
@@ -1061,6 +1061,9 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode)
 			kUnlock(&(gs_stFileSystemManager.stMutex));
 			return NULL;
 		}
+		// 파일의 접근 권한을 default 로 설정하고 owner를 로그인 중인 user의 id로 설정
+		stEntry.authFlag = 0x74; //01110100
+		kMemCpy(stEntry.owner, id, kStrLen(id));
 	}
 
 	//==========================================================================
@@ -1069,7 +1072,15 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode)
 	//==========================================================================
 	else if (pcMode[0] == 'w')
 	{
-
+		//owner가 아닌 id가 write 시도
+		if (0 == kStrCmp(stEntry.owner, id))
+		{
+			//권한 확인
+			if (0 == (stEntry.authFlag & 0x02))
+			{
+				return -1;
+			}
+		}
 		// 시작 클러스터의 다음 클러스터를 찾음
 		if (kGetClusterLinkData(stEntry.dwStartClusterIndex, &dwSecondCluster) == FALSE)
 		{
