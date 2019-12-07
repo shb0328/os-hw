@@ -13,6 +13,7 @@
 #include "Utility.h"
 #include "CacheManager.h"
 #include "RAMDisk.h"
+#include "ConsoleShell.h"
 
 // 파일 시스템 자료구조
 static FILESYSTEMMANAGER gs_stFileSystemManager;
@@ -906,7 +907,7 @@ static void kFreeFileDirectoryHandle(FILE *pstFile)
  *  파일을 생성
  */
 static BOOL kCreateFile(const char *pcFileName, DIRECTORYENTRY *pstEntry,
-						int *piDirectoryEntryIndex)
+						int *piDirectoryEntryIndex, const char *id)
 {
 	DWORD dwCluster;
 
@@ -932,6 +933,13 @@ static BOOL kCreateFile(const char *pcFileName, DIRECTORYENTRY *pstEntry,
 	pstEntry->dwStartClusterIndex = dwCluster;
 	pstEntry->dwFileSize = 0;
 	pstEntry->iFlag = 0;
+
+	// 파일의 접근 권한을 default 로 설정하고 owner를 로그인 중인 user의 id로 설정
+	kStrCpy(pstEntry->owner, id, kStrLen(id));
+	char auth[9];
+	pstEntry->authFlag = 0x74; //01110100
+	authFlagToString(pstEntry->authFlag, auth);
+	kPrintf("create file... \nowner : %s\nauth : %s\n", pstEntry->owner, auth);
 
 	// 디렉터리 엔트리를 등록
 	if (kSetDirectoryEntryData(*piDirectoryEntryIndex, pstEntry) == FALSE)
@@ -1055,15 +1063,12 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 		}
 
 		// 나머지 옵션들은 파일을 생성
-		if (kCreateFile(pcFileName, &stEntry, &iDirectoryEntryOffset) == FALSE)
+		if (kCreateFile(pcFileName, &stEntry, &iDirectoryEntryOffset, id) == FALSE)
 		{
 			// 동기화
 			kUnlock(&(gs_stFileSystemManager.stMutex));
 			return NULL;
 		}
-		// 파일의 접근 권한을 default 로 설정하고 owner를 로그인 중인 user의 id로 설정
-		stEntry.authFlag = 0x74; //01110100
-		kStrCpy(stEntry.owner, id, kStrLen(id));
 	}
 
 	//==========================================================================

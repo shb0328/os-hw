@@ -86,7 +86,7 @@ int kStrCpy(char *pvDestination, const char *pvSource, int iSize)
 {
     int i;
 
-    for (i = 0; i < iSize; i++)
+    for (i = 0; i < iSize + 1; i++)
     {
         (pvDestination)[i] = (pvSource)[i];
     }
@@ -200,6 +200,55 @@ int kStrLen(const char *pcBuffer)
         }
     }
     return i;
+}
+
+/**
+ * flag to string
+ **/
+void authFlagToString(BYTE authFlag, char res[9])
+{
+    BYTE filter = 0x80;
+    for (int i = 0; i < 8; ++i)
+    {
+        if (authFlag & filter)
+        {
+            switch (i)
+            {
+            case 0:
+                res[i] = 's';
+                break;
+            case 1:
+                res[i] = 'r';
+                break;
+            case 2:
+                res[i] = 'w';
+                break;
+            case 3:
+                res[i] = 'x';
+                break;
+            case 4:
+                res[i] = '-';
+                break;
+            case 5:
+                res[i] = 'r';
+                break;
+            case 6:
+                res[i] = 'w';
+                break;
+            case 7:
+                res[i] = 'x';
+                break;
+            }
+        }
+        else
+        {
+            res[i] = '-';
+        }
+
+        filter = filter >> 1;
+    }
+
+    res[8] = '\0';
 }
 
 // 램의 총 크기(Mbyte 단위)

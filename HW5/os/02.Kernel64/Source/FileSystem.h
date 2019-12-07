@@ -276,7 +276,7 @@ void *kAllocateFileDirectoryHandle(void);
 
 static void kFreeFileDirectoryHandle(FILE *pstFile);
 static BOOL kCreateFile(const char *pcFileName, DIRECTORYENTRY *pstEntry,
-                        int *piDirectoryEntryIndex);
+                        int *piDirectoryEntryIndex, const char *id);
 
 BOOL kCreateDirectory(const char *pcDirName, DIRECTORYENTRY *pstEntry,
                       int *piDirectoryEntryIndex);

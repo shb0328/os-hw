@@ -68,6 +68,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
         {"testperformance", "Test File Read/WritePerformance", kTestPerformance},
         {"flush", "Flush File System Cache", kFlushCache},
         {"cd", "Change Directory, ex) cd temp", kChangeDirectory},
+        {"logout", "logout", kStartConsoleShell},
 };
 
 //==============================================================================
@@ -134,24 +135,22 @@ void kStartConsoleShell(void)
         //remove enter, add '\0'
         pw[i - 1] = '\0';
 
-        /*
-        if (loginCheck() == 1)
+        if (loginCheck(id, pw) == 1)
         {
             kStrCpy(USER, id, kStrLen(id));
+            kPrintf("************\nLogin Success~!\nuser:%s\n************\n", USER);
             break;
         }
-        else if (loginCheck() == -1)
+        else if (loginCheck(id, pw) == -1)
         {
-            kPrintf("No ID\n");
+            kPrintf("************\nNo ID\n************\n");
+            kStartConsoleShell();
         }
-        else if (loginCheck() == -2)
+        else if (loginCheck(id, pw) == -2)
         {
-            kPrintf("Wrong PW\n");
+            kPrintf("************\nWrong PW\n************\n");
+            kStartConsoleShell();
         }
-        */
-        kStrCpy(USER, id, kStrLen(id));
-        break;
-        kPrintf("%s\n", USER);
     }
 
     /**
@@ -212,6 +211,54 @@ void kStartConsoleShell(void)
                 vcCommandBuffer[iCommandBufferIndex++] = bKey;
                 kPrintf("%c", bKey);
             }
+        }
+    }
+}
+
+int loginCheck(char id[], char pw[])
+{
+    char ids[4][16] = {
+        "hyebeen",
+        "jiho",
+        "sxxnz",
+        "ethan"};
+    char pws[4][16] = {
+        "aaa",
+        "bbbb",
+        "zxcvbnm",
+        "qwer"};
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (kStrCmp(ids[i], id, kStrLen(id)))
+        {
+            if (kStrCmp(pws[i], pw, kStrLen(pw)))
+            {
+                return 1;
+            }
+            else
+            {
+                return -2;
+            }
+        }
+    }
+
+    return -1;
+}
+
+#define MAX_ID_LEN 16
+void caesar(int n, char str[])
+{
+    int i = 0;
+    for (i = 0; i < MAX_ID_LEN; i++)
+    {
+        if (str[i] >= 65 && str[i] <= 90)
+        {
+            str[i] = (str[i] - 65 + n) % 26 + 65;
+        }
+        else if (str[i] >= 97 && str[i] <= 122)
+        {
+            str[i] = (str[i] - 97 + n) % 26 + 97;
         }
     }
 }
@@ -1772,6 +1819,10 @@ static void kShowRootDirectory(const char *pcParameterBuffer)
             kMemCpy(vcBuffer + 25, vcTempValue, kStrLen(vcTempValue));
             break;
         }
+        kPrintf("owner : %s\n", pstEntry->owner);
+        char auth[9] = {0};
+        authFlagToString(pstEntry->authFlag, auth);
+        kPrintf("auth : %s\n", auth);
 
         kPrintf("  %s\n", vcBuffer);
 
