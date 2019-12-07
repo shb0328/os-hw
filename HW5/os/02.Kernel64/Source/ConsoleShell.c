@@ -19,6 +19,9 @@
 #include "HardDisk.h"
 #include "FileSystem.h"
 
+//login 성공한 USER의 id
+char USER[16];
+
 // 커맨드 테이블 정의
 SHELLCOMMANDENTRY gs_vstCommandTable[] =
 {
@@ -1501,6 +1504,9 @@ static void kCreateFileInRootDirectory( const char* pcParameterBuffer )
     kPrintf( "File Create Success\n" );
 }
 
+/**
+ *  루트 디렉터리에 빈 디렉토리를 생성
+ */
 static void kCreateDirectoryInRootDirectory( const char* pcParameterBuffer )
 {
     PARAMETERLIST stList;
