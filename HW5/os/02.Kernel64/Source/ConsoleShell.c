@@ -85,6 +85,79 @@ void kStartConsoleShell(void)
 
     vcDirectoryBuffer[0] = '\0';
 
+    while (1)
+    {
+        BYTE bID;
+        BYTE bPW;
+        int i = 0;
+        char id[16], pw[16];
+
+        kPrintf("LOGIN\n");
+        kPrintf("ID : ");
+
+        while (bID != KEY_ENTER)
+        {
+
+            bID = kGetCh();
+
+            id[i] = bID;
+            kPrintf("%c", bID);
+            ++i;
+
+            if (i > 16)
+            {
+                kPrintf("\ntoo long id. maximun is 16.\n");
+                i = 0;
+                kPrintf("ID : ");
+            }
+        }
+        //remove enter, add '\0'
+        id[i - 1] = '\0';
+
+        i = 0;
+        kPrintf("PW : ");
+        while (bPW != KEY_ENTER)
+        {
+            bPW = kGetCh();
+
+            pw[i] = bPW;
+            kPrintf("%c", bPW);
+            ++i;
+
+            if (i > 16)
+            {
+                kPrintf("\ntoo long pw. maximun is 16.\n");
+                i = 0;
+                kPrintf("PW : ");
+            }
+        }
+        //remove enter, add '\0'
+        pw[i - 1] = '\0';
+
+        /*
+        if (loginCheck() == 1)
+        {
+            kStrCpy(USER, id, kStrLen(id));
+            break;
+        }
+        else if (loginCheck() == -1)
+        {
+            kPrintf("No ID\n");
+        }
+        else if (loginCheck() == -2)
+        {
+            kPrintf("Wrong PW\n");
+        }
+        */
+        kStrCpy(USER, id, kStrLen(id));
+        break;
+        kPrintf("%s\n", USER);
+    }
+
+    /**
+     *  Start MINTOS ConsoleShell
+     **/
+
     kPrintf(CONSOLESHELL_PROMPTMESSAGE);
     kPrintf(">");
 
