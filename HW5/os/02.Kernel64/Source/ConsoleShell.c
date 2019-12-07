@@ -1496,7 +1496,7 @@ static void kCreateFileInRootDirectory(const char *pcParameterBuffer)
         return;
     }
 
-    pstFile = fopen(vcFileName, "w");
+    pstFile = fopen(vcFileName, "w", USER);
     if (pstFile == NULL)
     {
         kPrintf("File Create Fail\n");
@@ -1750,7 +1750,7 @@ static void kWriteDataToFile(const char *pcParameterBuffer)
     }
 
     // 파일 생성
-    fp = fopen(vcFileName, "w");
+    fp = fopen(vcFileName, "w", USER);
     if (fp == NULL)
     {
         kPrintf("%s File Open Fail\n", vcFileName);
@@ -1817,7 +1817,7 @@ static void kReadDataFromFile(const char *pcParameterBuffer)
     }
 
     // 파일 생성
-    fp = fopen(vcFileName, "r");
+    fp = fopen(vcFileName, "r", USER);
     if (fp == NULL)
     {
         kPrintf("%s File Open Fail\n", vcFileName);
@@ -1893,7 +1893,7 @@ static void kTestFileIO(const char *pcParameterBuffer)
     //==========================================================================
     kPrintf("1. File Open Fail Test...");
     // r 옵션은 파일을 생성하지 않으므로, 테스트 파일이 없는 경우 NULL이 되어야 함
-    pstFile = fopen("testfileio.bin", "r");
+    pstFile = fopen("testfileio.bin", "r", USER);
     if (pstFile == NULL)
     {
         kPrintf("[Pass]\n");
@@ -1909,7 +1909,7 @@ static void kTestFileIO(const char *pcParameterBuffer)
     //==========================================================================
     kPrintf("2. File Create Test...");
     // w 옵션은 파일을 생성하므로, 정상적으로 핸들이 반환되어야함
-    pstFile = fopen("testfileio.bin", "w");
+    pstFile = fopen("testfileio.bin", "w", USER);
     if (pstFile != NULL)
     {
         kPrintf("[Pass]\n");
@@ -2191,7 +2191,7 @@ static void kTestPerformance(const char *pcParameterBuffer)
 
     // 기존의 테스트 파일을 제거하고 새로 만듦
     remove("performance.txt");
-    pstFile = fopen("performance.txt", "w");
+    pstFile = fopen("performance.txt", "w", USER);
     if (pstFile == NULL)
     {
         kPrintf("File Open Fail\n");
@@ -2248,7 +2248,7 @@ static void kTestPerformance(const char *pcParameterBuffer)
 
     // 기존의 테스트 파일을 제거하고 새로 만듦
     remove("performance.txt");
-    pstFile = fopen("performance.txt", "w");
+    pstFile = fopen("performance.txt", "w", USER);
     if (pstFile == NULL)
     {
         kPrintf("File Open Fail\n");
