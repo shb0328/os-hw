@@ -133,21 +133,27 @@ int kMemCmp(const void *pvDestination, const void *pvSource, int iSize)
     }
     return 0;
 }
-/*
-int kMemCmp( const void* pvDestination, const void* pvSource, int iSize )
+
+/**
+ *  문자열 비교
+ */
+int kStrCmp(const char *pvDestination, const char *pvSource)
 {
-    int i;
-    char cTemp;
-    
-    for( i = 0 ; i < iSize ; i++ )
+    if (kStrLen(pvDestination) != kStrLen(pvSource))
     {
-        cTemp = ( ( char* ) pvDestination )[ i ] - ( ( char* ) pvSource )[ i ];
-        if( cTemp != 0 )
-        {
-            return ( int ) cTemp;
-        }
+        return 0;
     }
-    return 0;
+    else
+    {
+        for (int i = 0; i < strlen(pvSource); ++i)
+        {
+            if (pvDestination[i] != pvSource[i])
+            {
+                return 0;
+            }
+        }
+        return 1;
+    }
 }
 
 /**
