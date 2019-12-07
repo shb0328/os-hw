@@ -1115,6 +1115,18 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 			return NULL;
 		}
 	}
+	else if (pcMode[0] == "r")
+	{
+		//owner가 아닌 id가 read 시도
+		if (0 == kStrCmp(stEntry.owner, id))
+		{
+			//권한 확인
+			if (0 == (stEntry.authFlag & 0x04))
+			{
+				return -1;
+			}
+		}
+	}
 
 	//==========================================================================
 	// 파일 핸들을 할당 받아 데이터를 설정한 후 반환

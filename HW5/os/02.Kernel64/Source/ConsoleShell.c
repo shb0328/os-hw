@@ -1758,7 +1758,7 @@ static void kWriteDataToFile(const char *pcParameterBuffer)
     }
     else if (fp == -1)
     {
-        kPrintf("File already exists. You don't have permission.\n");
+        kPrintf("File already exists. And you don't have permission.\n");
         return;
     }
 
@@ -1821,6 +1821,11 @@ static void kReadDataFromFile(const char *pcParameterBuffer)
     if (fp == NULL)
     {
         kPrintf("%s File Open Fail\n", vcFileName);
+        return;
+    }
+    else if (fp == -1)
+    {
+        kPrintf("File already exists. And you don't have permission.\n");
         return;
     }
 
