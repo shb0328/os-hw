@@ -1063,7 +1063,7 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 		}
 		// 파일의 접근 권한을 default 로 설정하고 owner를 로그인 중인 user의 id로 설정
 		stEntry.authFlag = 0x74; //01110100
-		kMemCpy(stEntry.owner, id, kStrLen(id));
+		kStrCpy(stEntry.owner, id, kStrLen(id));
 	}
 
 	//==========================================================================

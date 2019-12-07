@@ -79,13 +79,16 @@ int kMemCpy(void *pvDestination, const void *pvSource, int iSize)
     return iSize;
 }
 
-int kMemCpy(char *pvDestination, const char *pvSource, int iSize)
+/**
+ *  문자열 복사
+ */
+int kStrCpy(char *pvDestination, const char *pvSource, int iSize)
 {
     int i;
 
     for (i = 0; i < iSize; i++)
     {
-        ((char *)pvDestination)[i] = ((char *)pvSource)[i];
+        (pvDestination)[i] = (pvSource)[i];
     }
 
     return iSize;
