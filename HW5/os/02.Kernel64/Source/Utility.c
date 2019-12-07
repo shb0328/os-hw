@@ -148,7 +148,7 @@ int kStrCmp(const char *pvDestination, const char *pvSource)
     }
     else
     {
-        for (int i = 0; i < strlen(pvSource); ++i)
+        for (int i = 0; i < kStrLen(pvSource); ++i)
         {
             if (pvDestination[i] != pvSource[i])
             {
