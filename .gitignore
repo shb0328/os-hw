@@ -1,6 +1,6 @@
 chap27/
 *.bin
-*.img
+**/Disk.img
 *.o
 *.elf
 *.dep

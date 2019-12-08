@@ -122,7 +122,7 @@ BOOL kMount(void)
     if (pstMBR->dwSignature != FILESYSTEM_SIGNATURE)
     {
         // 동기화 처리
-        kUnlock(&(gs_stFileSystemManager.stMutex));
+                kUnlock(&(gs_stFileSystemManager.stMutex));
         return FALSE;
     }
 

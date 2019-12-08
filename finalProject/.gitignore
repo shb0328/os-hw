@@ -1,7 +1,7 @@
 */Temp/
 *.o
 *.bin
-*.img
+Disk.img
 *.elf
 *.dep
 *.elf.bin

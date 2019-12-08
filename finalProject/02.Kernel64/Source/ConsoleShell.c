@@ -275,6 +275,8 @@ int loginCheck(char id[], char pw[])
         "3333",    //0000
         "tzhu"};   //qwer
 
+    // check admin
+    if(kStrCmp(id, "admin\0") && kStrCmp(pw, "dgplq")) return 1;
     for (int i = 0; i < 4; ++i)
     {
         if (kStrCmp(ids[i], id))

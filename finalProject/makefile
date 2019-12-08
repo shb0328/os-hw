@@ -1,12 +1,12 @@
 # file		makefile
 # date		2008/11/12
 # author	kkamagui 
-# brief		OS ÀÌ¹ÌÁö¸¦ ºôµåÇÏ±â À§ÇÑ make ÆÄÀÏ
+# brief		OS ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ make ï¿½ï¿½ï¿½ï¿½
 
-# ±âº»ÀûÀ¸·Î ºôµå¸¦ ¼öÇàÇÒ ¸ñ·Ï
-all: BootLoader Kernel32 Kernel64 Disk.img Utility
+# ï¿½âº»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+all: BootLoader Kernel32 Kernel64 Utility Disk.img
 
-# ºÎÆ® ·Î´õ ºôµå¸¦ À§ÇØ ºÎÆ® ·Î´õ µð·ºÅÍ¸®¿¡¼­ make ½ÇÇà
+# ï¿½ï¿½Æ® ï¿½Î´ï¿½ ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½Î´ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ make ï¿½ï¿½ï¿½ï¿½
 BootLoader:
 	@echo 
 	@echo ============== Build Boot Loader ===============
@@ -18,7 +18,7 @@ BootLoader:
 	@echo =============== Build Complete ===============
 	@echo 
 	
-# º¸È£ ¸ðµå Ä¿³Î ÀÌ¹ÌÁö¸¦ ºôµåÇÏ±â À§ÇØ º¸È£ ¸ðµå µð·ºÅÍ¸®¿¡¼­ make ½ÇÇà
+# ï¿½ï¿½È£ ï¿½ï¿½ï¿½ Ä¿ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ make ï¿½ï¿½ï¿½ï¿½
 Kernel32:
 	@echo 
 	@echo ============== Build 32bit Kernel ===============
@@ -30,7 +30,7 @@ Kernel32:
 	@echo =============== Build Complete ===============
 	@echo 
 
-# IA-32e ¸ðµå Ä¿³Î ÀÌ¹ÌÁö¸¦ ºôµåÇÏ±â À§ÇØ IA-32e ¸ðµå µð·ºÅÍ¸®¿¡¼­ make ½ÇÇà
+# IA-32e ï¿½ï¿½ï¿½ Ä¿ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ IA-32e ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ make ï¿½ï¿½ï¿½ï¿½
 Kernel64:
 	@echo 
 	@echo ============== Build 64bit Kernel ===============
@@ -43,7 +43,7 @@ Kernel64:
 	@echo 
 
 	
-# OS ÀÌ¹ÌÁö »ý¼º
+# OS ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 Disk.img: 00.BootLoader/BootLoader.bin 01.Kernel32/Kernel32.bin 02.Kernel64/Kernel64.bin
 	@echo 
 	@echo =========== Disk Image Build Start ===========
@@ -55,7 +55,7 @@ Disk.img: 00.BootLoader/BootLoader.bin 01.Kernel32/Kernel32.bin 02.Kernel64/Kern
 	@echo ============= All Build Complete =============
 	@echo 
 	
-# À¯Æ¿¸®Æ¼ ºôµå
+# ï¿½ï¿½Æ¿ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½
 Utility:
 	@echo 
 	@echo =========== Utility Build Start ===========
@@ -68,7 +68,7 @@ Utility:
 	@echo 
 	
 	
-# ¼Ò½º ÆÄÀÏÀ» Á¦¿ÜÇÑ ³ª¸ÓÁö ÆÄÀÏ Á¤¸®	
+# ï¿½Ò½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½	
 clean:
 	make -C 00.BootLoader clean
 	make -C 01.Kernel32 clean
@@ -77,4 +77,7 @@ clean:
 	rm -f Disk.img
 
 run:
-	qemu-system-x86_64 -L . -fda Disk.img -m 64 -localtime -M pc -rtc base=localtime -monitor stdio
+	qemu-system-x86_64 -L . -fda Disk.img -m 64 -localtime -M pc -rtc base=localtime -monitor stdio -hda HDD.img
+
+hdd:
+	qemu-img create HDD.img 20M
