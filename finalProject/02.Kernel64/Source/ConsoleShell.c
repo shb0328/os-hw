@@ -1768,6 +1768,8 @@ static void kShowRootDirectory(const char *pcParameterBuffer)
         kSPrintf(vcTempValue, "0x%X Cluster", pstEntry->dwStartClusterIndex);
         kMemCpy(vcBuffer + 20, vcTempValue, kStrLen(vcTempValue) + 1);
 
+        kPrintf("  %s", vcBuffer);
+
         kPrintf("  owner:%s", pstEntry->owner);
         char auth[9] = {0};
         authFlagToString(pstEntry->authFlag, auth);
