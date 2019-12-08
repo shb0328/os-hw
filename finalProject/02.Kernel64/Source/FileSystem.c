@@ -122,7 +122,7 @@ BOOL kMount(void)
     if (pstMBR->dwSignature != FILESYSTEM_SIGNATURE)
     {
         // 동기화 처리
-                kUnlock(&(gs_stFileSystemManager.stMutex));
+        kUnlock(&(gs_stFileSystemManager.stMutex));
         return FALSE;
     }
 
@@ -1100,7 +1100,6 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
                 return -1;
             }
             kPrintf("But you have permission.\n");
-            kPrintf("=== read... ===\n");
         }
         else //owner
         {
@@ -1111,7 +1110,6 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
                 return -1;
             }
             kPrintf("You have permission.\n");
-            kPrintf("=== read... ===\n");
         }
     }
     //==========================================================================
@@ -1786,7 +1784,8 @@ int kChangeMode(const char *pcFileName, BYTE authFlag, const char *user)
         return -1;
     }
 
-    if(!kStrCmp(user, stEntry.owner)) {
+    if (!kStrCmp(user, stEntry.owner))
+    {
         kUnlock(&(gs_stFileSystemManager.stMutex));
         return ~0;
     }

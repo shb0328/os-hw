@@ -64,8 +64,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
         {"flush", "Flush File System Cache", kFlushCache},
         {"logout", "logout", kStartConsoleShell},
         {"chmod", "Change mode, ex) chmod a.c(filename) 70(owner:rwx,other:---)", kChmod},
-        {"createuser", "Create User, Only Admin ex) createuser id password", kCreateUser}
-};
+        {"createuser", "Create User, Only Admin ex) createuser id password", kCreateUser}};
 
 //==============================================================================
 //  실제 셸을 구성하는 코드
@@ -84,96 +83,113 @@ void kStartConsoleShell(void)
     /**
      *  Login
      **/
-    while (1)
+    // while (1)
+    // {
+    BYTE bID = 0;
+    BYTE bPW = 0;
+    char id[16] = {0}, pw[16] = {0};
+
+    kPrintf("============= LOGIN =============\n");
+
+    //ID 입력
+    int i = 0;
+    kPrintf(" ID : ");
+    while (bID != KEY_ENTER)
     {
-        BYTE bID = 0;
-        BYTE bPW = 0;
-        char id[16] = {0}, pw[16] = {0};
 
-        kPrintf("============= LOGIN =============\n");
-
-        //ID 입력
-        int i = 0;
-        kPrintf(" ID : ");
-        while (bID != KEY_ENTER)
+        bID = kGetCh();
+        if (bID == KEY_BACKSPACE)
         {
-
-            bID = kGetCh();
-            if (bID == KEY_BACKSPACE)
+            if (i > 0)
             {
-                if (i > 0)
-                {
-                    // 현재 커서 위치를 얻어서 한 문자 앞으로 이동한 다음 공백을 출력하고
-                    // 커맨드 버퍼에서 마지막 문자 삭제
-                    kGetCursor(&iCursorX, &iCursorY);
-                    kPrintStringXY(iCursorX - 1, iCursorY, " ");
-                    kSetCursor(iCursorX - 1, iCursorY);
+                // 현재 커서 위치를 얻어서 한 문자 앞으로 이동한 다음 공백을 출력하고
+                // 커맨드 버퍼에서 마지막 문자 삭제
+                kGetCursor(&iCursorX, &iCursorY);
+                kPrintStringXY(iCursorX - 1, iCursorY, " ");
+                kSetCursor(iCursorX - 1, iCursorY);
 
-                    // iCommandBufferIndex--;
-                    i--;
-                    id[i] = '\0';
-                }
-            }
-            else
-            {
-                id[i] = bID;
-                kPrintf("%c", bID);
-                ++i;
-            }
-
-            if (i > 16)
-            {
-                kPrintf("\ntoo long id. maximun is 16.\n");
-                i = 0;
-                kPrintf(" ID : ");
+                // iCommandBufferIndex--;
+                i--;
+                id[i] = '\0';
             }
         }
-        //remove enter, add '\0'
-        id[i - 1] = '\0';
-
-        //PW 입력
-        i = 0;
-        kPrintf(" PW : ");
-        while (bPW != KEY_ENTER)
+        else
         {
-            bPW = kGetCh();
-            if (bPW == KEY_BACKSPACE)
-            {
-                if (i > 0)
-                {
-                    // 현재 커서 위치를 얻어서 한 문자 앞으로 이동한 다음 공백을 출력하고
-                    // 커맨드 버퍼에서 마지막 문자 삭제
-                    kGetCursor(&iCursorX, &iCursorY);
-                    kPrintStringXY(iCursorX - 1, iCursorY, " ");
-                    kSetCursor(iCursorX - 1, iCursorY);
+            id[i] = bID;
+            kPrintf("%c", bID);
+            ++i;
+        }
 
-                    // iCommandBufferIndex--;
-                    i--;
-                    pw[i] = '\0';
-                }
-            }
-            else if (bPW == KEY_ENTER)
-            {
-                kPrintf("%c", bPW);
-            }
-            else
-            {
-                kPrintf("*");
-                pw[i] = bPW;
-                ++i;
-            }
+        if (i > 16)
+        {
+            kPrintf("\ntoo long id. maximun is 16.\n");
+            i = 0;
+            kPrintf(" ID : ");
+        }
+    }
+    //remove enter, add '\0'
+    id[i - 1] = '\0';
 
-            if (i > 16)
+    //PW 입력
+    i = 0;
+    kPrintf(" PW : ");
+    while (bPW != KEY_ENTER)
+    {
+        bPW = kGetCh();
+        if (bPW == KEY_BACKSPACE)
+        {
+            if (i > 0)
             {
-                kPrintf("\ntoo long pw. maximun is 16.\n");
-                i = 0;
-                kPrintf(" PW : ");
+                // 현재 커서 위치를 얻어서 한 문자 앞으로 이동한 다음 공백을 출력하고
+                // 커맨드 버퍼에서 마지막 문자 삭제
+                kGetCursor(&iCursorX, &iCursorY);
+                kPrintStringXY(iCursorX - 1, iCursorY, " ");
+                kSetCursor(iCursorX - 1, iCursorY);
+
+                // iCommandBufferIndex--;
+                i--;
+                pw[i] = '\0';
             }
         }
-        //remove enter, add '\0'
-        // pw[i - 1] = '\0';
+        else if (bPW == KEY_ENTER)
+        {
+            kPrintf("%c", bPW);
+        }
+        else
+        {
+            kPrintf("*");
+            pw[i] = bPW;
+            ++i;
+        }
 
-        caesar(n, pw);
+        if (i > 16)
+        {
+            kPrintf("\ntoo long pw. maximun is 16.\n");
+            i = 0;
+            kPrintf(" PW : ");
+        }
+    }
+
+    caesar(n, pw);
+    switch (loginCheck(id, pw))
+    {
+    case 1:
+        kStrCpy(USER, id, kStrLen(id));
+        kPrintf("=================================\n");
+        kPrintf(" Login Success~!\n");
+        kPrintf(" user:%s\n", USER);
+        kPrintf("=================================\n");
+        break;
+    case -1:
+        kPrintf("============= No ID =============\n");
+        kStartConsoleShell();
+        break;
+    case -2:
+        kPrintf("=========== Wrong PW ============\n");
+        kStartConsoleShell();
+        break;
+    }
+    /*
         if (loginCheck(id, pw) == 1)
         {
             kStrCpy(USER, id, kStrLen(id));
@@ -193,7 +209,8 @@ void kStartConsoleShell(void)
             kPrintf("=========== Wrong PW ============\n");
             kStartConsoleShell();
         }
-    }
+        */
+    // }
 
     /**
      *  Start MINTOS ConsoleShell
@@ -295,9 +312,16 @@ int loginCheck(char id[], char pw[])
     }
 
     // check admin
-    if (kStrCmp(id, "admin\0") && kStrCmp(pw, "dgplq"))
-        return 1;
+    if (kStrCmp(id, "admin\0"))
+    {
+        if (kStrCmp(pw, "dgplq"))
+        {
+            return 1;
+        }
+        return -2;
+    }
 
+    // check login.txt
     FILE *fp;
     fp = fopen("login.txt", "r", "admin");
     if (fp == NULL)
@@ -305,13 +329,7 @@ int loginCheck(char id[], char pw[])
         kPrintf("login.txt File Open Fail\n");
         return;
     }
-    else if (fp == -1)
-    {
-        kPrintf("You don't have \"r\" permission.\n");
-        return;
-    }
 
-    int i = 0;
     while (1)
     {
         char line[32];
@@ -321,8 +339,6 @@ int loginCheck(char id[], char pw[])
         {
             break;
         }
-        kPrintf("#test\nlogin.txt, line %d: %s\n", ++i, line);
-
         kMemCpy(loginID, line, 16);
         if (kStrCmp(loginID, id))
         {
@@ -337,6 +353,7 @@ int loginCheck(char id[], char pw[])
     fclose(fp);
     return -1; //No ID
 }
+
 /*
  *  커맨드 버퍼에 있는 커맨드를 비교하여 해당 커맨드를 처리하는 함수를 수행
  */
@@ -2474,8 +2491,10 @@ static void kChmod(const char *pcParameterBuffer)
     }
 }
 
-void kCreateUser(const char *pcParameterBuffer) {
-    if(!kStrCmp(USER, "admin")) {
+void kCreateUser(const char *pcParameterBuffer)
+{
+    if (!kStrCmp(USER, "admin"))
+    {
         kPrintf("This command is only admin allow\n");
         return;
     }
@@ -2486,7 +2505,7 @@ void kCreateUser(const char *pcParameterBuffer) {
 
     int nameLength = kGetNextParameter(&stList, username);
     int pwdLength = kGetNextParameter(&stList, password);
-    kPrintf("user %s pwd %s\n", username, password);
+    caesar(3, password);
 
     FILE *f = fopen("login.txt", "a", USER);
     if (f == NULL)
@@ -2495,13 +2514,15 @@ void kCreateUser(const char *pcParameterBuffer) {
         return;
     }
 
-    int res = fwrite((void*)username, 16, 1, f);
-    if (res != 1) {
+    int res = fwrite((void *)username, 16, 1, f);
+    if (res != 1)
+    {
         kPrintf("Creating User Fail %d\n", res);
         return;
     }
-    res = fwrite((void*)password, 16, 1, f);
-    if (res != 1) {
+    res = fwrite((void *)password, 16, 1, f);
+    if (res != 1)
+    {
         kPrintf("Creating User Fail %d\n", res);
         return;
     }
