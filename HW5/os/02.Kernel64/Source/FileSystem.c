@@ -1077,17 +1077,20 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 	//==========================================================================
 	else if (pcMode[0] == 'w')
 	{
+		kPrintf("open... \"w\"\n");
 		//owner가 아닌 id가 write 시도
 		if (0 == kStrCmp(stEntry.owner, id))
 		{
+			kPrintf("you are not owner.\n");
 			//권한 확인
 			if (0 == (stEntry.authFlag & 0x02))
 			{
 				return -1;
 			}
 		}
-		else
+		else //owner
 		{
+			kPrintf("you are owner.\n");
 			//권한 확인
 			if (0 == (stEntry.authFlag & 0x20))
 			{
@@ -1129,19 +1132,22 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 			return NULL;
 		}
 	}
-	else if (pcMode[0] == "r")
+	else if (pcMode[0] == 'r')
 	{
+		kPrintf("open... \"r\"\n");
 		//owner가 아닌 id가 read 시도
 		if (0 == kStrCmp(stEntry.owner, id))
 		{
+			kPrintf("you are not owner.\n");
 			//권한 확인
 			if (0 == (stEntry.authFlag & 0x04))
 			{
 				return -1;
 			}
 		}
-		else
+		else //owner
 		{
+			kPrintf("you are owner.\n");
 			//권한 확인
 			if (0 == (stEntry.authFlag & 0x40))
 			{
@@ -1149,6 +1155,7 @@ FILE *kOpenFile(const char *pcFileName, const char *pcMode, const char *id)
 			}
 		}
 	}
+	kPrintf("you have permission.\n");
 
 	//==========================================================================
 	// 파일 핸들을 할당 받아 데이터를 설정한 후 반환
@@ -1990,4 +1997,52 @@ BOOL kFlushFileSystemCache(void)
 	// 동기화
 	kUnlock(&(gs_stFileSystemManager.stMutex));
 	return TRUE;
+}
+
+void kChangeMode(const char *pcFileName, BYTE authFlag)
+{
+	DIRECTORYENTRY stEntry;
+	int iDirectoryEntryOffset;
+	int iFileNameLength;
+
+	// 파일 이름 검사
+	iFileNameLength = kStrLen(pcFileName);
+	if ((iFileNameLength > (sizeof(stEntry.vcFileName) - 1)) ||
+		(iFileNameLength == 0))
+	{
+		return NULL;
+	}
+
+	// 동기화
+	kLock(&(gs_stFileSystemManager.stMutex));
+
+	// 파일이 존재하는가 확인
+	iDirectoryEntryOffset = kFindDirectoryEntry(pcFileName, &stEntry);
+	if (iDirectoryEntryOffset == -1)
+	{
+		// 동기화
+		kUnlock(&(gs_stFileSystemManager.stMutex));
+		return -1;
+	}
+	BYTE tmp = stEntry.authFlag;
+	stEntry.authFlag = authFlag;
+
+	// 변경된 디렉터리 엔트리를 설정
+	if (kSetDirectoryEntryData(iDirectoryEntryOffset, &stEntry) == FALSE)
+	{
+		kPrintf("change mode fail...\n");
+		return FALSE;
+	}
+
+	char tmpStr[9], resStr[9];
+	authFlagToString(tmp, tmpStr);
+	authFlagToString(stEntry.authFlag, resStr);
+
+	kPrintf("change mode success~!\n");
+	kPrintf("**********\n");
+	kPrintf("%s\nauth: %s > %s\n", pcFileName, tmpStr, resStr);
+	kPrintf("**********\n");
+
+	// 동기화
+	kUnlock(&(gs_stFileSystemManager.stMutex));
 }
