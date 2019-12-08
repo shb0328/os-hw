@@ -264,35 +264,77 @@ void kStartConsoleShell(void)
  **/
 int loginCheck(char id[], char pw[])
 {
-    char ids[4][16] = {
-        "hyebeen",
-        "jiho",
-        "sxxnz",
-        "ethan"};
-    char pws[4][16] = {
-        "ddd222",  //aaa999
-        "eeee456", //bbbb123
-        "3333",    //0000
-        "tzhu"};   //qwer
-
-    // check admin
-    if(kStrCmp(id, "admin\0") && kStrCmp(pw, "dgplq")) return 1;
-    for (int i = 0; i < 4; ++i)
+    if (0)
     {
-        if (kStrCmp(ids[i], id))
+        char ids[4][16] = {
+            "hyebeen",
+            "jiho",
+            "sxxnz",
+            "ethan"};
+        char pws[4][16] = {
+            "ddd222",  //aaa999
+            "eeee456", //bbbb123
+            "3333",    //0000
+            "tzhu"};   //qwer
+        for (int i = 0; i < 4; ++i)
         {
-            if (kStrCmp(pws[i], pw))
+            if (kStrCmp(ids[i], id))
             {
-                return 1;
-            }
-            else
-            {
-                return -2;
+                if (kStrCmp(pws[i], pw))
+                {
+                    return 1; //Success
+                }
+                else
+                {
+                    return -2; //Wrong PW
+                }
             }
         }
+        return -1; //No ID
     }
 
-    return -1;
+    // check admin
+    if (kStrCmp(id, "admin\0") && kStrCmp(pw, "dgplq"))
+        return 1;
+
+    FILE *fp;
+    fp = fopen("login.txt", "r", "admin");
+    if (fp == NULL)
+    {
+        kPrintf("login.txt File Open Fail\n");
+        return;
+    }
+    else if (fp == -1)
+    {
+        kPrintf("You don't have \"r\" permission.\n");
+        return;
+    }
+
+    int i = 0;
+    while (1)
+    {
+        char line[32];
+        char loginID[16];
+        char loginPW[16];
+        if (fread(line, 32, 1, fp) != 1)
+        {
+            break;
+        }
+        kPrintf("#test\nlogin.txt, line %d: %s\n", ++i, line);
+
+        kMemCpy(loginID, line, 16);
+        if (kStrCmp(loginID, id))
+        {
+            kMemCpy(loginPW, line + 16, 16);
+            if (0 == kStrCmp(loginPW, pw))
+            {
+                return -2; //Wrong PW
+            }
+            return 1; //Success
+        }
+    }
+    fclose(fp);
+    return -1; //No ID
 }
 /*
  *  커맨드 버퍼에 있는 커맨드를 비교하여 해당 커맨드를 처리하는 함수를 수행
@@ -2425,7 +2467,8 @@ static void kChmod(const char *pcParameterBuffer)
         kPrintf("Too Long or Too Short File Name\n");
         return;
     }
-    if(kChangeMode(vcFileName, authFlag, USER) == ~0) {
+    if (kChangeMode(vcFileName, authFlag, USER) == ~0)
+    {
         kPrintf("Permission Denied, only owner can change\n");
     }
 }
