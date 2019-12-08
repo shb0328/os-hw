@@ -69,6 +69,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
         {"flush", "Flush File System Cache", kFlushCache},
         {"cd", "Change Directory, ex) cd temp", kChangeDirectory},
         {"logout", "logout", kStartConsoleShell},
+        {"chmod", "Change mode, ex) chmod a.txt(filename) 0x70(owner:rwx,other:---)", kChmod},
 };
 
 //==============================================================================
@@ -213,8 +214,11 @@ void kStartConsoleShell(void)
             }
         }
     }
-}
+} //end of kStartConsoleShell
 
+/**
+ *  Login Check
+ **/
 int loginCheck(char id[], char pw[])
 {
     char ids[4][16] = {
@@ -609,6 +613,12 @@ static void kShowDateAndTime(const char *pcParameterBuffer)
             kConvertDayOfWeekToString(bDayOfWeek));
     kPrintf("Time: %d:%d:%d\n", bHour, bMinute, bSecond);
 }
+
+//=================================================================
+//
+// 멀티 태스킹 & 멀티 쓰레딩
+//
+//=================================================================
 
 /**
  *  태스크 1
@@ -1351,6 +1361,12 @@ static void kTestRandomAllocation(const char *pcParameterBuffer)
         kCreateTask(TASK_FLAGS_LOWEST | TASK_FLAGS_THREAD, 0, 0, (QWORD)kRandomAllocationTask);
     }
 }
+
+//=================================================================
+//
+// 파일 시스템
+//
+//=================================================================
 
 /**
  *  하드 디스크의 정보를 표시
@@ -2482,4 +2498,37 @@ static void kChangeDirectory(const char *pcParameterBuffer)
     {
         kPrintf(" %s is not a directory\n", vcBuffer);
     }
+}
+
+/**
+ *  Chmode
+ **/
+static void kChmod(const char *pcParameterBuffer)
+{
+    PARAMETERLIST stList;
+    char vcFileName[50];
+    int iLength;
+    char auth[10];
+    BYTE authFlag;
+
+    // 파라미터 리스트를 초기화하여 파일 이름을 추출
+    kInitializeParameter(&stList, pcParameterBuffer);
+    iLength = kGetNextParameter(&stList, vcFileName);
+    vcFileName[iLength] = '\0';
+    kGetNextParameter(&stList, auth);
+
+    //문자열로 받은 authFlag를 16진수 authFlag 값으로 변경
+    authFlag = kAToI(auth, 16);
+
+    //test
+    char tmp[9];
+    authFlagToString(authFlag, tmp);
+    kPrintf("chmod test...\ninput authFlag : %s : %d\n", tmp, authFlag);
+    vcFileName[iLength] = '\0';
+    if ((iLength > (FILESYSTEM_MAXFILENAMELENGTH - 1)) || (iLength == 0))
+    {
+        kPrintf("Too Long or Too Short File Name\n");
+        return;
+    }
+    kChangeMode(vcFileName, authFlag);
 }
