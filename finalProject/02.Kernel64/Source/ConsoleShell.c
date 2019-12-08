@@ -273,7 +273,7 @@ int loginCheck(char id[], char pw[])
         "ddd222",  //aaa999
         "eeee456", //bbbb123
         "3333",    //0000
-        "txhu"};   //qwer
+        "tzhu"};   //qwer
 
     for (int i = 0; i < 4; ++i)
     {
