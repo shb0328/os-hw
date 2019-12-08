@@ -268,10 +268,10 @@ int loginCheck(char id[], char pw[])
         "sxxnz",
         "ethan"};
     char pws[4][16] = {
-        "ddd",
-        "eeee",
-        "cafyeqp",
-        "txhu"};
+        "ddd222",  //aaa999
+        "eeee456", //bbbb123
+        "3333",    //0000
+        "txhu"};   //qwer
 
     for (int i = 0; i < 4; ++i)
     {
@@ -291,19 +291,22 @@ int loginCheck(char id[], char pw[])
     return -1;
 }
 
-#define MAX_PWD_LEN 16
 void caesar(int n, char str[])
 {
     int i = 0;
     for (i = 0; i < kStrLen(str); i++)
     {
-        if (str[i] >= 65 && str[i] <= 90)
+        if (str[i] >= 65 && str[i] <= 90) //a~z
         {
             str[i] = (str[i] - 65 + n) % 26 + 65;
         }
-        else if (str[i] >= 97 && str[i] <= 122)
+        else if (str[i] >= 97 && str[i] <= 122) //A~Z
         {
             str[i] = (str[i] - 97 + n) % 26 + 97;
+        }
+        else if (str[i] - '0' >= 0 && str[i] - '0' <= 9) //0~9
+        {
+            str[i] = (str[i] - '0' + 3) % 10 + '0';
         }
     }
 }
