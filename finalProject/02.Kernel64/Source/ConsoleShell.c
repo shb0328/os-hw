@@ -1768,8 +1768,6 @@ static void kShowRootDirectory(const char *pcParameterBuffer)
         kSPrintf(vcTempValue, "0x%X Cluster", pstEntry->dwStartClusterIndex);
         kMemCpy(vcBuffer + 20, vcTempValue, kStrLen(vcTempValue) + 1);
 
-        kPrintf("  %s", vcBuffer);
-
         kPrintf("  owner:%s", pstEntry->owner);
         char auth[9] = {0};
         authFlagToString(pstEntry->authFlag, auth);
@@ -1838,20 +1836,16 @@ static void kWriteDataToFile(const char *pcParameterBuffer)
         return;
     }
 
-    kPrintf("=== write.... === (if 3 enter, save and exit)\n");
+    kPrintf("=== write.... === (if ESC, save and exit)\n");
     // 엔터 키가 연속으로 3번 눌러질 때까지 내용을 파일에 씀
     iEnterCount = 0;
     while (1)
     {
         bKey = kGetCh();
         // 엔터 키이면 연속 3번 눌러졌는가 확인하여 루프를 빠져 나감
-        if (bKey == KEY_ENTER)
+        if (bKey == KEY_ESC)
         {
-            iEnterCount++;
-            if (iEnterCount >= 3)
-            {
-                break;
-            }
+            break;
         }
         // 엔터 키가 아니라면 엔터 키 입력 횟수를 초기화
         else
@@ -1867,7 +1861,7 @@ static void kWriteDataToFile(const char *pcParameterBuffer)
         }
     }
 
-    kPrintf("File Create Success\n");
+    kPrintf("File Save.\n");
     fclose(fp);
 }
 
@@ -1902,7 +1896,7 @@ static void kReadDataFromFile(const char *pcParameterBuffer)
     }
     else if (fp == -1)
     {
-        kPrintf("File already exists. And you don't have permission.\n");
+        kPrintf("You don't have \"r\" permission.\n");
         return;
     }
 
