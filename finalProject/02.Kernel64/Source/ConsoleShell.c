@@ -83,8 +83,6 @@ void kStartConsoleShell(void)
     /**
      *  Login
      **/
-    // while (1)
-    // {
     BYTE bID = 0;
     BYTE bPW = 0;
     char id[16] = {0}, pw[16] = {0};
@@ -189,28 +187,6 @@ void kStartConsoleShell(void)
         kStartConsoleShell();
         break;
     }
-    /*
-        if (loginCheck(id, pw) == 1)
-        {
-            kStrCpy(USER, id, kStrLen(id));
-            kPrintf("=================================\n");
-            kPrintf(" Login Success~!\n");
-            kPrintf(" user:%s\n", USER);
-            kPrintf("=================================\n");
-            break;
-        }
-        else if (loginCheck(id, pw) == -1)
-        {
-            kPrintf("============= No ID =============\n");
-            kStartConsoleShell();
-        }
-        else if (loginCheck(id, pw) == -2)
-        {
-            kPrintf("=========== Wrong PW ============\n");
-            kStartConsoleShell();
-        }
-        */
-    // }
 
     /**
      *  Start MINTOS ConsoleShell
@@ -282,35 +258,6 @@ void kStartConsoleShell(void)
  **/
 int loginCheck(char id[], char pw[])
 {
-    if (0)
-    {
-        char ids[4][16] = {
-            "hyebeen",
-            "jiho",
-            "sxxnz",
-            "ethan"};
-        char pws[4][16] = {
-            "ddd222",  //aaa999
-            "eeee456", //bbbb123
-            "3333",    //0000
-            "tzhu"};   //qwer
-        for (int i = 0; i < 4; ++i)
-        {
-            if (kStrCmp(ids[i], id))
-            {
-                if (kStrCmp(pws[i], pw))
-                {
-                    return 1; //Success
-                }
-                else
-                {
-                    return -2; //Wrong PW
-                }
-            }
-        }
-        return -1; //No ID
-    }
-
     // check admin
     if (kStrCmp(id, "admin\0"))
     {

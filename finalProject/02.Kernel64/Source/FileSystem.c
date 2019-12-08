@@ -935,7 +935,15 @@ static BOOL kCreateFile(const char *pcFileName, DIRECTORYENTRY *pstEntry,
     // 파일의 접근 권한을 default 로 설정하고 owner를 로그인 중인 user의 id로 설정
     kStrCpy(pstEntry->owner, id, kStrLen(id));
     char auth[9];
-    pstEntry->authFlag = 0x74; //01110100
+    if (kStrCmp("admin", id))
+    {
+        pstEntry->authFlag = 0xf4; //11110100
+    }
+    else
+    {
+        pstEntry->authFlag = 0x74; //01110100
+    }
+
     authFlagToString(pstEntry->authFlag, auth);
     kPrintf("create file... \nowner : %s\nauth : %s\n", pstEntry->owner, auth);
 
