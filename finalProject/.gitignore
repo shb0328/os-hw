@@ -1,0 +1,7 @@
+*/Temp/
+*.o
+*.bin
+*.img
+*.elf
+*.dep
+*.elf.bin

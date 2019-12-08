@@ -1,0 +1,9 @@
+chap27/
+*.bin
+*.img
+*.o
+*.elf
+*.dep
+ImageMaker
+*.exe
+Temp/
