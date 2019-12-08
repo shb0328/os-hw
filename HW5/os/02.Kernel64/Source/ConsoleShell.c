@@ -84,7 +84,7 @@ void kStartConsoleShell(void)
     int iCommandBufferIndex = 0;
     BYTE bKey;
     int iCursorX, iCursorY;
-
+    int n = 3;
     vcDirectoryBuffer[0] = '\0';
 
     while (1)
@@ -123,7 +123,7 @@ void kStartConsoleShell(void)
             bPW = kGetCh();
 
             pw[i] = bPW;
-            kPrintf("%c", bPW);
+            kPrintf("*");
             ++i;
 
             if (i > 16)
@@ -135,21 +135,21 @@ void kStartConsoleShell(void)
         }
         //remove enter, add '\0'
         pw[i - 1] = '\0';
-
+        caesar(n, pw);
         if (loginCheck(id, pw) == 1)
         {
             kStrCpy(USER, id, kStrLen(id));
-            kPrintf("************\nLogin Success~!\nuser:%s\n************\n", USER);
+            kPrintf("==========\nLogin Success~!\nuser:%s\n==========\n", USER);
             break;
         }
         else if (loginCheck(id, pw) == -1)
         {
-            kPrintf("************\nNo ID\n************\n");
+            kPrintf("==========\n No ID \n==========\n");
             kStartConsoleShell();
         }
         else if (loginCheck(id, pw) == -2)
         {
-            kPrintf("************\nWrong PW\n************\n");
+            kPrintf("==========\n Wrong PW \n==========\n");
             kStartConsoleShell();
         }
     }
@@ -227,10 +227,10 @@ int loginCheck(char id[], char pw[])
         "sxxnz",
         "ethan"};
     char pws[4][16] = {
-        "aaa",
-        "bbbb",
-        "zxcvbnm",
-        "qwer"};
+        "ddd",
+        "eeee",
+        "cafyeqp",
+        "txhu"};
 
     for (int i = 0; i < 4; ++i)
     {
@@ -250,11 +250,11 @@ int loginCheck(char id[], char pw[])
     return -1;
 }
 
-#define MAX_ID_LEN 16
+#define MAX_PWD_LEN 16
 void caesar(int n, char str[])
 {
     int i = 0;
-    for (i = 0; i < MAX_ID_LEN; i++)
+    for (i = 0; i < MAX_PWD_LEN; i++)
     {
         if (str[i] >= 65 && str[i] <= 90)
         {
