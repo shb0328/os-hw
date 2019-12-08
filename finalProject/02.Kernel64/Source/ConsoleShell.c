@@ -64,6 +64,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
         {"flush", "Flush File System Cache", kFlushCache},
         {"logout", "logout", kStartConsoleShell},
         {"chmod", "Change mode, ex) chmod a.c(filename) 70(owner:rwx,other:---)", kChmod},
+        {"createuser", "Create User, Only Admin ex) createuser id password", kCreateUser}
 };
 
 //==============================================================================
@@ -2428,4 +2429,39 @@ static void kChmod(const char *pcParameterBuffer)
     if(kChangeMode(vcFileName, authFlag, USER) == ~0) {
         kPrintf("Permission Denied, only owner can change\n");
     }
+}
+
+void kCreateUser(const char *pcParameterBuffer) {
+    if(!kStrCmp(USER, "admin")) {
+        kPrintf("This command is only admin allow\n");
+        return;
+    }
+    PARAMETERLIST stList;
+    kInitializeParameter(&stList, pcParameterBuffer);
+    char username[16] = {0};
+    char password[16] = {0};
+
+    int nameLength = kGetNextParameter(&stList, username);
+    int pwdLength = kGetNextParameter(&stList, password);
+    kPrintf("user %s pwd %s\n", username, password);
+
+    FILE *f = fopen("login.txt", "a", USER);
+    if (f == NULL)
+    {
+        kPrintf("Open File Fail\n");
+        return;
+    }
+
+    int res = fwrite((void*)username, 16, 1, f);
+    if (res != 1) {
+        kPrintf("Creating User Fail %d\n", res);
+        return;
+    }
+    res = fwrite((void*)password, 16, 1, f);
+    if (res != 1) {
+        kPrintf("Creating User Fail %d\n", res);
+        return;
+    }
+    fclose(f);
+    kPrintf("Create User Success\n");
 }
