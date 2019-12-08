@@ -85,9 +85,9 @@ void kStartConsoleShell(void)
      **/
     while (1)
     {
-        BYTE bID;
-        BYTE bPW;
-        char id[16], pw[16];
+        BYTE bID = 0;
+        BYTE bPW = 0;
+        char id[16] = {0}, pw[16] = {0};
 
         kPrintf("============= LOGIN =============\n");
 
