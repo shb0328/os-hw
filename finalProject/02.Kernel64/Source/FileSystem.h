@@ -265,7 +265,7 @@ void kRewindDirectory(DIR *pstDirectory);
 int kCloseDirectory(DIR *pstDirectory);
 BOOL kWriteZero(FILE *pstFile, DWORD dwCount);
 BOOL kIsFileOpened(const DIRECTORYENTRY *pstEntry);
-void kChangeMode(const char *pcFileName, BYTE authFlag);
+int kChangeMode(const char *pcFileName, BYTE authFlag, const char *user);
 
 static void *kAllocateFileDirectoryHandle(void);
 static void kFreeFileDirectoryHandle(FILE *pstFile);

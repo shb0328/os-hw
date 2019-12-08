@@ -1760,7 +1760,7 @@ DIR *kOpenDirectory(const char *pcDirectoryName)
 /**
  *  Chmod
  **/
-void kChangeMode(const char *pcFileName, BYTE authFlag)
+int kChangeMode(const char *pcFileName, BYTE authFlag, const char *user)
 {
     DIRECTORYENTRY stEntry;
     int iDirectoryEntryOffset;
@@ -1784,6 +1784,11 @@ void kChangeMode(const char *pcFileName, BYTE authFlag)
         // 동기화
         kUnlock(&(gs_stFileSystemManager.stMutex));
         return -1;
+    }
+
+    if(!kStrCmp(user, stEntry.owner)) {
+        kUnlock(&(gs_stFileSystemManager.stMutex));
+        return ~0;
     }
     BYTE tmp = stEntry.authFlag;
     stEntry.authFlag = authFlag;

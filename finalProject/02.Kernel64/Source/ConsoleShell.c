@@ -2423,5 +2423,7 @@ static void kChmod(const char *pcParameterBuffer)
         kPrintf("Too Long or Too Short File Name\n");
         return;
     }
-    kChangeMode(vcFileName, authFlag);
+    if(kChangeMode(vcFileName, authFlag, USER) == ~0) {
+        kPrintf("Permission Denied, only owner can change\n");
+    }
 }
