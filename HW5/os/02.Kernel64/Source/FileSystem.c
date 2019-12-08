@@ -2039,9 +2039,9 @@ void kChangeMode(const char *pcFileName, BYTE authFlag)
 	authFlagToString(stEntry.authFlag, resStr);
 
 	kPrintf("change mode success~!\n");
-	kPrintf("**********\n");
+	kPrintf("====================\n");
 	kPrintf("%s\nauth: %s > %s\n", pcFileName, tmpStr, resStr);
-	kPrintf("**********\n");
+	kPrintf("====================\n");
 
 	// 동기화
 	kUnlock(&(gs_stFileSystemManager.stMutex));

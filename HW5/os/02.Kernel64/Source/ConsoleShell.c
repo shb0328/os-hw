@@ -69,7 +69,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
         {"flush", "Flush File System Cache", kFlushCache},
         {"cd", "Change Directory, ex) cd temp", kChangeDirectory},
         {"logout", "logout", kStartConsoleShell},
-        {"chmod", "Change mode, ex) chmod a.txt(filename) 0x70(owner:rwx,other:---)", kChmod},
+        {"chmod", "Change mode, ex) chmod a.c(filename) 70(owner:rwx,other:---)", kChmod},
 };
 
 //==============================================================================
@@ -121,9 +121,15 @@ void kStartConsoleShell(void)
         while (bPW != KEY_ENTER)
         {
             bPW = kGetCh();
-
+            if (bPW == KEY_ENTER)
+            {
+                kPrintf("%c", bPW);
+            }
+            else
+            {
+                kPrintf("*");
+            }
             pw[i] = bPW;
-            kPrintf("*");
             ++i;
 
             if (i > 16)
@@ -1835,12 +1841,12 @@ static void kShowRootDirectory(const char *pcParameterBuffer)
             kMemCpy(vcBuffer + 25, vcTempValue, kStrLen(vcTempValue));
             break;
         }
-        kPrintf("owner : %s\n", pstEntry->owner);
-        char auth[9] = {0};
-        authFlagToString(pstEntry->authFlag, auth);
-        kPrintf("auth : %s\n", auth);
 
         kPrintf("  %s\n", vcBuffer);
+        kPrintf("  owner : %s\n", pstEntry->owner);
+        char auth[9] = {0};
+        authFlagToString(pstEntry->authFlag, auth);
+        kPrintf("  auth : %s\n", auth);
 
         if ((iCount != 0) && ((iCount % 20) == 0))
         {
@@ -1852,17 +1858,17 @@ static void kShowRootDirectory(const char *pcParameterBuffer)
             }
         }
         iCount++;
-    }
+    } //end of while
 
-    /*kPrintf( "\t\tTotal File Count: %d\n", iTotalCount );
-    kPrintf( "\t\tTotal File Size: %d KByte (%d Cluster)\n", dwTotalByte, 
-             dwUsedClusterCount );
-    
-    kPrintf( "\t\tFree Space: %d KByte (%d Cluster)\n", 
-             ( stManager.dwTotalClusterCount - dwUsedClusterCount ) * 
-             FILESYSTEM_CLUSTERSIZE / 1024, stManager.dwTotalClusterCount - 
-             dwUsedClusterCount );
-    */
+    kPrintf("\t\t\tTotal File Count: %d\n", iTotalCount);
+    kPrintf("\t\t\tTotal File Size: %d KByte (%d Cluster)\n", dwTotalByte,
+            dwUsedClusterCount);
+
+    kPrintf("\t\t\tFree Space: %d KByte (%d Cluster)\n",
+            (stManager.dwTotalClusterCount - dwUsedClusterCount) *
+                FILESYSTEM_CLUSTERSIZE / 1024,
+            stManager.dwTotalClusterCount -
+                dwUsedClusterCount);
 
     closedir(pstDirectory);
 }
@@ -2523,7 +2529,6 @@ static void kChmod(const char *pcParameterBuffer)
     //test
     char tmp[9];
     authFlagToString(authFlag, tmp);
-    kPrintf("chmod test...\ninput authFlag : %s : %d\n", tmp, authFlag);
     vcFileName[iLength] = '\0';
     if ((iLength > (FILESYSTEM_MAXFILENAMELENGTH - 1)) || (iLength == 0))
     {
