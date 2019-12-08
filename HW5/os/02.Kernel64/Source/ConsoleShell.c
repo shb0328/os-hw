@@ -65,7 +65,7 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
         {"writefile", "Write Data To File, ex) writefile a.txt", kWriteDataToFile},
         {"readfile", "Read Data From File, ex) readfile a.txt", kReadDataFromFile},
         {"testfileio", "Test File I/O Function", kTestFileIO},
-        {"testperformance", "Test File Read/WritePerformance", kTestPerformance},
+        // {"testperformance", "Test File Read/WritePerformance", kTestPerformance},
         {"flush", "Flush File System Cache", kFlushCache},
         {"cd", "Change Directory, ex) cd temp", kChangeDirectory},
         {"logout", "logout", kStartConsoleShell},
@@ -91,20 +91,38 @@ void kStartConsoleShell(void)
     {
         BYTE bID;
         BYTE bPW;
-        int i = 0;
         char id[16], pw[16];
 
         kPrintf("LOGIN\n");
-        kPrintf("ID : ");
 
+        //ID 입력
+        int i = 0;
+        kPrintf("ID : ");
         while (bID != KEY_ENTER)
         {
 
             bID = kGetCh();
+            if (bID == KEY_BACKSPACE)
+            {
+                if (i > 0)
+                {
+                    // 현재 커서 위치를 얻어서 한 문자 앞으로 이동한 다음 공백을 출력하고
+                    // 커맨드 버퍼에서 마지막 문자 삭제
+                    kGetCursor(&iCursorX, &iCursorY);
+                    kPrintStringXY(iCursorX - 1, iCursorY, " ");
+                    kSetCursor(iCursorX - 1, iCursorY);
 
-            id[i] = bID;
-            kPrintf("%c", bID);
-            ++i;
+                    // iCommandBufferIndex--;
+                    i--;
+                    id[i] = '\0';
+                }
+            }
+            else
+            {
+                id[i] = bID;
+                kPrintf("%c", bID);
+                ++i;
+            }
 
             if (i > 16)
             {
@@ -116,21 +134,37 @@ void kStartConsoleShell(void)
         //remove enter, add '\0'
         id[i - 1] = '\0';
 
+        //PW 입력
         i = 0;
         kPrintf("PW : ");
         while (bPW != KEY_ENTER)
         {
             bPW = kGetCh();
-            if (bPW == KEY_ENTER)
+            if (bPW == KEY_BACKSPACE)
+            {
+                if (i > 0)
+                {
+                    // 현재 커서 위치를 얻어서 한 문자 앞으로 이동한 다음 공백을 출력하고
+                    // 커맨드 버퍼에서 마지막 문자 삭제
+                    kGetCursor(&iCursorX, &iCursorY);
+                    kPrintStringXY(iCursorX - 1, iCursorY, " ");
+                    kSetCursor(iCursorX - 1, iCursorY);
+
+                    // iCommandBufferIndex--;
+                    i--;
+                    pw[i] = '\0';
+                }
+            }
+            else if (bPW == KEY_ENTER)
             {
                 kPrintf("%c", bPW);
             }
             else
             {
                 kPrintf("*");
+                pw[i] = bPW;
+                ++i;
             }
-            pw[i] = bPW;
-            ++i;
 
             if (i > 16)
             {
@@ -140,7 +174,8 @@ void kStartConsoleShell(void)
             }
         }
         //remove enter, add '\0'
-        pw[i - 1] = '\0';
+        // pw[i - 1] = '\0';
+
         caesar(n, pw);
         if (loginCheck(id, pw) == 1)
         {
@@ -260,7 +295,7 @@ int loginCheck(char id[], char pw[])
 void caesar(int n, char str[])
 {
     int i = 0;
-    for (i = 0; i < MAX_PWD_LEN; i++)
+    for (i = 0; i < kStrLen(str); i++)
     {
         if (str[i] >= 65 && str[i] <= 90)
         {
@@ -2303,6 +2338,7 @@ static void kTestFileIO(const char *pcParameterBuffer)
 /**
  *  파일을 읽고 쓰는 속도를 측정
  */
+/*
 static void kTestPerformance(const char *pcParameterBuffer)
 {
     FILE *pstFile;
@@ -2446,7 +2482,7 @@ static void kTestPerformance(const char *pcParameterBuffer)
     fclose(pstFile);
     kFreeMemory(pbBuffer);
 }
-
+*/
 /**
  *  파일 시스템의 캐시 버퍼에 있는 데이터를 모두 하드 디스크에 씀 
  */
