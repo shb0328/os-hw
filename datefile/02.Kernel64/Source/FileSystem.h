@@ -129,7 +129,7 @@ typedef struct kMBRStruct
 typedef struct kDirectoryEntryStruct
 {
     //�������� ���丮���� ����
-    int flag;
+    int flag, f;
     // ���� �̸�
     char vcFileName[FILESYSTEM_MAXFILENAMELENGTH];
     // ������ ���� ũ��

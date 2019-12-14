@@ -73,7 +73,9 @@ SHELLCOMMANDENTRY gs_vstCommandTable[] =
  */
 char path[100] = "/";
 DWORD currentDirectoryClusterIndex = 0;
-
+BYTE Second, Minute, Hour;
+BYTE DayOfWeek, DayOfMonth, Month;
+WORD Year;
 void kStartConsoleShell(void)
 {
     char vcCommandBuffer[CONSOLESHELL_MAXCOMMANDBUFFERCOUNT];
@@ -81,6 +83,8 @@ void kStartConsoleShell(void)
     BYTE bKey;
     int iCursorX, iCursorY;
 
+    kReadRTCTime(&Hour, &Minute, &Second);
+    kReadRTCDate(&Year, &Month, &DayOfMonth, &DayOfWeek);
     // ������Ʈ ���
     kPrintf(CONSOLESHELL_PROMPTMESSAGE);
     kPrintf(path);
@@ -1808,6 +1812,7 @@ static void kShowRootDirectory(const char *pcParameterBuffer)
 /**
  *  ���͸��� ���� ����� ǥ��
  */
+
 static void kShowDirectory(const char *pcParameterBuffer)
 {
     DIR *pstDirectory;
@@ -1833,30 +1838,28 @@ static void kShowDirectory(const char *pcParameterBuffer)
         {
 
             pstEntry = &directoryInfo[i];
-            // ���� �������� �ʱ�ȭ �� �� �� ��ġ�� ���� ����
+
             kMemSet(vcBuffer, ' ', sizeof(vcBuffer) - 1);
             vcBuffer[sizeof(vcBuffer) - 1] = '\0';
 
-            if (pstEntry->flag == 0)
+            if (pstEntry->flag == 0 && pstEntry->f == 0)
             {
-                // ���� �̸� ����
+
                 kMemCpy(vcBuffer, pstEntry->d_name,
                         kStrLen(pstEntry->d_name));
 
-                // ���� ���� ����
                 kSPrintf(vcTempValue, "%d Byte", pstEntry->dwFileSize);
                 kMemCpy(vcBuffer + 30, vcTempValue, kStrLen(vcTempValue));
 
-                // ������ ���� Ŭ������ ����
                 kSPrintf(vcTempValue, "0x%X Cluster", pstEntry->dwStartClusterIndex);
                 kMemCpy(vcBuffer + 55, vcTempValue, kStrLen(vcTempValue) + 1);
 
-                kPrintf("    %s\n", vcBuffer);
+                kPrintf("   %s\n", vcBuffer);
 
                 kPrintf("%d/%d/%d ", pstEntry->wYear, pstEntry->bMonth, pstEntry->bDayOfMonth);
                 kPrintf("%d:%d:%d\n", pstEntry->bHour, pstEntry->bMinute, pstEntry->bSecond);
             }
-
+            /*
             else if (pstEntry->flag == 1)
             {
                 // ���� �̸� ����
@@ -1871,8 +1874,25 @@ static void kShowDirectory(const char *pcParameterBuffer)
                 kPrintf("%d/%d/%d ", pstEntry->wYear, pstEntry->bMonth, pstEntry->bDayOfMonth);
                 kPrintf("%d:%d:%d\n", pstEntry->bHour, pstEntry->bMinute, pstEntry->bSecond);
             }
-
-            //kSPrintf(vcTempValue,"%d-%d-%d %d:%d:%d",pstEntry->wYear,pstEntry->bMonth,pstEntry->bDayOfMonth,pstEntry->bHour,pstEntry->bMinute,pstEntry->bSecond);
+            */
+            else if (pstEntry->flag == 1 && pstEntry->f == 1)
+            {
+                kMemCpy(vcBuffer, pstEntry->d_name, kStrLen(pstEntry->d_name));
+                kSPrintf(vcTempValue, "Directory", 10);
+                kMemCpy(vcBuffer + 30, vcTempValue, kStrLen(vcTempValue) + 1);
+                kPrintf("   %s\n", vcBuffer);
+                kPrintf("%d/%d/%d ", Year, Month, DayOfMonth);
+                kPrintf("%d:%d:%d\n", Hour, Minute, Second);
+            }
+            else if (pstEntry->flag == 1 && pstEntry->f != 1)
+            {
+                kMemCpy(vcBuffer, pstEntry->d_name, kStrLen(pstEntry->d_name));
+                kSPrintf(vcTempValue, "Directory", 10);
+                kMemCpy(vcBuffer + 30, vcTempValue, kStrLen(vcTempValue) + 1);
+                kPrintf("   %s\n", vcBuffer);
+                kPrintf("%d/%d/%d ", pstEntry->wYear, pstEntry->bMonth, pstEntry->bDayOfMonth);
+                kPrintf("%d:%d:%d\n", pstEntry->bHour, pstEntry->bMinute, pstEntry->bSecond);
+            }
         }
     }
 }

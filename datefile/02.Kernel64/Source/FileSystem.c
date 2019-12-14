@@ -242,12 +242,10 @@ void kSetDotInDirectory()
     stEntry.dwStartClusterIndex = -1;
     stEntry.dwFileSize = 0;
     stEntry.flag = 1;
+    stEntry.f = 1;
     stEntry.ParentDirectoryCluserIndex = 0;
     stEntry.ParentDirectoryPath[0] = '/';
     stEntry.ParentDirectoryPath[1] = '\0';
-
-    //kReadRTCTime(&bHour, &bMinute, &bSecond);
-    //kReadRTCDate(&wYear, &bMonth, &bDayOfMonth, &bDayOfWeek);
 
     // ���͸� ��Ʈ���� ���
     if (kSetDirectoryEntryData(iDirectoryEntryOffset, &stEntry) == FALSE)
@@ -256,11 +254,11 @@ void kSetDotInDirectory()
         return FALSE;
     }
 
-    // ���͸� ��Ʈ���� ����
     kMemCpy(stEntry.vcFileName, "..", 3);
     stEntry.dwStartClusterIndex = -2;
     stEntry.dwFileSize = 0;
     stEntry.flag = 1;
+    stEntry.f = 1;
     stEntry.ParentDirectoryCluserIndex = 0;
     stEntry.ParentDirectoryPath[0] = '/';
     stEntry.ParentDirectoryPath[1] = '\0';
@@ -688,7 +686,7 @@ static BOOL kCreateFile(const char *pcFileName, DIRECTORYENTRY *pstEntry, int *p
     pstEntry->dwStartClusterIndex = dwCluster;
     pstEntry->dwFileSize = 0;
     pstEntry->flag = 0;
-
+    pstEntry->f = 0;
     kReadRTCTime(&bHour, &bMinute, &bSecond);
     kReadRTCDate(&wYear, &bMonth, &bDayOfMonth, &bDayOfWeek);
 
