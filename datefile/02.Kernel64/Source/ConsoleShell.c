@@ -1531,10 +1531,6 @@ static void kMakeDirectory(const char *pcParamegerBuffer)
     fclose(pstFile);
     kPrintf("Directory Create Success\n");
 }
-
-/**
- * ���丮 �̵�
- */
 static void kMoveDirectory(const char *pcParamegerBuffer)
 {
     PARAMETERLIST stList;
@@ -1544,7 +1540,7 @@ static void kMoveDirectory(const char *pcParamegerBuffer)
     int i;
     FILE *pstFile;
 
-    // �Ķ���� ����Ʈ�� �ʱ�ȭ�Ͽ� ���� �̸��� ����
+
     kInitializeParameter(&stList, pcParamegerBuffer);
     iLength = kGetNextParameter(&stList, vcFileName);
     vcFileName[iLength] = '\0';
@@ -1561,7 +1557,7 @@ static void kMoveDirectory(const char *pcParamegerBuffer)
     char temp_path[100] = "\0";
     DWORD temp_index = 0;
 
-    // ���� �ý��� ������ ����
+
     kGetFileSystemInformation(&stManager);
 
     directoryInfo = kFindDirectory(currentDirectoryClusterIndex);
@@ -1577,10 +1573,52 @@ static void kMoveDirectory(const char *pcParamegerBuffer)
 
         currentDirectoryClusterIndex = directoryInfo[1].ParentDirectoryCluserIndex;
         kSetClusterIndex(currentDirectoryClusterIndex);
-
         kMemCpy(path, directoryInfo[1].ParentDirectoryPath, kStrLen(directoryInfo[1].ParentDirectoryPath) + 1);
     }
+    else if (vcFileName[0] == '/') {
+        DWORD rootClusterIndex = 0;
+        DIRECTORYENTRY *rootDirInfo = kFindDirectory(rootClusterIndex);
+        
+        int perSlashSize = 0;
+        int fileNameLength = kStrLen(vcFileName);
+        int curIndex = 1;
 
+        while(vcFileName[curIndex + perSlashSize] != '/' && vcFileName[curIndex + perSlashSize] != '\0') {
+            perSlashSize++;
+        }
+
+        if(perSlashSize == 0) {
+            currentDirectoryClusterIndex = rootClusterIndex;
+            kSetClusterIndex(currentDirectoryClusterIndex);
+            kMemCpy(path, "/", kStrLen(path));
+            return;
+        }
+
+        
+
+        char dirname[100] = {0};
+        kMemCpy(dirname, vcFileName + curIndex, perSlashSize);
+        
+        DWORD beforeClusterIndex = rootClusterIndex;
+        for(int i = 0; i < FILESYSTEM_MAXDIRECTORYENTRYCOUNT; i++)
+        {
+            if(rootDirInfo[i].dwStartClusterIndex != 0 &&
+                kMemCmp(rootDirInfo[i].vcFileName, dirname, kStrLen(dirname)) == 0) {
+                rootClusterIndex = rootDirInfo[i].dwStartClusterIndex;
+                rootDirInfo = kFindDirectory(rootClusterIndex);
+                break;
+            }
+        }
+        if(beforeClusterIndex == rootClusterIndex) {
+            kPrintf("No Such Directory\n");
+            return;
+        }
+
+        currentDirectoryClusterIndex = rootClusterIndex;
+        kSetClusterIndex(currentDirectoryClusterIndex);
+        kMemCpy(path, rootDirInfo[0].ParentDirectoryPath, kStrLen(rootDirInfo[0].ParentDirectoryPath) + 1);
+        return;
+    }
     else
     {
         for (int j = 0; j < FILESYSTEM_MAXDIRECTORYENTRYCOUNT; j++)

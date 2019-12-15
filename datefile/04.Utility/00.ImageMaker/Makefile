@@ -4,7 +4,9 @@ all: ImageMaker.out
 # ImageMaker 빌드
 ImageMaker.out: ImageMaker.c
 	gcc -o $@ $<
+	cp $@ ../../ImageMaker.out
 
 # 소스 파일을 제외한 나머지 파일 정리
 clean:
 	rm -f ImageMaker.out
+	rm -f ../../ImageMaker.out

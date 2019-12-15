@@ -125,19 +125,19 @@ typedef struct kMBRStruct
     BYTE vbBootLoaderSignature[2];
 } MBR;
 
-// ���͸� ��Ʈ�� �ڷᱸ��
+// directory entry 
 typedef struct kDirectoryEntryStruct
 {
-    //�������� ���丮���� ����
+    //directory or file
     int flag;
-    // ���� �̸�
+    // filename
     char vcFileName[FILESYSTEM_MAXFILENAMELENGTH];
-    // ������ ���� ũ��
+    // real file size
     DWORD dwFileSize;
-    // ������ �����ϴ� Ŭ������ �ε���
+    // file start cluster index
     DWORD dwStartClusterIndex;
 
-    //�θ� ���͸� ǥ��
+    // parent dir
     char ParentDirectoryPath[FILESYSTEM_MAXFILENAMELENGTH];
     DWORD ParentDirectoryCluserIndex;
 
