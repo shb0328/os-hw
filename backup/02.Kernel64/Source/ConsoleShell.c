@@ -1609,10 +1609,6 @@ static void kMoveDirectory( const char* pcParamegerBuffer){
                 kMemCpy(path + kStrLen(path),"/",1);
                 kMemCpy(path + kStrLen(path),vcFileName,kStrLen(vcFileName)+1);
             }
-//kPrintf("\nparent %d %d %d %d %d %d %d %d \n", directoryInfo[j-1].bSecond, directoryInfo[j-1].bMinute, directoryInfo[j-1].bHour, directoryInfo[j-1].bDayOfWeek, directoryInfo[j-1].bDayOfMonth, directoryInfo[j-1].bMonth, directoryInfo[j-1].wYear,  1);
-
-
-//kPrintf("\n%d %d %d %d %d %d %d %d \n", directoryInfo[j].bSecond, directoryInfo[j].bMinute, directoryInfo[j].bHour, directoryInfo[j].bDayOfWeek, directoryInfo[j].bDayOfMonth, directoryInfo[j].bMonth, directoryInfo[j].wYear,  1);
 
 bSecond=directoryInfo[j].bSecond;
 bMinute=directoryInfo[j].bMinute;

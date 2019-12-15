@@ -265,14 +265,14 @@ currentDirectoryClusterIndex = directoryInfo[0].ParentDirectoryCluserIndex;
     stEntry.bDayOfMonth = bDayOfMonth;
     stEntry.bMonth =bMonth;
 
-//kPrintf("%d",stEntry.bDayOfMonth);
+//
     // 디렉터리 엔트리 등록
     if( kSetDirectoryEntryData( iDirectoryEntryOffset, &stEntry ) == FALSE )
     {
-        kPrintf("\nyes\n");
+        
         return FALSE;
     }
-kPrintf("\nyes2\n");
+
     DIRECTORYENTRY stEntry2;
     kMemCpy( stEntry2.vcFileName, "..", 3 );
     stEntry2.dwStartClusterIndex = -2;
@@ -298,8 +298,7 @@ kPrintf("\nyes2\n");
     {
         return FALSE;
     }
-kPrintf("%d/%d/%d ", stEntry2.wYear, stEntry2.bDayOfMonth, 0);
-	kPrintf("%d:%d:%d\n",stEntry2.bHour ,0, stEntry2.bSecond );
+
 
 }
 
