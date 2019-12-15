@@ -107,27 +107,26 @@ typedef struct kPartitionStruct
 // MBR ÀÚ·á±žÁ¶
 typedef struct kMBRStruct
 {
-    // ºÎÆ® ·ÎŽõ ÄÚµå°¡ À§Ä¡ÇÏŽÂ ¿µ¿ª
+   
     BYTE vbBootCode[ 430 ];
 
-    // ÆÄÀÏ œÃœºÅÛ œÃ±×³ÊÃ³, 0x7E38CF10
+    
     DWORD dwSignature;
-    // ¿¹ŸàµÈ ¿µ¿ªÀÇ ŒœÅÍ Œö
+    
     DWORD dwReservedSectorCount;
-    // Å¬·¯œºÅÍ žµÅ© Å×ÀÌºí ¿µ¿ªÀÇ ŒœÅÍ Œö
+    
     DWORD dwClusterLinkSectorCount;
-    // Å¬·¯œºÅÍÀÇ ÀüÃŒ °³Œö
+    
     DWORD dwTotalClusterCount;
     
-    // ÆÄÆŒŒÇ Å×ÀÌºí
+    
     PARTITION vstPartition[ 4 ];
     
-    // ºÎÆ® ·ÎŽõ œÃ±×³ÊÃ³, 0x55, 0xAA
     BYTE vbBootLoaderSignature[ 2 ];
 } MBR;
 
 // 디렉터리 엔트리 자료구조
-typedef struct kDirectoryEntryStruct   //////////
+typedef struct kDirectoryEntryStruct   
 {
     
     int flag;
@@ -142,74 +141,71 @@ typedef struct kDirectoryEntryStruct   //////////
     char ParentDirectoryPath[FILESYSTEM_MAXFILENAMELENGTH];
     DWORD ParentDirectoryCluserIndex;
 	
-        BYTE bSecond, bMinute, bHour;
-	BYTE bDayOfWeek, bDayOfMonth, bMonth;
-	WORD wYear;
+     BYTE bSecond, bMinute, bHour;
+     BYTE bDayOfWeek, bDayOfMonth, bMonth;
+     WORD wYear;
 	
-  int f;
+     int f;
 
 } DIRECTORYENTRY;
 
 #pragma pack( pop )
 
-// ÆÄÀÏÀ» °üž®ÇÏŽÂ ÆÄÀÏ ÇÚµé ÀÚ·á±žÁ¶
 typedef struct kFileHandleStruct
 {
-    // ÆÄÀÏÀÌ ÁžÀçÇÏŽÂ µð·ºÅÍž® ¿£Æ®ž®ÀÇ ¿ÀÇÁŒÂ
+    
     int iDirectoryEntryOffset;
-    // ÆÄÀÏ Å©±â
+    
     DWORD dwFileSize;
-    // ÆÄÀÏÀÇ œÃÀÛ Å¬·¯œºÅÍ ÀÎµŠœº
+    
     DWORD dwStartClusterIndex;
-    // ÇöÀç I/O°¡ ŒöÇàÁßÀÎ Å¬·¯œºÅÍÀÇ ÀÎµŠœº
+   
     DWORD dwCurrentClusterIndex;
-    // ÇöÀç Å¬·¯œºÅÍÀÇ ¹Ù·Î ÀÌÀü Å¬·¯œºÅÍÀÇ ÀÎµŠœº
+    
     DWORD dwPreviousClusterIndex;
-    // ÆÄÀÏ Æ÷ÀÎÅÍÀÇ ÇöÀç À§Ä¡
+    
     DWORD dwCurrentOffset;
 } FILEHANDLE;
 
-// µð·ºÅÍž®žŠ °üž®ÇÏŽÂ µð·ºÅÍž® ÇÚµé ÀÚ·á±žÁ¶
+
 typedef struct kDirectoryHandleStruct
 {
-    // ·çÆ® µð·ºÅÍž®žŠ ÀúÀåÇØµÐ ¹öÆÛ
+    
     DIRECTORYENTRY* pstDirectoryBuffer;
     
-    // µð·ºÅÍž® Æ÷ÀÎÅÍÀÇ ÇöÀç À§Ä¡
+    
     int iCurrentOffset;
 } DIRECTORYHANDLE;
 
-// ÆÄÀÏ°ú µð·ºÅÍž®¿¡ ŽëÇÑ Á€ºž°¡ µéŸîÀÖŽÂ ÀÚ·á±žÁ¶
+
 typedef struct kFileDirectoryHandleStruct
 {
-    // ÀÚ·á±žÁ¶ÀÇ ÅžÀÔ Œ³Á€. ÆÄÀÏ ÇÚµéÀÌ³ª µð·ºÅÍž® ÇÚµé, ¶ÇŽÂ ºó ÇÚµé ÅžÀÔ ÁöÁ€ °¡ŽÉ
-    BYTE bType;
-
-    // bTypeÀÇ °ª¿¡ µû¶ó ÆÄÀÏ ¶ÇŽÂ µð·ºÅÍž®·Î »ç¿ë
+    
+    BYTE bType;   
     union
     {
-        // ÆÄÀÏ ÇÚµé
+        
         FILEHANDLE stFileHandle;
-        // µð·ºÅÍž® ÇÚµé
+      
         DIRECTORYHANDLE stDirectoryHandle;
     };    
 } FILE, DIR;
 
-// ÆÄÀÏ œÃœºÅÛÀ» °üž®ÇÏŽÂ ±žÁ¶ÃŒ
+
 typedef struct kFileSystemManagerStruct
 {
-    // ÆÄÀÏ œÃœºÅÛÀÌ Á€»óÀûÀž·Î ÀÎœÄµÇŸúŽÂÁö ¿©ºÎ
+    
     BOOL bMounted;
     
-    // °¢ ¿µ¿ªÀÇ ŒœÅÍ Œö¿Í œÃÀÛ LBA Ÿîµå·¹œº
+    
     DWORD dwReservedSectorCount;
     DWORD dwClusterLinkAreaStartAddress;
     DWORD dwClusterLinkAreaSize;
     DWORD dwDataAreaStartAddress;   
-    // µ¥ÀÌÅÍ ¿µ¿ªÀÇ Å¬·¯œºÅÍÀÇ ÃÑ °³Œö
+    
     DWORD dwTotalClusterCount;
     
-    // ž¶Áöž·Àž·Î Å¬·¯œºÅÍžŠ ÇÒŽçÇÑ Å¬·¯œºÅÍ žµÅ© Å×ÀÌºíÀÇ ŒœÅÍ ¿ÀÇÁŒÂÀ» ÀúÀå
+    
     DWORD dwLastAllocatedClusterLinkSectorOffset;
     
     // ÆÄÀÏ œÃœºÅÛ µ¿±âÈ­ °ŽÃŒ
@@ -268,7 +264,9 @@ static BOOL kUpdateDirectoryEntry( FILEHANDLE* pstFileHandle );
 static BOOL kCreateDirectory( const char* pcFileName, DIRECTORYENTRY* pstEntry, 
         int* piDirectoryEntryIndex );               //
  DIRECTORYENTRY* kFindDirectory( DWORD currentCluster );      //
- void kSetDotInDirectory();
+ //void kSetDotInDirectory();
+void kSetDotInDirectory(BYTE bSecond, BYTE bMinute, BYTE bHour, BYTE bDayOfWeek, BYTE bDayOfMonth, BYTE bMonth,WORD wYear,WORD dwCluster);
+
  void kSetClusterIndex(DWORD currentDirectoryClusterIndex);
  BOOL kUpdateDirectory( int piDirectoryEntryIndex,const char* fileName,const char* parentPath, int parentIndex );
 
