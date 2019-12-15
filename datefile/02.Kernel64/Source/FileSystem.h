@@ -131,6 +131,7 @@ typedef struct kDirectoryEntryStruct
     //directory or file
     int flag;
     // filename
+    int flag, f;
     char vcFileName[FILESYSTEM_MAXFILENAMELENGTH];
     // real file size
     DWORD dwFileSize;
